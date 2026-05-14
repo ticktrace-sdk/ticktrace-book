@@ -80,7 +80,8 @@ Each chapter is short. Run the examples as you go.
 | 13 | [Multicore](13-multicore.md) | launch handshake |
 | 14 | [Where to go next](14-where-to-go-next.md) | — |
 |   | [Appendix A — Glossary](A-glossary.md) | — |
-|   | [Appendix B — Cheat sheet](B-cheat-sheet.md) | — |
+|   | [Appendix B — Cheat sheet](B-cheat-sheet.md) | + [printable infographic](figures/cheat-sheet-print.svg) |
+|   | [Appendix C — Debugging](C-debugging.md) | — |
 
 Every chapter from 2 onward ends with exercises. Skim them even if
 you don't work them — they're often the questions a reader actually

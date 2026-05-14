@@ -1,0 +1,310 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1120"
+     font-family="ui-monospace, Menlo, Monaco, 'DejaVu Sans Mono', monospace"
+     font-size="11">
+  <style>
+    text { fill: #1f2937; }
+    .title-big   { font-size: 28px; font-weight: bold; }
+    .subtitle    { font-size: 12px; fill: #6b7280; }
+    .h           { font-size: 13px; font-weight: bold; fill: #111827; }
+    .lab         { font-size: 11px; }
+    .code        { font-size: 10.5px; font-family: ui-monospace, Menlo, monospace; }
+    .codek       { font-size: 10.5px; font-family: ui-monospace; font-weight: bold; fill: #111827; }
+    .note        { font-size: 10px; fill: #6b7280; }
+    .footer      { font-size: 10px; fill: #6b7280; }
+
+    .panel       { fill: #ffffff; stroke: #d1d5db; }
+    .panel-blue  { fill: #eff6ff; stroke: #2563eb; }
+    .panel-green { fill: #f0fdf4; stroke: #16a34a; }
+    .panel-amber { fill: #fffbeb; stroke: #b45309; }
+    .panel-violet{ fill: #f5f3ff; stroke: #7c3aed; }
+    .panel-rose  { fill: #fff1f2; stroke: #dc2626; }
+
+    .pres-caller { fill: #fee2e2; stroke: #dc2626; }
+    .pres-callee { fill: #dcfce7; stroke: #16a34a; }
+    .pres-spec   { fill: #dbeafe; stroke: #2563eb; }
+
+    .divider     { stroke: #d1d5db; stroke-width: 1; }
+
+    @media (prefers-color-scheme: dark) {
+      text         { fill: #e5e7eb; }
+      .subtitle    { fill: #9ca3af; }
+      .h           { fill: #f3f4f6; }
+      .codek       { fill: #f3f4f6; }
+      .note        { fill: #9ca3af; }
+      .footer      { fill: #9ca3af; }
+      .panel       { fill: #0d1117; stroke: #374151; }
+      .panel-blue  { fill: #0c1a2e; stroke: #2563eb; }
+      .panel-green { fill: #06170c; stroke: #16a34a; }
+      .panel-amber { fill: #1a1305; stroke: #b45309; }
+      .panel-violet{ fill: #14091e; stroke: #7c3aed; }
+      .panel-rose  { fill: #1a0707; stroke: #dc2626; }
+      .pres-caller { fill: #7f1d1d; stroke: #dc2626; }
+      .pres-callee { fill: #14532d; stroke: #16a34a; }
+      .pres-spec   { fill: #1e3a8a; stroke: #2563eb; }
+      .divider     { stroke: #374151; }
+    }
+  </style>
+
+  <!-- ============================================================ -->
+  <!-- HEADER                                                       -->
+  <!-- ============================================================ -->
+  <rect x="0" y="0" width="800" height="80" class="panel" stroke="none" />
+  <text x="40" y="44" class="title-big">rp-asm cheat sheet</text>
+  <text x="40" y="64" class="subtitle">ARM Thumb-2 · Cortex-M33 · RP2350 · Raspberry Pi Pico 2 · every cycle matters</text>
+  <line x1="40" y1="78" x2="760" y2="78" class="divider" />
+
+  <!-- ============================================================ -->
+  <!-- LEFT COLUMN: x=40..390 (w=350)                                -->
+  <!-- ============================================================ -->
+
+  <!-- ----- Register file & AAPCS ----- -->
+  <g transform="translate(40, 100)">
+    <text x="0" y="0" class="h">Register file (AAPCS)</text>
+
+    <!-- Header row -->
+    <text x="0"   y="20" class="note">reg</text>
+    <text x="50"  y="20" class="note">alias</text>
+    <text x="100" y="20" class="note">role</text>
+    <text x="270" y="20" class="note">preserved?</text>
+
+    <!-- r0-r3 caller-saved -->
+    <rect x="265" y="26" width="80" height="14" class="pres-caller" />
+    <text x="0"   y="36" class="codek">r0</text>
+    <text x="100" y="36" class="lab">arg1 / return (low)</text>
+    <text x="305" y="36" text-anchor="middle" class="lab">caller</text>
+
+    <rect x="265" y="42" width="80" height="14" class="pres-caller" />
+    <text x="0"   y="52" class="codek">r1</text>
+    <text x="100" y="52" class="lab">arg2 / return (high)</text>
+    <text x="305" y="52" text-anchor="middle" class="lab">caller</text>
+
+    <rect x="265" y="58" width="80" height="14" class="pres-caller" />
+    <text x="0"   y="68" class="codek">r2</text>
+    <text x="100" y="68" class="lab">arg3</text>
+    <text x="305" y="68" text-anchor="middle" class="lab">caller</text>
+
+    <rect x="265" y="74" width="80" height="14" class="pres-caller" />
+    <text x="0"   y="84" class="codek">r3</text>
+    <text x="100" y="84" class="lab">arg4</text>
+    <text x="305" y="84" text-anchor="middle" class="lab">caller</text>
+
+    <!-- r4-r11 callee-saved -->
+    <rect x="265" y="90" width="80" height="14" class="pres-callee" />
+    <text x="0"   y="100" class="codek">r4–r11</text>
+    <text x="100" y="100" class="lab">general purpose</text>
+    <text x="305" y="100" text-anchor="middle" class="lab">callee</text>
+
+    <!-- r12 -->
+    <rect x="265" y="106" width="80" height="14" class="pres-caller" />
+    <text x="0"   y="116" class="codek">r12</text>
+    <text x="50"  y="116" class="lab">ip</text>
+    <text x="100" y="116" class="lab">intra-proc scratch</text>
+    <text x="305" y="116" text-anchor="middle" class="lab">caller</text>
+
+    <!-- sp -->
+    <rect x="265" y="122" width="80" height="14" class="pres-spec" />
+    <text x="0"   y="132" class="codek">r13</text>
+    <text x="50"  y="132" class="lab">sp</text>
+    <text x="100" y="132" class="lab">stack pointer</text>
+    <text x="305" y="132" text-anchor="middle" class="lab">8-byte align</text>
+
+    <!-- lr -->
+    <rect x="265" y="138" width="80" height="14" class="pres-spec" />
+    <text x="0"   y="148" class="codek">r14</text>
+    <text x="50"  y="148" class="lab">lr</text>
+    <text x="100" y="148" class="lab">return address</text>
+    <text x="305" y="148" text-anchor="middle" class="lab">bl clobbers</text>
+
+    <!-- pc -->
+    <rect x="265" y="154" width="80" height="14" class="pres-spec" />
+    <text x="0"   y="164" class="codek">r15</text>
+    <text x="50"  y="164" class="lab">pc</text>
+    <text x="100" y="164" class="lab">program counter</text>
+    <text x="305" y="164" text-anchor="middle" class="lab">special</text>
+
+    <text x="0" y="184" class="note">Flags: N Z C V — set by instructions ending in <tspan class="codek">s</tspan> (adds, subs, cmp…)</text>
+  </g>
+
+  <!-- ----- Atomic aliases ----- -->
+  <g transform="translate(40, 304)">
+    <text x="0" y="0" class="h">Atomic register aliases (RP2350 APB)</text>
+    <text x="0"   y="20" class="codek">BASE + 0x0000</text>
+    <text x="150" y="20" class="lab">normal read / write</text>
+    <text x="0"   y="36" class="codek">BASE + 0x1000</text>
+    <text x="150" y="36" class="lab">atomic XOR (toggle set bits)</text>
+    <text x="0"   y="52" class="codek">BASE + 0x2000</text>
+    <text x="150" y="52" class="lab">atomic SET</text>
+    <text x="0"   y="68" class="codek">BASE + 0x3000</text>
+    <text x="150" y="68" class="lab">atomic CLR</text>
+  </g>
+
+  <!-- ----- Base addresses ----- -->
+  <g transform="translate(40, 392)">
+    <text x="0" y="0" class="h">Base addresses</text>
+
+    <text x="0"   y="20"  class="lab">Bootrom</text>
+    <text x="200" y="20"  text-anchor="end" class="codek">0x00000000</text>
+    <text x="0"   y="36"  class="lab">Flash (XIP)</text>
+    <text x="200" y="36"  text-anchor="end" class="codek">0x10000000</text>
+    <text x="0"   y="52"  class="lab">SRAM</text>
+    <text x="200" y="52"  text-anchor="end" class="codek">0x20000000</text>
+    <text x="0"   y="68"  class="lab">RESETS</text>
+    <text x="200" y="68"  text-anchor="end" class="codek">0x40020000</text>
+    <text x="0"   y="84"  class="lab">IO_BANK0</text>
+    <text x="200" y="84"  text-anchor="end" class="codek">0x40028000</text>
+    <text x="0"   y="100" class="lab">PADS_BANK0</text>
+    <text x="200" y="100" text-anchor="end" class="codek">0x40038000</text>
+    <text x="0"   y="116" class="lab">UART0 / UART1</text>
+    <text x="200" y="116" text-anchor="end" class="codek">0x40070000 / +8000</text>
+    <text x="0"   y="132" class="lab">I2C0 / I2C1</text>
+    <text x="200" y="132" text-anchor="end" class="codek">0x40090000 / +8000</text>
+    <text x="0"   y="148" class="lab">SPI0 / SPI1</text>
+    <text x="200" y="148" text-anchor="end" class="codek">0x40080000 / +8000</text>
+    <text x="0"   y="164" class="lab">TIMER0 / TIMER1</text>
+    <text x="200" y="164" text-anchor="end" class="codek">0x400B0000 / +8000</text>
+    <text x="0"   y="180" class="lab">SIO</text>
+    <text x="200" y="180" text-anchor="end" class="codek">0xD0000000</text>
+    <text x="0"   y="196" class="lab">NVIC</text>
+    <text x="200" y="196" text-anchor="end" class="codek">0xE000E100</text>
+    <text x="0"   y="212" class="lab">DWT_CYCCNT</text>
+    <text x="200" y="212" text-anchor="end" class="codek">0xE0001004</text>
+  </g>
+
+  <!-- ----- Function template ----- -->
+  <g transform="translate(40, 632)">
+    <text x="0" y="0" class="h">Function template (AAPCS-compliant)</text>
+    <rect x="-6" y="8" width="356" height="148" rx="4" class="panel-blue" />
+    <text x="0"  y="26" class="code">    .section .text.NAME, "ax"</text>
+    <text x="0"  y="40" class="code">    .thumb_func</text>
+    <text x="0"  y="54" class="code">    .global  NAME</text>
+    <text x="0"  y="68" class="code">NAME:</text>
+    <text x="0"  y="82" class="code">    push    {r4, r5, lr}        @ if needed</text>
+    <text x="0"  y="96" class="code">    @ args in r0..r3, work,</text>
+    <text x="0"  y="110" class="code">    @ leave return in r0</text>
+    <text x="0"  y="124" class="code">    pop     {r4, r5, pc}</text>
+    <text x="0"  y="146" class="note">Leaf (no bl, no callee-saved): drop push/pop, end with bx lr.</text>
+  </g>
+
+  <!-- ----- .S file header ----- -->
+  <g transform="translate(40, 800)">
+    <text x="0" y="0" class="h">.S file header</text>
+    <rect x="-6" y="8" width="356" height="74" rx="4" class="panel-blue" />
+    <text x="0"  y="26" class="code">    .include "rp2350.inc"    @ optional</text>
+    <text x="0"  y="40" class="code">    .syntax unified</text>
+    <text x="0"  y="54" class="code">    .cpu    cortex-m33</text>
+    <text x="0"  y="68" class="code">    .thumb</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- RIGHT COLUMN: x=410..760 (w=350)                              -->
+  <!-- ============================================================ -->
+
+  <!-- ----- Common instructions ----- -->
+  <g transform="translate(410, 100)">
+    <text x="0" y="0" class="h">Common Thumb-2 instructions</text>
+
+    <text x="0" y="20" class="note">Move / load</text>
+    <text x="0" y="34" class="code">movs    r0, #25         </text><text x="160" y="34" class="note">small immediate &lt;256</text>
+    <text x="0" y="48" class="code">mov     r0, r1          </text><text x="160" y="48" class="note">reg → reg</text>
+    <text x="0" y="62" class="code">ldr     r0, =0x40028000 </text><text x="160" y="62" class="note">32-bit const</text>
+    <text x="0" y="76" class="code">ldr     r0, =symbol     </text><text x="160" y="76" class="note">address of label</text>
+
+    <text x="0" y="98" class="note">Arithmetic</text>
+    <text x="0" y="112" class="code">adds    r0, r1, r2</text>
+    <text x="0" y="126" class="code">subs    r0, #1</text>
+    <text x="0" y="140" class="code">muls    r0, r1, r0</text>
+    <text x="0" y="154" class="code">sdiv / udiv  r0, r1, r2</text>
+
+    <text x="0" y="176" class="note">Bit ops</text>
+    <text x="0" y="190" class="code">ands / orrs / eors / bics  r0, r1</text>
+    <text x="0" y="204" class="code">lsls / lsrs / asrs  r0, r1, #N</text>
+
+    <text x="0" y="226" class="note">Memory</text>
+    <text x="0" y="240" class="code">ldr     r0, [r1]</text>
+    <text x="0" y="254" class="code">ldr     r0, [r1, #4]</text>
+    <text x="0" y="268" class="code">str     r0, [r1, #N]</text>
+    <text x="0" y="282" class="code">ldrb / ldrh / strb / strh   </text><text x="160" y="282" class="note">byte / half</text>
+    <text x="0" y="296" class="code">push    {r4, lr}        </text><text x="160" y="296" class="note">save</text>
+    <text x="0" y="310" class="code">pop     {r4, pc}        </text><text x="160" y="310" class="note">restore + return</text>
+
+    <text x="0" y="332" class="note">Branch</text>
+    <text x="0" y="346" class="code">cmp     r0, r1</text>
+    <text x="0" y="360" class="code">beq / bne / blt / bgt / blo / bhs .L</text>
+    <text x="0" y="374" class="code">cbz / cbnz  r0, .L      </text><text x="160" y="374" class="note">cmp+branch r0 only</text>
+    <text x="0" y="388" class="code">bl      func            </text><text x="160" y="388" class="note">call</text>
+    <text x="0" y="402" class="code">bx      lr              </text><text x="160" y="402" class="note">return (leaf)</text>
+    <text x="0" y="416" class="code">cpsid i / cpsie i / wfi </text><text x="160" y="416" class="note">IRQ off/on / sleep</text>
+  </g>
+
+  <!-- ----- GPIO idioms ----- -->
+  <g transform="translate(410, 540)">
+    <text x="0" y="0" class="h">GPIO idioms — pin 25 LED</text>
+    <rect x="-6" y="8" width="356" height="140" rx="4" class="panel-green" />
+    <text x="0"  y="26" class="code">@ drive HIGH (atomic SET)</text>
+    <text x="0"  y="40" class="code">ldr   r0, =SIO_BASE + SIO_GPIO_OUT_SET_OFFS</text>
+    <text x="0"  y="54" class="code">movs  r1, #1</text>
+    <text x="0"  y="68" class="code">lsls  r1, #25</text>
+    <text x="0"  y="82" class="code">str   r1, [r0]</text>
+
+    <text x="0"  y="104" class="code">@ TOGGLE atomically (2-cycle store)</text>
+    <text x="0"  y="118" class="code">ldr   r0, =SIO_BASE + SIO_GPIO_OUT_XOR_OFFS</text>
+    <text x="0"  y="132" class="code">str   r1, [r0]</text>
+  </g>
+
+  <!-- ----- UART send idiom ----- -->
+  <g transform="translate(410, 704)">
+    <text x="0" y="0" class="h">UART send-byte (spin while FIFO full)</text>
+    <rect x="-6" y="8" width="356" height="80" rx="4" class="panel-green" />
+    <text x="0"  y="26" class="code">    ldr   r2, =UART0_BASE</text>
+    <text x="0"  y="40" class="code">1:  ldr   r3, [r2, #UART_FR_OFFS]</text>
+    <text x="0"  y="54" class="code">    tst   r3, #UART_FR_TXFF</text>
+    <text x="0"  y="68" class="code">    bne   1b</text>
+    <text x="0"  y="82" class="code">    str   r1, [r2, #UART_DR_OFFS]   @ r1=byte</text>
+  </g>
+
+  <!-- ----- Scheduler / multicore (mini) ----- -->
+  <g transform="translate(410, 814)">
+    <text x="0" y="0" class="h">Scheduler &amp; multicore — one-liners</text>
+    <rect x="-6" y="8" width="356" height="146" rx="4" class="panel-violet" />
+    <text x="0"  y="26" class="code">bl      sched_init</text>
+    <text x="0"  y="40" class="code">@ task_create(id, fn, prio)</text>
+    <text x="0"  y="54" class="code">bl      task_create</text>
+    <text x="0"  y="68" class="code">@ task_post(id) — 5 cycles, STR to ISPR</text>
+    <text x="0"  y="82" class="code">bl      task_post</text>
+    <text x="0"  y="96" class="code">b       sched_run     @ never returns</text>
+    <text x="0"  y="118" class="code">@ multicore_launch_core1(entry, sp, vtbl)</text>
+    <text x="0"  y="132" class="code">bl      multicore_launch_core1</text>
+    <text x="0"  y="146" class="code">spin_lock_blocking / spin_unlock  (idx)</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- FOOTER: Build & flash spans full width                        -->
+  <!-- ============================================================ -->
+  <g transform="translate(40, 990)">
+    <line x1="0" y1="-10" x2="720" y2="-10" class="divider" />
+    <text x="0" y="6" class="h">Build &amp; flash</text>
+
+    <rect x="-6" y="14" width="356" height="92" rx="4" class="panel-amber" />
+    <text x="0"  y="32" class="code">$ make                          </text><text x="180" y="32" class="note"># SRAM variants</text>
+    <text x="0"  y="46" class="code">$ make build/blinky_flash.uf2   </text><text x="180" y="46" class="note"># flash UF2</text>
+    <text x="0"  y="60" class="code">$ make test                     </text><text x="180" y="60" class="note"># T1+T2</text>
+    <text x="0"  y="74" class="code">$ make test-all                 </text><text x="180" y="74" class="note"># +T3 Renode</text>
+    <text x="0"  y="88" class="code">$ arm-none-eabi-size build/X.elf</text><text x="180" y="88" class="note"># size report</text>
+    <text x="0"  y="102" class="code">$ arm-none-eabi-objdump -d X.elf</text><text x="180" y="102" class="note"># disassemble</text>
+
+    <rect x="370" y="14" width="356" height="92" rx="4" class="panel-rose" />
+    <text x="376"  y="32" class="codek">Flashing on hardware</text>
+    <text x="376"  y="48" class="lab">1. Hold BOOTSEL while plugging USB in.</text>
+    <text x="376"  y="62" class="lab">2. Pico mounts as RPI-RP2 mass-storage.</text>
+    <text x="376"  y="76" class="lab">3. Drag build/&lt;name&gt;_flash.uf2 onto it.</text>
+    <text x="376"  y="90" class="lab">4. Open serial @ 115200 8N1 on UART0 TX</text>
+    <text x="376"  y="104" class="lab">   (GP0, pin 1) or /dev/ttyACM0 for USB CDC.</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Bottom strip — branding                                       -->
+  <!-- ============================================================ -->
+  <line x1="40" y1="1090" x2="760" y2="1090" class="divider" />
+  <text x="40"  y="1108" class="footer">github.com/amken3d/rp-asm · pure Thumb-2 SDK for Pico 2 · book/ has the full reference</text>
+  <text x="760" y="1108" text-anchor="end" class="footer">every cycle matters</text>
+</svg>
