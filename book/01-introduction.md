@@ -1,14 +1,22 @@
 # Chapter 1 — Introduction
 
-There is a moment, the first time you flash an assembly program onto a
-microcontroller and watch the LED blink, when you understand a computer
-in a way you didn't five minutes earlier. There is no operating system
-between you and the chip. There is no runtime, no garbage collector, no
-interpreter. There is a piece of silicon, and there is the binary you
-wrote, and the binary is *running*.
+This book is a working introduction to ARM Thumb-2 assembly
+programming on the Raspberry Pi RP2350 microcontroller. It uses
+**rp-asm** — a pure-assembly SDK for that chip — as its running
+codebase.
 
-This book is about getting you to that moment, and then explaining what
-just happened.
+**Scope:** 12 chapters and two appendices, covering the CPU
+architecture, the toolchain, the calling convention, and the GPIO,
+UART, and timer/interrupt subsystems.
+
+**Outcome:** the reader will be able to build, flash, and modify
+cycle-counted bare-metal firmware on a Raspberry Pi Pico 2 without
+invoking a C compiler at any step in the pipeline.
+
+The premise: on a microcontroller there is no operating system, no
+language runtime, no garbage collector, and no interpreter between
+the source and the silicon. The binary you write is the binary that
+runs. This book makes that fact operational.
 
 ## What this book is
 
