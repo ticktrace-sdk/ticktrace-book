@@ -2,7 +2,7 @@
 
 This book is a working introduction to ARM Thumb-2 assembly
 programming on the Raspberry Pi RP2350 microcontroller. It uses
-**rp-asm** — a pure-assembly SDK for that chip — as its running
+**rp-asm**, a pure-assembly SDK for that chip, as its running
 codebase.
 
 **Scope:** 14 chapters and two appendices, covering the CPU
@@ -14,10 +14,6 @@ primitives rp-asm provides.
 cycle-counted bare-metal firmware on a Raspberry Pi Pico 2 without
 invoking a C compiler at any step in the pipeline.
 
-The premise: on a microcontroller there is no operating system, no
-language runtime, no garbage collector, and no interpreter between
-the source and the silicon. The binary you write is the binary that
-runs. This book makes that fact operational.
 
 ## What this book is
 
@@ -37,8 +33,8 @@ rp-asm code, and we point you at deeper references when it's time.
 
 It is also not a book about computer architecture in the abstract. There
 are wonderful books about pipelines, branch predictors, cache coherency,
-and out-of-order execution. The Cortex-M33 has none of those things in
-any interesting form — it is a simple, in-order processor, and that is
+and out-of-order execution, etc. I couldn't teach you these even if I wanted to as I myself am not an expert. 
+The Cortex-M33 has none of those things in any interesting form  it is a simple, in-order processor, and that is
 exactly why it is a good teaching target.
 
 ## Why I built rp-asm
@@ -71,7 +67,7 @@ work I actually wanted to do, which is *write the exact sequence of
 instructions that hits the wire at the exact cycle I expect*.
 
 rp-asm is what that looks like when you take it seriously. Pure
-Thumb-2 assembly. No compiler between you and the silicon. Every
+Thumb-2 assembly. **No compiler between you and the silicon**. Every
 register, every peripheral, every cycle accounted for in source you
 can read end-to-end. The motto on the front of the README — "every
 cycle matters" — isn't a slogan, it's the reason the project exists.
@@ -106,7 +102,7 @@ rp-asm makes this concrete by giving you, in pure assembly:
 - Working examples
 - A test harness so you can verify changes without burning an LED
 
-You will read it all. There is no part of the system that is somebody
+You will figure out exactly what your chip does. There is no part of the system that is somebody
 else's secret.
 
 ## What you'll need
@@ -126,8 +122,8 @@ else's secret.
 - A text editor
 
 Chapter 5 walks you through installing all of this. If you don't have a
-Pico 2 yet you can still follow the book — the rp-asm test harness lets
-you run programs in emulation — but you'll miss the satisfaction of the
+Pico 2 yet you can still follow the book, the rp-asm test harness lets
+you run programs in emulation  but you'll miss the satisfaction of the
 blinking LED.
 
 ## How to read
