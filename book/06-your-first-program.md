@@ -7,6 +7,37 @@ This is the program you flashed at the end of chapter 5 — the one that
 boots the RP2350, brings up the clock tree, and starts blinking the
 green LED while a banner prints over UART.
 
+## The big picture
+
+Before we read the source, here's the shape of the program in time.
+Boot rom hands off, `_reset` runs the M33 prologue, `main` brings up
+the chip, then we enter the forever loop.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Boot as Bootrom
+    participant R   as _reset
+    participant M   as main
+    participant Drv as drivers
+    Boot->>R: load SP, PC from vector table
+    R->>R: enable FPU, seed RCP, point VTOR
+    R->>R: zero .bss
+    R->>M: b main
+    M->>Drv: xosc_init / pll_sys_150 / pll_usb_48
+    M->>Drv: clocks_init / tick_init / watchdog_disable
+    M->>Drv: gpio_led_init / uart0_init / baud_fixup
+    M->>Drv: uart0_puts(banner)
+    loop forever
+        M->>Drv: gpio_led_toggle
+        M->>M:  busy-wait ≈ 250 ms
+    end
+```
+
+And here's where the bytes end up in flash:
+
+![Image layout in flash](figures/image-layout.svg)
+
 ## The program in full
 
 ```asm
@@ -307,5 +338,30 @@ how the program enters the chip. The rp-asm source tree is no longer
 opaque; you can open any `src/*.S` file and the language will mostly
 make sense, even if specific peripheral details are still mysterious.
 
-The next chapter rounds out the syntax reference so you can read the
-*driver* code, not just the user code.
+## Exercises
+
+1. **Halve the blink rate.** Edit `DELAY_COUNT_150MHZ` so the LED
+   blinks at 1 Hz instead of 2 Hz. Build, flash, observe.
+
+2. **Replace the banner.** Change the `.asciz` string to something
+   personal. Rebuild and watch the serial output. *(Note: keep the
+   `\r\n` at the end — most terminal programs need both.)*
+
+3. **Count cycles.** The inner busy-loop is `subs r0, #1` / `bne 1b`.
+   At 150 MHz, how many *seconds* would `DELAY_COUNT_150MHZ = 1`
+   produce? *(About 20 nanoseconds.)*
+
+4. **Why the order?** Why does `clocks_post_pll_uart_baud_fixup` come
+   *after* `uart0_init` and not before? *(Because `uart0_init` writes
+   IBRD/FBRD assuming 12 MHz; the fixup overrides them. If you reversed
+   the order, the fixup would happen first and then immediately get
+   overwritten with the wrong values.)*
+
+5. **A faulty change.** Suppose you removed the trailing
+   `b .Lloop`. The LED would blink once and then the chip would do
+   something unpredictable. Why? *(Execution falls past `main` into
+   whatever bytes happen to be next in flash; the CPU tries to execute
+   them and will eventually fault.)*
+
+The [next chapter](07-assembler-syntax.md) rounds out the syntax
+reference so you can read the *driver* code, not just the user code.

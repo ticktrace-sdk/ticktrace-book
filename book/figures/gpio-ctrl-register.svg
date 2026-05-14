@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+  <style>
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .lab   { font-size: 11px; }
+    .lab-b { font-size: 11px; font-weight: bold; }
+    .b-num { font-size: 9px; fill: #6b7280; }
+    .reserved { fill: #f3f4f6; stroke: #9ca3af; }
+    .funcsel { fill: #dbeafe; stroke: #2563eb; }
+    .out     { fill: #dcfce7; stroke: #16a34a; }
+    .oe      { fill: #fef3c7; stroke: #b45309; }
+    .in      { fill: #fed7aa; stroke: #ea580c; }
+    .irq     { fill: #fee2e2; stroke: #dc2626; }
+  </style>
+
+  <text x="20" y="28" class="title">IO_BANK0.GPIO[n].CTRL — 32-bit register layout</text>
+  <text x="20" y="48" class="note">One per pin. Address = IO_BANK0_BASE + 4 + n × 8.</text>
+
+  <!-- 32 cells, 20px wide each = 640px wide row at x=60 -->
+  <g transform="translate(60,80)">
+    <!-- bit numbers at top -->
+    <g class="b-num">
+      <text x="0"   y="-4">31</text>
+      <text x="40"  y="-4">29</text>
+      <text x="80"  y="-4">27</text>
+      <text x="160" y="-4">19</text>
+      <text x="200" y="-4">17</text>
+      <text x="240" y="-4">13</text>
+      <text x="320" y="-4">11</text>
+      <text x="380" y="-4">7</text>
+      <text x="630" y="-4">0</text>
+    </g>
+
+    <!-- IRQOVER [29:28] -->
+    <rect x="40" y="0" width="40" height="36" class="irq" />
+    <text x="60" y="22" text-anchor="middle" class="lab-b">IRQOVER</text>
+
+    <!-- reserved 27:20 -->
+    <rect x="80" y="0" width="80" height="36" class="reserved" />
+    <text x="120" y="22" text-anchor="middle" class="note">reserved</text>
+
+    <!-- INOVER [19:18] -->
+    <rect x="160" y="0" width="40" height="36" class="in" />
+    <text x="180" y="22" text-anchor="middle" class="lab-b">INOVER</text>
+
+    <!-- OEOVER [17:16] -->
+    <rect x="200" y="0" width="40" height="36" class="oe" />
+    <text x="220" y="22" text-anchor="middle" class="lab-b">OEOVER</text>
+
+    <!-- reserved 15:14 -->
+    <rect x="240" y="0" width="40" height="36" class="reserved" />
+    <text x="260" y="22" text-anchor="middle" class="note">res</text>
+
+    <!-- OUTOVER [13:12] -->
+    <rect x="280" y="0" width="40" height="36" class="out" />
+    <text x="300" y="22" text-anchor="middle" class="lab-b">OUTOVER</text>
+
+    <!-- reserved 11:5 -->
+    <rect x="320" y="0" width="140" height="36" class="reserved" />
+    <text x="390" y="22" text-anchor="middle" class="note">reserved</text>
+
+    <!-- FUNCSEL [4:0] -->
+    <rect x="460" y="0" width="180" height="36" class="funcsel" />
+    <text x="550" y="22" text-anchor="middle" class="lab-b">FUNCSEL [4:0]</text>
+  </g>
+
+  <!-- Field descriptions -->
+  <g transform="translate(20,160)">
+    <rect x="0" y="0" width="14" height="14" class="funcsel" />
+    <text x="22" y="12" class="lab"><tspan font-weight="bold">FUNCSEL</tspan> — peripheral function (0..31). 5 = SIO, 2 = UART, 3 = I²C, 6 = PIO0, …</text>
+
+    <rect x="0" y="22" width="14" height="14" class="out" />
+    <text x="22" y="34" class="lab"><tspan font-weight="bold">OUTOVER</tspan> — override the output signal (0 = pass through, 2 = drive low, 3 = drive high).</text>
+
+    <rect x="0" y="44" width="14" height="14" class="oe" />
+    <text x="22" y="56" class="lab"><tspan font-weight="bold">OEOVER</tspan> — override the output enable (0 = pass through, 3 = always-enabled).</text>
+
+    <rect x="0" y="66" width="14" height="14" class="in" />
+    <text x="22" y="78" class="lab"><tspan font-weight="bold">INOVER</tspan> — override the input value seen by the peripheral.</text>
+
+    <rect x="0" y="88" width="14" height="14" class="irq" />
+    <text x="22" y="100" class="lab"><tspan font-weight="bold">IRQOVER</tspan> — override the interrupt source signal.</text>
+  </g>
+
+  <text x="20" y="290" class="note">rp-asm's gpio_set_function(pin, func) writes FUNCSEL with the other fields zeroed — all overrides off, peripheral in control.</text>
+</svg>

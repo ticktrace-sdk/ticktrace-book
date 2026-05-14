@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
+  <style>
+    .title  { font-size: 16px; font-weight: bold; }
+    .note   { font-size: 11px; fill: #6b7280; }
+    .cpu    { fill: #fee2e2; stroke: #dc2626; }
+    .bus    { fill: none; stroke: #374151; stroke-width: 2; }
+    .ram    { fill: #dcfce7; stroke: #16a34a; }
+    .periph { fill: #dbeafe; stroke: #2563eb; }
+    .clock  { fill: #fef3c7; stroke: #b45309; }
+    .sio    { fill: #ede9fe; stroke: #7c3aed; }
+    .label  { font-weight: bold; }
+  </style>
+
+  <text x="20" y="28" class="title">RP2350 — chip-level block diagram</text>
+
+  <!-- CPU cluster -->
+  <g transform="translate(40,60)">
+    <rect x="0" y="0" width="220" height="120" class="cpu" rx="6" />
+    <text x="110" y="22" text-anchor="middle" class="label">CPU complex</text>
+    <rect x="14" y="36" width="90" height="32" class="cpu" />
+    <text x="59" y="56" text-anchor="middle">Core 0 (M33)</text>
+    <rect x="116" y="36" width="90" height="32" class="cpu" />
+    <text x="161" y="56" text-anchor="middle">Core 1 (M33)</text>
+    <rect x="14" y="76" width="192" height="28" class="cpu" />
+    <text x="110" y="94" text-anchor="middle">NVIC + SysTick + bus matrix</text>
+  </g>
+
+  <!-- SIO -->
+  <g transform="translate(290,60)">
+    <rect x="0" y="0" width="180" height="120" class="sio" rx="6" />
+    <text x="90" y="22" text-anchor="middle" class="label">SIO</text>
+    <text x="90" y="44" text-anchor="middle" class="note">single-cycle I/O</text>
+    <rect x="14" y="56" width="152" height="22" class="sio" />
+    <text x="90" y="72" text-anchor="middle">GPIO_OUT / OE</text>
+    <rect x="14" y="84" width="152" height="22" class="sio" />
+    <text x="90" y="100" text-anchor="middle">FIFO • spinlocks</text>
+  </g>
+
+  <!-- SRAM -->
+  <g transform="translate(500,60)">
+    <rect x="0" y="0" width="220" height="120" class="ram" rx="6" />
+    <text x="110" y="22" text-anchor="middle" class="label">Memory</text>
+    <rect x="14" y="36" width="90" height="32" class="ram" />
+    <text x="59" y="56" text-anchor="middle">SRAM 520 KB</text>
+    <rect x="116" y="36" width="90" height="32" class="ram" />
+    <text x="161" y="56" text-anchor="middle">Bootrom 32 KB</text>
+    <rect x="14" y="76" width="192" height="28" class="ram" />
+    <text x="110" y="94" text-anchor="middle">XIP cache → ext. QSPI flash</text>
+  </g>
+
+  <!-- bus -->
+  <line x1="40" y1="200" x2="720" y2="200" class="bus" />
+  <text x="380" y="216" text-anchor="middle" class="note">APB / AHB peripheral bus</text>
+
+  <!-- peripherals row -->
+  <g transform="translate(40,236)">
+    <rect x="0"   y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="50"  y="22" text-anchor="middle" class="label">GPIO</text>
+    <text x="50"  y="38" text-anchor="middle" class="note">48 pins</text>
+
+    <rect x="112" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="162" y="22" text-anchor="middle" class="label">UART × 2</text>
+    <text x="162" y="38" text-anchor="middle" class="note">PL011</text>
+
+    <rect x="224" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="274" y="22" text-anchor="middle" class="label">I²C × 2</text>
+
+    <rect x="336" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="386" y="22" text-anchor="middle" class="label">SPI × 2</text>
+
+    <rect x="448" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="498" y="22" text-anchor="middle" class="label">USB device</text>
+
+    <rect x="560" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="610" y="22" text-anchor="middle" class="label">DMA</text>
+    <text x="610" y="38" text-anchor="middle" class="note">16 ch</text>
+  </g>
+
+  <g transform="translate(40,296)">
+    <rect x="0"   y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="50"  y="22" text-anchor="middle" class="label">TIMER × 2</text>
+    <text x="50"  y="38" text-anchor="middle" class="note">+ alarms</text>
+
+    <rect x="112" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="162" y="22" text-anchor="middle" class="label">PWM</text>
+    <text x="162" y="38" text-anchor="middle" class="note">12 slices</text>
+
+    <rect x="224" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="274" y="22" text-anchor="middle" class="label">ADC</text>
+    <text x="274" y="38" text-anchor="middle" class="note">8 ch + temp</text>
+
+    <rect x="336" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="386" y="22" text-anchor="middle" class="label">PIO × 3</text>
+    <text x="386" y="38" text-anchor="middle" class="note">state machines</text>
+
+    <rect x="448" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="498" y="22" text-anchor="middle" class="label">SHA-256</text>
+
+    <rect x="560" y="0" width="100" height="48" class="periph" rx="4" />
+    <text x="610" y="22" text-anchor="middle" class="label">TRNG</text>
+  </g>
+
+  <!-- Clock tree -->
+  <g transform="translate(40,360)">
+    <rect x="0" y="0" width="660" height="56" class="clock" rx="6" />
+    <text x="14"  y="22" class="label">Clock tree</text>
+    <text x="14"  y="42" class="note">XOSC 12 MHz → PLL_SYS 150 MHz (clk_sys/clk_peri) → PLL_USB 48 MHz (clk_usb/clk_adc)</text>
+  </g>
+</svg>

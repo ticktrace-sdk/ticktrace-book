@@ -106,6 +106,16 @@ Both demonstrate that AAPCS isn't just an academic convention; it's
 the *real* contract that lets pure-asm drivers compose with any
 ABI-compatible language.
 
+## Inside this book
+
+Two appendices that you'll probably keep open while you work:
+
+- **[Appendix A — Glossary](A-glossary.md).** Every term we've used,
+  defined once and indexed. When you forget what AAPCS or VTOR stands
+  for, look here.
+- **[Appendix B — Cheat sheet](B-cheat-sheet.md).** Every instruction,
+  directive, and idiom we've used, in one printable page.
+
 ## Further reading
 
 - **The RP2350 datasheet** — Raspberry Pi's main reference. About 1300

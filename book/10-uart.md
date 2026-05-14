@@ -25,6 +25,8 @@ A standard frame is:
 That's 10 bit-times per byte. At 115200 baud — the rate rp-asm
 defaults to — each byte takes about 87 µs.
 
+![UART frame for the byte 'A' = 0x41](figures/uart-frame.svg)
+
 The Pico 2 has two UARTs on chip: UART0 and UART1. UART0's default TX
 pin is GP0; we send bytes by writing them to a transmit register, the
 hardware shifts them out at the configured rate.
@@ -57,6 +59,22 @@ worth knowing the shape of the hardware so the driver isn't a black
 box.
 
 ## Bringing a UART up
+
+The init sequence has a particular shape — six steps in order, and
+the order matters because the PL011 latches some settings only on
+specific writes:
+
+```mermaid
+flowchart TD
+    A[uart0_init called] --> B[Clear RESETS bit for UART0]
+    B --> C[Poll RESETS_DONE until bit shows reset complete]
+    C --> D[Set GP0/GP1 FUNCSEL = UART, clear ISO/OD on pads]
+    D --> E[Compute IBRD + FBRD for target baud]
+    E --> F[Write IBRD, then FBRD]
+    F --> G[Write LCR_H — latches baud, sets 8N1, enables FIFO]
+    G --> H[Write CR = UARTEN | TXE | RXE]
+    H --> I[UART is ready]
+```
 
 To use UART0 at 115200 baud, the driver does roughly the following:
 
@@ -243,8 +261,44 @@ complicated — so we don't take that detour in this book. But know
 that the *interface* the rest of your code sees is similar:
 `cdc_putc(byte)`, `cdc_puts(ptr)`, `cdc_getc()`.
 
+## Exercises
+
+1. **Bit time math.** At 115200 baud, how long is one bit-time? How
+   long does a 10-bit frame take? How many bytes per second can the
+   wire carry? *(8.68 µs per bit, 86.8 µs per frame, ~11520 bytes/s.)*
+
+2. **Decode a frame.** Looking at the UART frame figure, what byte is
+   `0100 0001` read **LSB-first**? *(0x41, ASCII 'A'.)*
+
+3. **Why the order?** Looking at the init flowchart, what happens if
+   you write `LCR_H` *before* `IBRD`/`FBRD`? *(The new baud divisors
+   don't take effect until LCR_H is written, so the UART runs at the
+   old rate. Writing LCR_H twice is also a valid alternative — the
+   second write latches.)*
+
+4. **Spin-loop reasoning.** In our `my_puts`, why is the FIFO-full
+   poll inside the per-byte loop and not outside it? *(The FIFO is 32
+   bytes deep — for a short string, the loop never spins. For a long
+   string the FIFO fills up around byte 32 and we wait per-byte after
+   that. Polling once at the start would only let us send 32 bytes.)*
+
+5. **A buggy alternative.** Suppose someone writes:
+   ```asm
+       ldr     r2, [r5, #UART_FR_OFFS]
+       tst     r2, #UART_FR_TXFF
+       beq     send                @ ← jump if not full
+       b       1f
+   send:
+       str     r0, [r5, #UART_DR_OFFS]
+   1:
+   ```
+   What does this do? *(Drops bytes when the FIFO is full instead of
+   waiting. Sometimes that's what you want — non-blocking sends — but
+   it's a different contract from `puts`.)*
+
 ## What's next
 
-The final substantive chapter introduces **interrupts** — the
-mechanism that lets hardware events (a timer firing, a UART byte
-arriving) call your code without you polling for it.
+The [final substantive chapter](11-timers-and-interrupts.md)
+introduces **interrupts** — the mechanism that lets hardware events
+(a timer firing, a UART byte arriving) call your code without you
+polling for it.

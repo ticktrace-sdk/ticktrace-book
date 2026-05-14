@@ -63,20 +63,26 @@ Each chapter is short. Run the examples as you go.
 
 ## Table of contents
 
-| # | Chapter |
-| --- | --- |
-| 1 | [Introduction](01-introduction.md) |
-| 2 | [What is assembly language?](02-what-is-assembly.md) |
-| 3 | [The RP2 family](03-the-rp2-family.md) |
-| 4 | [The ARM Cortex-M33 and Thumb-2](04-cortex-m33-and-thumb2.md) |
-| 5 | [Setting up rp-asm](05-setting-up-rp-asm.md) |
-| 6 | [Your first program: blinky](06-your-first-program.md) |
-| 7 | [Assembler syntax and instructions](07-assembler-syntax.md) |
-| 8 | [Functions and the calling convention](08-functions-and-calling-convention.md) |
-| 9 | [GPIO and memory-mapped I/O](09-gpio-and-memory-mapped-io.md) |
-| 10 | [UART: talking to the host](10-uart.md) |
-| 11 | [Timers and interrupts](11-timers-and-interrupts.md) |
-| 12 | [Where to go next](12-where-to-go-next.md) |
+| # | Chapter | Has figures? |
+| --- | --- | --- |
+| 1 | [Introduction](01-introduction.md) | — |
+| 2 | [What is assembly language?](02-what-is-assembly.md) | register file, fetch/decode cycle |
+| 3 | [The RP2 family](03-the-rp2-family.md) | chip block diagram, Pico 2 pinout, boot flow |
+| 4 | [The ARM Cortex-M33 and Thumb-2](04-cortex-m33-and-thumb2.md) | register file, memory map, atomic aliases |
+| 5 | [Setting up rp-asm](05-setting-up-rp-asm.md) | build pipeline |
+| 6 | [Your first program: blinky](06-your-first-program.md) | boot sequence, image layout |
+| 7 | [Assembler syntax and instructions](07-assembler-syntax.md) | section linking |
+| 8 | [Functions and the calling convention](08-functions-and-calling-convention.md) | call sequence, stack frame |
+| 9 | [GPIO and memory-mapped I/O](09-gpio-and-memory-mapped-io.md) | pin block, CTRL register |
+| 10 | [UART: talking to the host](10-uart.md) | UART frame, init sequence |
+| 11 | [Timers and interrupts](11-timers-and-interrupts.md) | vector table, IRQ entry |
+| 12 | [Where to go next](12-where-to-go-next.md) | — |
+|   | [Appendix A — Glossary](A-glossary.md) | — |
+|   | [Appendix B — Cheat sheet](B-cheat-sheet.md) | — |
+
+Every chapter from 2 onward ends with exercises. Skim them even if
+you don't work them — they're often the questions a reader actually
+has at that point.
 
 ## Conventions used in this book
 
@@ -87,5 +93,18 @@ Each chapter is short. Run the examples as you go.
 - `file.S:42` references mean "line 42 of file.S in the rp-asm tree".
 - Hexadecimal numbers are written with a `0x` prefix; binary with `0b`.
 - "The datasheet" always means the *RP2350 Datasheet* from Raspberry Pi.
+
+## On the figures
+
+Diagrams come in three flavours, all rendered natively by GitHub:
+
+- **SVG files** in [`book/figures/`](figures/) for hardware layouts,
+  register bit-fields, stack frames, and memory maps. Open them in
+  a browser to zoom or copy.
+- **Mermaid diagrams** inline for flowcharts and sequences.
+- Occasional **ASCII art** in code blocks for tiny inline visuals.
+
+If you're reading on a renderer that doesn't display SVG or Mermaid
+(e.g. plain text), the surrounding prose still stands on its own.
 
 Let's begin.

@@ -17,6 +17,8 @@ Three things:
 You do **not** need GCC or any C compiler. rp-asm is pure assembly;
 the C compiler in `binutils-arm-none-eabi` is not used.
 
+![Build pipeline: .S → .o → .elf → .uf2](figures/build-pipeline.svg)
+
 ## Linux (Debian / Ubuntu / Raspberry Pi OS)
 
 ```console
@@ -187,5 +189,24 @@ the bootrom, jumped into the rp-asm reset handler, brought up two PLLs
 and the clock tree, configured a UART, sent some bytes, and started
 toggling a GPIO pin. All in 728 bytes of code.
 
-In the next chapter we'll read that code, line by line, and understand
-every byte.
+## Exercises
+
+1. **Inspect the binary.** Run
+   `arm-none-eabi-objdump -d build/blinky.elf | less`
+   and find the disassembly of `main`. How many instructions is it?
+
+2. **Try the size tool.** Run
+   `arm-none-eabi-size build/blinky.elf`.
+   What is the `.text` size in bytes? What about `.data` and `.bss`?
+
+3. **Find an example by size.** Run
+   `make bench-sizes 2>/dev/null || ls -lh build/*_flash.uf2 | sort -k5 -h`.
+   Which UF2 image is the smallest? Which is the largest? Speculate why.
+
+4. **Smoke-test without hardware.** Run `make test-all` and watch which
+   tiers pass. If T3 (Renode) is skipped because Renode isn't
+   installed, that's fine — T1 and T2 alone exercise every public
+   driver function.
+
+In the [next chapter](06-your-first-program.md) we'll read the blinky
+code, line by line, and understand every byte.

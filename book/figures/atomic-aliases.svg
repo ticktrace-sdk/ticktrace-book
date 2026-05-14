@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
+  <style>
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .alias { fill: #dbeafe; stroke: #2563eb; }
+    .reg   { fill: #fef3c7; stroke: #b45309; }
+    .label { font-weight: bold; }
+    .op    { font-size: 12px; fill: #374151; }
+  </style>
+
+  <text x="20" y="28" class="title">Four addresses, one hardware register</text>
+  <text x="20" y="48" class="note">Atomic alias windows on RP2350 APB peripherals — write 1s to set/clear/toggle bits.</text>
+
+  <!-- Four alias addresses on the left -->
+  <g transform="translate(20,90)">
+    <rect x="0" y="0"   width="240" height="40" class="alias" />
+    <text x="14"  y="18" class="label">BASE + 0x0000</text>
+    <text x="14"  y="35" class="op">normal read / write</text>
+
+    <rect x="0" y="56"  width="240" height="40" class="alias" />
+    <text x="14"  y="74" class="label">BASE + 0x1000</text>
+    <text x="14"  y="91" class="op">write 1 → atomic XOR (toggle)</text>
+
+    <rect x="0" y="112" width="240" height="40" class="alias" />
+    <text x="14"  y="130" class="label">BASE + 0x2000</text>
+    <text x="14"  y="147" class="op">write 1 → atomic SET</text>
+
+    <rect x="0" y="168" width="240" height="40" class="alias" />
+    <text x="14"  y="186" class="label">BASE + 0x3000</text>
+    <text x="14"  y="203" class="op">write 1 → atomic CLR</text>
+  </g>
+
+  <!-- Arrows to the single register on the right -->
+  <g stroke="#374151" fill="none" stroke-width="1.5">
+    <path d="M260,110 C 380,110 380,200 500,200" />
+    <path d="M260,166 C 400,166 400,210 500,210" />
+    <path d="M260,222 C 400,222 400,220 500,220" />
+    <path d="M260,278 C 380,278 380,230 500,230" />
+  </g>
+  <g fill="#374151">
+    <polygon points="500,200 492,196 492,204" />
+    <polygon points="500,210 492,206 492,214" />
+    <polygon points="500,220 492,216 492,224" />
+    <polygon points="500,230 492,226 492,234" />
+  </g>
+
+  <!-- The actual hardware register -->
+  <g transform="translate(500,180)">
+    <rect x="0" y="0" width="240" height="80" class="reg" />
+    <text x="120" y="34" text-anchor="middle" class="label">underlying hardware register</text>
+    <text x="120" y="54" text-anchor="middle" class="note">one storage element on the silicon</text>
+  </g>
+
+  <text x="20" y="320" class="note">One STR to the right alias = one atomic, 2-cycle bit operation. No read-modify-write, no ISR race.</text>
+</svg>

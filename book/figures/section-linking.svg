@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+  <style>
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .obj   { fill: #dbeafe; stroke: #2563eb; }
+    .text  { fill: #dcfce7; stroke: #16a34a; }
+    .rodat { fill: #fef3c7; stroke: #b45309; }
+    .drop  { fill: #fecaca; stroke: #dc2626; stroke-dasharray: 4 4; }
+    .label { font-weight: bold; }
+    .arrow { stroke: #374151; stroke-width: 1.5; fill: none; }
+  </style>
+
+  <text x="20" y="28" class="title">Per-function sections → linker garbage collection</text>
+  <text x="20" y="48" class="note">Each function gets its own section; the linker drops the ones nothing references.</text>
+
+  <!-- Two source objects -->
+  <g transform="translate(20,80)">
+    <rect x="0" y="0" width="200" height="180" class="obj" rx="6" />
+    <text x="100" y="22" text-anchor="middle" class="label">gpio.o</text>
+    <rect x="14" y="36"  width="172" height="22" class="text" />
+    <text x="100" y="52" text-anchor="middle" class="note">.text.gpio_set_function</text>
+    <rect x="14" y="64"  width="172" height="22" class="text" />
+    <text x="100" y="80" text-anchor="middle" class="note">.text.gpio_led_init</text>
+    <rect x="14" y="92"  width="172" height="22" class="text" />
+    <text x="100" y="108" text-anchor="middle" class="note">.text.gpio_led_toggle</text>
+    <rect x="14" y="120" width="172" height="22" class="drop" />
+    <text x="100" y="136" text-anchor="middle" class="note">.text.gpio_pull_up  ✗</text>
+    <rect x="14" y="148" width="172" height="22" class="drop" />
+    <text x="100" y="164" text-anchor="middle" class="note">.text.gpio_set_irq  ✗</text>
+  </g>
+
+  <g transform="translate(20,280)">
+    <rect x="0" y="0" width="200" height="120" class="obj" rx="6" />
+    <text x="100" y="22" text-anchor="middle" class="label">uart.o</text>
+    <rect x="14" y="36"  width="172" height="22" class="text" />
+    <text x="100" y="52" text-anchor="middle" class="note">.text.uart0_init</text>
+    <rect x="14" y="64"  width="172" height="22" class="text" />
+    <text x="100" y="80" text-anchor="middle" class="note">.text.uart0_puts</text>
+    <rect x="14" y="92"  width="172" height="22" class="rodat" />
+    <text x="100" y="108" text-anchor="middle" class="note">.rodata.uart_lut</text>
+  </g>
+
+  <!-- arrow -->
+  <path d="M230,250 L320,250" class="arrow" />
+  <polygon points="320,250 312,246 312,254" fill="#374151" />
+  <text x="275" y="240" text-anchor="middle" class="note">ld + flash.ld + --gc-sections</text>
+
+  <!-- output .elf -->
+  <g transform="translate(360,80)">
+    <rect x="0" y="0" width="220" height="320" class="obj" rx="6" />
+    <text x="110" y="22" text-anchor="middle" class="label">blinky.elf — output .text</text>
+    <rect x="14" y="40"  width="192" height="22" class="text" />
+    <text x="110" y="56" text-anchor="middle" class="note">gpio_set_function</text>
+    <rect x="14" y="68"  width="192" height="22" class="text" />
+    <text x="110" y="84" text-anchor="middle" class="note">gpio_led_init</text>
+    <rect x="14" y="96"  width="192" height="22" class="text" />
+    <text x="110" y="112" text-anchor="middle" class="note">gpio_led_toggle</text>
+    <rect x="14" y="124" width="192" height="22" class="text" />
+    <text x="110" y="140" text-anchor="middle" class="note">uart0_init</text>
+    <rect x="14" y="152" width="192" height="22" class="text" />
+    <text x="110" y="168" text-anchor="middle" class="note">uart0_puts</text>
+    <rect x="14" y="180" width="192" height="22" class="rodat" />
+    <text x="110" y="196" text-anchor="middle" class="note">.rodata.uart_lut</text>
+
+    <text x="110" y="240" text-anchor="middle" class="note">Unused gpio_pull_up + gpio_set_irq</text>
+    <text x="110" y="256" text-anchor="middle" class="note">never appear in the final image.</text>
+    <text x="110" y="288" text-anchor="middle" class="note">Result: tiny .uf2 — blinky is</text>
+    <text x="110" y="304" text-anchor="middle" class="note">just 728 bytes of code.</text>
+  </g>
+
+  <text x="20" y="440" class="note">This is why every rp-asm function lives in its own `.section .text.NAME, "ax"`.</text>
+</svg>

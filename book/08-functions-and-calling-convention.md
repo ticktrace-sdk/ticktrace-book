@@ -42,6 +42,28 @@ ARM assembly should follow if it wants to interoperate.
 In one sentence: **r0–r3 and r12 are scratch; r4–r11 must be preserved
 across calls.**
 
+## A call, drawn
+
+Here's what happens when one function calls another, in time order:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as caller
+    participant S as stack
+    participant F as callee
+    Note over C: r0..r3 set up as args
+    C->>S: push {r4, lr}     (save what callee may clobber)
+    C->>F: bl callee         (lr ← return addr)
+    F->>S: push {r4, lr}     (only if it needs r4 or makes calls)
+    F->>F: work, possibly bl other_func
+    F->>S: pop {r4, pc}      (restore + return)
+    C->>S: pop {r4, lr} (or {r4, pc})
+```
+
+Two pushes, two pops, paired. Every function the SDK ships obeys this
+shape. If you do too, your functions compose with everything else.
+
 ## Anatomy of a well-behaved function
 
 The simplest case — a leaf function (one that doesn't call anything
@@ -100,6 +122,16 @@ The alternative is:
 
 …which is one instruction longer for no benefit. Always use the
 `pop {…, pc}` form.
+
+## A picture of the stack
+
+Here's what the stack actually looks like before and after a typical
+prologue:
+
+![Stack frame after push {r4, r5, r7, lr}](figures/stack-frame.svg)
+
+Every push must be matched by exactly one pop, or your stack drifts
+and the next return goes somewhere awful.
 
 ## Stack alignment
 
@@ -239,9 +271,47 @@ The compiler catches none of these for you — you're writing assembly
 — so develop the habit of reviewing every function's prologue/epilogue
 pair as one unit. They should always match.
 
+## Exercises
+
+1. **Push count.** Which of these prologues keep the stack 8-byte
+   aligned?
+   (a) `push {r4, lr}`
+   (b) `push {r4, r5, lr}`
+   (c) `push {r4, r5, r6, lr}`
+   (d) `push {r4, r5, r6, r7, lr}`
+   *(a and c. b pushes 12 bytes; d pushes 20.)*
+
+2. **Add a prologue.** Take the leaf `gpio_read` example. Modify it so
+   it calls `gpio_set_function(pin, GPIO_FUNC_SIO)` *first* and then
+   reads. Add the necessary push/pop, keeping AAPCS rules.
+
+3. **Spot the bug.** What's wrong with this function?
+   ```asm
+   bad_func:
+       push    {r4, lr}
+       mov     r4, r0
+       bl      something
+       bx      lr
+   ```
+   *(It leaks the stack: it pushed `r4` and `lr` but doesn't pop them.
+   The `bx lr` returns to the address that was in `lr` when `bad_func`
+   was entered, *not* to the saved value, because the pushed `lr` is
+   still on the stack. Next caller's frame is now misaligned.)*
+
+4. **Why `pop {…, pc}`?** Why is `pop {r4, pc}` strictly better than
+   `pop {r4, lr}; bx lr`? *(One fewer instruction, same effect — the
+   popped value goes straight into `pc` and the bottom-bit-thumb-marker
+   trick still works.)*
+
+5. **ISR rules.** True or false: an ISR can freely clobber `r0`–`r3`
+   and `r12` without saving them. *(True — the hardware saved them on
+   the way in. But `r4`–`r11` must still be saved if the ISR uses
+   them. We meet this again in [chapter 11](11-timers-and-interrupts.md).)*
+
 ## What's next
 
 You now know enough to write your own driver functions and call them
 from your own apps. The next three chapters apply this to real
-peripherals: GPIO in chapter 9, UART in chapter 10, and timers with
-interrupts in chapter 11.
+peripherals: GPIO in [chapter 9](09-gpio-and-memory-mapped-io.md),
+UART in [chapter 10](10-uart.md), and timers with interrupts in
+[chapter 11](11-timers-and-interrupts.md).

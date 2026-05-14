@@ -33,6 +33,8 @@ just an array of 32-bit function pointers, sitting in memory at a
 known address (usually the start of your image, with `VTOR` pointing
 at it).
 
+![Vector table layout](figures/vector-table.svg)
+
 The first 16 slots are for **CPU exceptions** (reset, NMI, hard fault,
 SysTick, etc.). The slots after that — up to 480 of them on the M33
 — are for **external interrupts** from peripherals.
@@ -212,6 +214,24 @@ They all coexist without polling.
 
 When IRQ 0 fires:
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant App as Application code
+    participant HW  as Cortex-M33 hardware
+    participant ISR as alarm0_isr
+    App->>App: instruction N completes
+    HW->>HW: see pending IRQ 0
+    HW->>HW: push r0-r3, r12, lr, pc, xPSR (32 bytes)
+    HW->>HW: lr ← EXC_RETURN, pc ← vectors[16]
+    HW->>ISR: branch to alarm0_isr
+    ISR->>ISR: push r4, lr (AAPCS)
+    ISR->>ISR: clear IRQ flag, do work, re-arm alarm
+    ISR->>ISR: pop r4, pc  (pc gets EXC_RETURN value)
+    HW->>HW: detect EXC_RETURN, unwind stack frame
+    HW->>App: resume instruction N+1
+```
+
 1. The CPU finishes the instruction it was executing.
 2. The hardware **pushes a frame** onto the current stack: `r0`–`r3`,
    `r12`, `lr`, `pc`, and the PSR. Eight 32-bit words.
@@ -220,6 +240,10 @@ When IRQ 0 fires:
 4. `pc` is loaded with the address in vector slot 16 + IRQ_NUMBER (in
    our case, slot 16 + 0 = `_vectors[16]`).
 5. The CPU starts executing the ISR.
+
+Visually, the hardware-pushed frame looks like this:
+
+![Hardware-pushed exception frame on IRQ entry](figures/irq-entry.svg)
 
 When the ISR's `pop {…, pc}` happens, the popped value has the
 `EXC_RETURN` pattern, and the hardware recognises that. It pops the
@@ -265,8 +289,39 @@ A subtler tool is `BASEPRI`, which lets you mask only interrupts
 *below* a certain priority. rp-asm's scheduler (`src/sched.S`) uses
 this. We don't dig deeper here, but the docs do.
 
+## Exercises
+
+1. **Vector slot math.** UART0's interrupt is RP2350 IRQ line 33.
+   What's the byte offset of its slot in the vector table?
+   *(16 + 33 = 49 entries, each 4 bytes, so offset = 49 × 4 = 0x0C4.)*
+
+2. **Why bit 0?** Each entry in the vector table has its low bit set
+   (e.g. `_reset + 1`). What goes wrong if you forget the `+ 1`?
+   *(The CPU treats the loaded `pc` as ARM-mode code and faults
+   immediately — there is no ARM mode on Cortex-M.)*
+
+3. **Count cycles.** Look at `alarm0_isr` above. About how many cycles
+   does it take? *(Roughly: 2 cycle push, ~10 cycles `alarm_clear_irq`,
+   ~6 cycles `gpio_led_toggle`, ~6 cycles `time_us_32`, ~10 cycles for
+   the add and `alarm_set` setup, ~10 cycles inside `alarm_set`, 2
+   cycles pop. ~50 cycles total — ~330 ns at 150 MHz.)*
+
+4. **Critical section.** Suppose your main loop increments a shared
+   counter, and an ISR reads it. Do you need a critical section?
+   What if the situations are reversed? *(Reads/writes of a single
+   aligned 32-bit value on the M33 are atomic with respect to ISRs
+   — they happen in a single cycle. So one-way is safe. A
+   read-modify-write needs `cpsid i` / `cpsie i` to be safe either
+   direction.)*
+
+5. **Re-fire bug.** Suppose you forget to call `alarm_clear_irq` in
+   your ISR. What happens? *(The IRQ stays pending. The moment your
+   ISR returns and re-enables interrupts, it re-fires immediately —
+   you're stuck in an infinite ISR loop.)*
+
 ## What's next
 
-The next and final chapter points you at the rest of rp-asm — DMA,
-PIO, the dual-core launch handshake, the test harness, the C and
-Rust bridges, and the corners of the chip we didn't reach.
+The [next and final chapter](12-where-to-go-next.md) points you at the
+rest of rp-asm — DMA, PIO, the dual-core launch handshake, the test
+harness, the C and Rust bridges, and the corners of the chip we didn't
+reach.

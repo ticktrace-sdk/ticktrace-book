@@ -9,6 +9,8 @@ to come back to. You'll absorb the details as you write programs.
 The Cortex-M33 has 16 general-purpose 32-bit registers. Most rp-asm
 documentation refers to them by the names below.
 
+![Cortex-M33 register file with AAPCS roles](figures/register-file.svg)
+
 | Name | Alias | Role |
 | --- | --- | --- |
 | `r0`–`r3` | — | Argument and return registers. **Caller-saved.** |
@@ -21,7 +23,7 @@ documentation refers to them by the names below.
 "Caller-saved" means: if the caller cares about the value, the caller
 saves it before the call. "Callee-saved" means: a called function must
 preserve the value, so the caller can rely on it surviving the call.
-We unpack this fully in chapter 8.
+We unpack this fully in [chapter 8](08-functions-and-calling-convention.md).
 
 There is also a hidden register called `APSR` — the Application
 Program Status Register — containing the four condition flags:
@@ -160,6 +162,8 @@ push `lr`.
 On the RP2350, the 32-bit address space is divided into regions. The
 ones you'll care about in this book are:
 
+![RP2350 memory map](figures/memory-map.svg)
+
 | Address range | What lives here |
 | --- | --- |
 | `0x00000000`–`0x00007fff` | Bootrom (32 KB, read-only) |
@@ -173,7 +177,8 @@ The two regions you'll talk to most are SRAM (your stack, your data,
 sometimes your code during testing) and the peripheral region. Every
 hardware peripheral on the chip has a base address; you write to a
 specific offset from that base to control it. We meet this concept
-formally in chapter 9 as **memory-mapped I/O**.
+formally in [chapter 9](09-gpio-and-memory-mapped-io.md) as
+**memory-mapped I/O**.
 
 ## Atomic register aliases — the RP2 trick
 
@@ -183,6 +188,8 @@ takes three instructions and is unsafe against interrupts.
 
 The RP2350 (and the RP2040 before it) cleverly map every peripheral
 register four times:
+
+![Atomic alias windows](figures/atomic-aliases.svg)
 
 | Offset | Effect |
 | --- | --- |
@@ -222,8 +229,36 @@ When the bootrom hands off to your reset handler, you can rely on:
 You inherit a clean machine. From there, what happens next is whatever
 you write — which is the whole point of this book.
 
+## Exercises
+
+1. **Caller-saved or callee-saved?** For each register, answer without
+   peeking: r0, r4, r7, r12, lr, sp. *(r0 caller, r4 callee, r7 callee,
+   r12 caller, lr is caller-saved in the sense that `bl` clobbers it
+   for you, sp must be preserved.)*
+
+2. **Compute an address.** GPIO[25].CTRL lives at
+   `IO_BANK0_BASE + 4 + 25 × 8`. With `IO_BANK0_BASE = 0x40028000`,
+   what's the byte address? Write the two-instruction Thumb sequence
+   that loads it into r0. *(Answer: 0x400280CC; e.g.
+   `ldr r0, =0x400280CC` does it in one instruction.)*
+
+3. **Atomic alias arithmetic.** Suppose `RESETS_RESET` is at
+   `0x40020000`. What address do you write to atomically clear bits in
+   it? *(0x40023000 — base + 0x3000 CLR alias.)*
+
+4. **Why bit 0?** Why does the `.thumb_func` directive set bit 0 of a
+   symbol's address? What happens if you `bx` to an even address?
+   *(Cortex-M only runs Thumb; bit 0 = Thumb marker. Even addresses
+   trigger a UsageFault.)*
+
+5. **Where does main live?** Looking at the memory map, where will the
+   `main` symbol's address fall when the program is built for flash?
+   What about when built for the SRAM test variant? *(Flash:
+   somewhere in 0x10000000-0x103FFFFF. SRAM: 0x20000000+.)*
+
 ## What's next
 
 You now have a working vocabulary of registers, instructions, and the
-RP2350 memory map. The next chapter gets the toolchain installed so
-we can turn assembly source into a runnable `.uf2` file.
+RP2350 memory map. The [next chapter](05-setting-up-rp-asm.md) gets the
+toolchain installed so we can turn assembly source into a runnable
+`.uf2` file.

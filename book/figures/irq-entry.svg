@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+  <style>
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .label { font-weight: bold; }
+    .hw    { fill: #fee2e2; stroke: #dc2626; }
+    .frame { fill: #dcfce7; stroke: #16a34a; }
+    .other { fill: #f3f4f6; stroke: #9ca3af; stroke-dasharray: 4 4; }
+    .arrow { stroke: #2563eb; stroke-width: 1.5; fill: none; }
+    .addr  { font-size: 11px; fill: #6b7280; }
+  </style>
+
+  <text x="20" y="28" class="title">Hardware-pushed exception frame on IRQ entry</text>
+  <text x="20" y="48" class="note">When an IRQ fires the CPU itself pushes 8 words before jumping to your ISR. You never write this code; the silicon does.</text>
+
+  <!-- Before -->
+  <g transform="translate(40,90)">
+    <text x="80" y="-6" text-anchor="middle" class="label">Stack before IRQ</text>
+
+    <rect x="0" y="0"   width="160" height="28" class="other" />
+    <text x="80" y="18" text-anchor="middle" class="note">…application stack…</text>
+
+    <rect x="0" y="28"  width="160" height="28" class="other" />
+    <text x="80" y="46" text-anchor="middle" class="note">…</text>
+
+    <rect x="0" y="56"  width="160" height="28" class="other" />
+    <text x="80" y="74" text-anchor="middle" class="note">caller's local data</text>
+
+    <text x="-10" y="74" text-anchor="end" class="addr">← sp</text>
+  </g>
+
+  <!-- Arrow -->
+  <path d="M230,130 L320,130" class="arrow" />
+  <polygon points="320,130 312,126 312,134" fill="#2563eb" />
+  <text x="275" y="116" text-anchor="middle" class="note">hardware pushes 8 words</text>
+  <text x="275" y="148" text-anchor="middle" class="note">sp -= 32</text>
+
+  <!-- After -->
+  <g transform="translate(360,90)">
+    <text x="80" y="-6" text-anchor="middle" class="label">Stack inside the ISR</text>
+
+    <rect x="0" y="0"   width="160" height="28" class="other" />
+    <text x="80" y="18" text-anchor="middle" class="note">caller's local data</text>
+
+    <rect x="0" y="28"  width="160" height="28" class="frame" />
+    <text x="80" y="46" text-anchor="middle" class="label">xPSR (flags + ISR num)</text>
+
+    <rect x="0" y="56"  width="160" height="28" class="frame" />
+    <text x="80" y="74" text-anchor="middle" class="label">pc (return address)</text>
+
+    <rect x="0" y="84"  width="160" height="28" class="frame" />
+    <text x="80" y="102" text-anchor="middle" class="label">lr</text>
+
+    <rect x="0" y="112" width="160" height="28" class="frame" />
+    <text x="80" y="130" text-anchor="middle" class="label">r12</text>
+
+    <rect x="0" y="140" width="160" height="28" class="frame" />
+    <text x="80" y="158" text-anchor="middle" class="label">r3</text>
+
+    <rect x="0" y="168" width="160" height="28" class="frame" />
+    <text x="80" y="186" text-anchor="middle" class="label">r2</text>
+
+    <rect x="0" y="196" width="160" height="28" class="frame" />
+    <text x="80" y="214" text-anchor="middle" class="label">r1</text>
+
+    <rect x="0" y="224" width="160" height="28" class="frame" />
+    <text x="80" y="242" text-anchor="middle" class="label">r0</text>
+
+    <text x="-10" y="242" text-anchor="end" class="addr">← sp</text>
+  </g>
+
+  <!-- Notes panel -->
+  <g transform="translate(540,90)">
+    <rect x="0" y="0" width="200" height="260" class="hw" rx="6" />
+    <text x="14" y="22"  class="label">During this:</text>
+    <text x="14" y="46"  class="note">• lr is loaded with a magic</text>
+    <text x="14" y="62"  class="note">  EXC_RETURN value, not</text>
+    <text x="14" y="78"  class="note">  a real address</text>
+    <text x="14" y="106" class="note">• pc is loaded from the</text>
+    <text x="14" y="122" class="note">  vector table</text>
+    <text x="14" y="150" class="note">• Inside the ISR you can</text>
+    <text x="14" y="166" class="note">  clobber r0–r3 and r12</text>
+    <text x="14" y="182" class="note">  freely (HW saved them)</text>
+    <text x="14" y="210" class="note">• `bx lr` (or pop into pc)</text>
+    <text x="14" y="226" class="note">  triggers HW to unwind</text>
+    <text x="14" y="242" class="note">  the frame and resume</text>
+  </g>
+
+  <text x="380" y="400" text-anchor="middle" class="note">Your ISR still has to save r4–r11 by itself if it uses them — same AAPCS rule as a normal function.</text>
+</svg>

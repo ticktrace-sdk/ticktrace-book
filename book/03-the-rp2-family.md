@@ -8,6 +8,8 @@ heart of the Raspberry Pi Pico and Pico 2 boards.
 This chapter is a tour of what these chips are, how they differ, and
 why rp-asm targets the RP2350 specifically.
 
+![RP2350 chip-level block diagram](figures/chip-block.svg)
+
 ## What is a microcontroller?
 
 A **microcontroller** is a chip that contains, on a single die:
@@ -104,9 +106,28 @@ There is also a Pico 2 W variant with onboard Wi-Fi/Bluetooth via an
 extra chip; rp-asm doesn't currently use the wireless, but everything
 else on the W is identical to the non-W board.
 
+![Pico 2 board layout with selected pins](figures/pico2-pinout.svg)
+
+We'll meet most of these pins again in later chapters: GP0/GP1 in
+[chapter 10](10-uart.md) (UART), GP25 in [chapter 6](06-your-first-program.md)
+and [chapter 9](09-gpio-and-memory-mapped-io.md) (LED), and the
+BOOTSEL button in [chapter 5](05-setting-up-rp-asm.md) (flashing).
+
 ## The boot sequence (quick preview)
 
 When you power on a Pico 2, here's what happens:
+
+```mermaid
+flowchart TD
+    A[Power on / reset] --> B{BOOTSEL held?}
+    B -- yes --> M[Bootrom: present as USB Mass Storage<br/>RPI-RP2 — drag-and-drop mode]
+    B -- no  --> S[Bootrom: scan flash for IMAGE_DEF block]
+    S --> V{Valid signature?}
+    V -- no  --> M
+    V -- yes --> R[Load SP from word 0, PC from word 1<br/>jump to _reset]
+    R --> P[_reset: enable FPU, seed RCP,<br/>set VTOR, zero .bss]
+    P --> C[main: clock tree → peripherals → loop]
+```
 
 1. The RP2350's internal **bootrom** runs first. It is a 32 KB read-only
    program baked into the silicon at Raspberry Pi's factory.
@@ -121,7 +142,7 @@ When you power on a Pico 2, here's what happens:
 
 rp-asm provides all of step 4 for you — see `src/startup.S` and
 `src/main.S`. From your perspective, "boot" just means "`main` gets
-called". We will read the bootrom-to-`main` handoff in chapter 6.
+called". We will read the bootrom-to-`main` handoff in [chapter 6](06-your-first-program.md).
 
 ## Why an RP2350 and not, say, an STM32?
 
@@ -140,8 +161,30 @@ Why this one?
 - **Cool peripherals.** PIO in particular is unique to this chip
   family and a delight to program.
 
+## Exercises
+
+1. **Compare the M0+ and the M33.** Look at the comparison table. Name
+   three RP2350 features that the RP2040 doesn't have. For each, why
+   might it matter when writing assembly?
+
+2. **Pin a peripheral.** Using the Pico 2 pinout figure, which physical
+   pins would you wire to talk to an I²C sensor? *(Hint: GP2/GP3, plus
+   GND and 3V3.)*
+
+3. **Bootrom hand-off.** From the boot flowchart, what is in `r13`
+   (the stack pointer) at the instant `_reset` starts executing?
+   *(The value the bootrom loaded from word 0 of the vector table —
+   i.e. the symbol `_stack_top` declared in `src/startup.S`.)*
+
+4. **Why no SRAM boot?** The README notes that SRAM-resident images
+   don't run on real Pico 2 silicon. Why is that an erratum and not a
+   design choice? *(Bootrom is supposed to be able to launch SRAM
+   images; the A2 silicon has a defect in that path. Workaround: build
+   the flash variant for hardware.)*
+
 ## What's next
 
-Chapter 4 zooms in on the Cortex-M33 itself: the register file, the
-Thumb-2 instruction set, the memory map, and the boot-time state your
-code inherits. After that we install the toolchain and start writing.
+[Chapter 4](04-cortex-m33-and-thumb2.md) zooms in on the Cortex-M33
+itself: the register file, the Thumb-2 instruction set, the memory map,
+and the boot-time state your code inherits. After that we install the
+toolchain and start writing.

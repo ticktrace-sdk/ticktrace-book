@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
+  <style>
+    .title  { font-size: 16px; font-weight: bold; }
+    .addr   { font-size: 11px; fill: #374151; }
+    .label  { font-weight: bold; }
+    .note   { font-size: 11px; fill: #6b7280; }
+    .rom    { fill: #fef3c7; stroke: #b45309; }
+    .flash  { fill: #fde68a; stroke: #b45309; }
+    .ram    { fill: #dcfce7; stroke: #16a34a; }
+    .periph { fill: #dbeafe; stroke: #2563eb; }
+    .sio    { fill: #ede9fe; stroke: #7c3aed; }
+    .system { fill: #fee2e2; stroke: #dc2626; }
+    .gap    { fill: #f3f4f6; stroke: #d1d5db; stroke-dasharray: 4 4; }
+  </style>
+
+  <text x="20" y="28" class="title">RP2350 memory map (top of 32-bit address space)</text>
+  <text x="20" y="50" class="note">addresses grow upward; not to scale</text>
+
+  <!-- vertical map. Each band: x=240, width=320 -->
+  <g transform="translate(0,72)">
+    <!-- ROM -->
+    <rect x="240" y="0" width="320" height="40" class="rom" />
+    <text x="400" y="25" text-anchor="middle" class="label">Bootrom (32 KB, read-only)</text>
+    <text x="230" y="13" text-anchor="end" class="addr">0x00000000</text>
+    <text x="230" y="38" text-anchor="end" class="addr">0x00007FFF</text>
+
+    <!-- gap -->
+    <rect x="240" y="48" width="320" height="20" class="gap" />
+    <text x="400" y="62" text-anchor="middle" class="note">reserved</text>
+
+    <!-- XIP flash -->
+    <rect x="240" y="76" width="320" height="50" class="flash" />
+    <text x="400" y="98" text-anchor="middle" class="label">XIP flash window (4 MB on Pico 2)</text>
+    <text x="400" y="115" text-anchor="middle" class="note">your program lives here</text>
+    <text x="230" y="89"  text-anchor="end" class="addr">0x10000000</text>
+    <text x="230" y="123" text-anchor="end" class="addr">0x103FFFFF</text>
+
+    <!-- gap -->
+    <rect x="240" y="134" width="320" height="20" class="gap" />
+    <text x="400" y="148" text-anchor="middle" class="note">reserved</text>
+
+    <!-- SRAM -->
+    <rect x="240" y="162" width="320" height="50" class="ram" />
+    <text x="400" y="184" text-anchor="middle" class="label">SRAM (520 KB)</text>
+    <text x="400" y="201" text-anchor="middle" class="note">stack, data, .bss</text>
+    <text x="230" y="175" text-anchor="end" class="addr">0x20000000</text>
+    <text x="230" y="209" text-anchor="end" class="addr">0x20081FFF</text>
+
+    <!-- gap -->
+    <rect x="240" y="220" width="320" height="20" class="gap" />
+
+    <!-- APB peripherals -->
+    <rect x="240" y="248" width="320" height="80" class="periph" />
+    <text x="400" y="278" text-anchor="middle" class="label">APB peripherals</text>
+    <text x="400" y="296" text-anchor="middle" class="note">UART, I2C, SPI, GPIO config,</text>
+    <text x="400" y="312" text-anchor="middle" class="note">timer, DMA, PWM, USB, …</text>
+    <text x="230" y="261" text-anchor="end" class="addr">0x40000000</text>
+    <text x="230" y="325" text-anchor="end" class="addr">0x4FFFFFFF</text>
+
+    <!-- gap -->
+    <rect x="240" y="336" width="320" height="20" class="gap" />
+
+    <!-- SIO -->
+    <rect x="240" y="364" width="320" height="50" class="sio" />
+    <text x="400" y="386" text-anchor="middle" class="label">SIO (single-cycle I/O)</text>
+    <text x="400" y="403" text-anchor="middle" class="note">GPIO drive, FIFO, spinlocks</text>
+    <text x="230" y="377" text-anchor="end" class="addr">0xD0000000</text>
+    <text x="230" y="411" text-anchor="end" class="addr">0xD000FFFF</text>
+
+    <!-- gap -->
+    <rect x="240" y="422" width="320" height="20" class="gap" />
+
+    <!-- System -->
+    <rect x="240" y="450" width="320" height="40" class="system" />
+    <text x="400" y="475" text-anchor="middle" class="label">Cortex-M33 system (NVIC, SysTick)</text>
+    <text x="230" y="463" text-anchor="end" class="addr">0xE0000000</text>
+    <text x="230" y="488" text-anchor="end" class="addr">0xE00FFFFF</text>
+  </g>
+</svg>

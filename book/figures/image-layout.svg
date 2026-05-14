@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+  <style>
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .label { font-weight: bold; }
+    .vec   { fill: #fee2e2; stroke: #dc2626; }
+    .imgd  { fill: #fef3c7; stroke: #b45309; }
+    .text  { fill: #dbeafe; stroke: #2563eb; }
+    .rodat { fill: #dcfce7; stroke: #16a34a; }
+    .bss   { fill: #ede9fe; stroke: #7c3aed; }
+    .addr  { font-size: 11px; fill: #6b7280; }
+  </style>
+
+  <text x="20" y="28" class="title">Image layout in flash (after linking with flash.ld)</text>
+  <text x="20" y="48" class="note">A blinky_flash.uf2 image starting at 0x10000000.</text>
+
+  <!-- Vertical layout: each block stacked -->
+  <g transform="translate(260,80)">
+    <rect x="0" y="0"   width="240" height="50" class="vec" />
+    <text x="120" y="22" text-anchor="middle" class="label">.vectors</text>
+    <text x="120" y="40" text-anchor="middle" class="note">16 + 52 word pointers</text>
+    <text x="250" y="14" class="addr">0x10000000</text>
+    <text x="250" y="40" class="addr">0x10000110</text>
+
+    <rect x="0" y="56" width="240" height="50" class="imgd" />
+    <text x="120" y="78" text-anchor="middle" class="label">.image_def</text>
+    <text x="120" y="96" text-anchor="middle" class="note">5 words, bootrom sig block</text>
+    <text x="250" y="70" class="addr">0x10000110</text>
+
+    <rect x="0" y="112" width="240" height="120" class="text" />
+    <text x="120" y="140" text-anchor="middle" class="label">.text</text>
+    <text x="120" y="160" text-anchor="middle" class="note">_reset, main,</text>
+    <text x="120" y="176" text-anchor="middle" class="note">gpio_*, uart_*, pll_*,</text>
+    <text x="120" y="192" text-anchor="middle" class="note">clocks_*, xosc_*, …</text>
+    <text x="250" y="126" class="addr">_reset → here</text>
+
+    <rect x="0" y="238" width="240" height="60" class="rodat" />
+    <text x="120" y="260" text-anchor="middle" class="label">.rodata</text>
+    <text x="120" y="278" text-anchor="middle" class="note">"rp-asm M2 — clk_sys = 150 MHz\r\n"</text>
+
+    <rect x="0" y="304" width="240" height="60" class="bss" />
+    <text x="120" y="326" text-anchor="middle" class="label">.bss / SRAM</text>
+    <text x="120" y="344" text-anchor="middle" class="note">zero-initialised RAM (in 0x20000000 region)</text>
+    <text x="250" y="320" class="addr">0x20000000+</text>
+  </g>
+
+  <text x="20" y="430" class="note">The linker groups every per-function .text.foo section into one .text block and orders by name.</text>
+  <text x="20" y="448" class="note">.bss lives in SRAM and is filled with zero by the reset handler before main runs.</text>
+</svg>

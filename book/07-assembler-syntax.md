@@ -268,9 +268,12 @@ references. With one big `.text` section, you'd pay for every function
 even if you only use one. With per-function sections, the linker can
 **garbage-collect** unused code, keeping your binary tiny.
 
+![Per-function sections and dead-code elimination](figures/section-linking.svg)
+
 The linker script in `link/flash.ld` then groups all `.text.*` sections
 into one final `.text` output section, all `.rodata.*` into `.rodata`,
-and so on. The result is laid out in flash starting at `0x10000000`.
+and so on. The result is laid out in flash starting at `0x10000000` —
+see the image-layout figure in [chapter 6](06-your-first-program.md).
 
 You don't have to write linker scripts to follow this book — `flash.ld`
 already exists and the Makefile uses it. But it's good to know the
@@ -299,6 +302,36 @@ Print this and keep it next to your keyboard:
 | Save registers | `push {r4, r5, lr}` |
 | Restore and return | `pop {r4, r5, pc}` |
 
-That's most of everything you'll see. The next chapter explains the
-*conventions* around how functions push, pop, and call each other —
-the rules that make all the rp-asm drivers compose.
+That's most of everything you'll see. A more complete reference lives
+in [appendix B](B-cheat-sheet.md).
+
+## Exercises
+
+1. **Decode a section line.** What do the flag letters in
+   `.section .text.foo, "ax"` mean? What about `.section .bss.x, "aw", %nobits`?
+   *(a = allocate, x = executable, w = writable, %nobits = the section
+   takes no space in the file image; the loader just reserves RAM.)*
+
+2. **Local vs global.** Which of these labels are visible to other
+   files? `main:`, `.Lloop:`, `1:`, `gpio_init:`.
+   *(`main` and `gpio_init` are global if `.global` was used. `.L…`
+   and numeric labels are file-local.)*
+
+3. **Trace an address calc.** Hand-execute
+   `lsls r2, r0, #3; adds r2, #4` with `r0 = 7`. What's in `r2`?
+   *(7 × 8 = 56, + 4 = 60.)*
+
+4. **Find the literal pool.** Open `build/blinky.elf` with
+   `arm-none-eabi-objdump -d` and find a `ldr r0, [pc, #N]` instruction.
+   Where in the disassembly is the 4-byte constant it's loading?
+
+5. **Why per-function sections?** Looking at the section-linking
+   figure, what would change in the final binary if every function
+   in `gpio.S` were in one big `.text.gpio` section?
+   *(The linker couldn't drop unused functions individually — the
+   whole gpio block would either be included or excluded together,
+   blowing up the binary.)*
+
+The [next chapter](08-functions-and-calling-convention.md) explains
+the *conventions* around how functions push, pop, and call each other
+— the rules that make all the rp-asm drivers compose.

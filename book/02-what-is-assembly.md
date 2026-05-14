@@ -24,6 +24,12 @@ A **register** is a small, named storage slot inside the CPU itself.
 On the ARM Cortex-M33 you have 16 of them, named `r0` through `r15`.
 Each holds 32 bits — a single 4-byte word.
 
+![ARM Cortex-M33 register file](figures/register-file.svg)
+
+*We'll come back to this picture in detail in [chapter 4](04-cortex-m33-and-thumb2.md)
+and [chapter 8](08-functions-and-calling-convention.md). For now, just register
+the shape: sixteen named slots, each 32 bits wide.*
+
 Registers are fast. Reading or writing one usually takes a single
 cycle. Compare that with RAM, which on the RP2350 takes a few cycles
 even in the best case. Most of what assembly does is move values
@@ -83,6 +89,15 @@ a few kinds:
 That is the entire toolkit. Even the most elaborate program — a
 1300-page operating system kernel, a web browser, this very text editor
 — is, somewhere inside, a sequence of these primitive instructions.
+
+The CPU runs that sequence in a tight loop:
+
+![Instruction fetch / decode / execute cycle](figures/instruction-cycle.svg)
+
+At 150 MHz this loop runs 150 million times a second. Every loop body
+either burns a cycle doing arithmetic in registers, or pays a few extra
+cycles to load/store memory. Programs are nothing but very long
+trajectories through this loop.
 
 ## A tiny example
 
@@ -152,9 +167,40 @@ Chapter 7 covers the syntax in detail. For now, when you see something
 that starts with a dot, it's a directive; when you see something that
 ends with a colon, it's a label.
 
+## Exercises
+
+1. **Trace the tiny example.** Walk through the four-instruction program
+   above on paper. After each instruction, write down the value of `r0`
+   and `r1`. What's the final state? *(Answer: r0 = 7, r1 = 4, and the
+   CPU loops on `b 1b` forever.)*
+
+2. **Spot the directive.** In the program below, mark each line as
+   either *instruction*, *label*, *directive*, or *comment*.
+
+   ```asm
+       .section .text.foo, "ax"     @ A
+   foo:                             @ B
+       movs    r0, #42              @ C
+       bx      lr                   @ D
+   ```
+
+   *(A is a directive, B is a label, C is an instruction with a
+   trailing comment, D is an instruction.)*
+
+3. **`mov` vs `movs`.** Why do `adds` and `subs` exist when `add` and
+   `sub` already do the arithmetic? Find one place this distinction
+   would matter for control flow. *(The flag-setting `s` form lets the
+   next conditional branch react. `adds r0, #1` followed by `beq` jumps
+   when the result is zero; plain `add` would leave the flags from
+   whatever happened earlier.)*
+
+4. **Read a number.** What is the value of the 16-bit Thumb encoding
+   `0x2003`? Refer back to the section on mnemonics and opcodes.
+
 ## What's next
 
 You now know enough vocabulary — register, memory, instruction, label
 — to read any assembly program. The next two chapters give you the
-specific context for *our* assembly: the RP2 chip family, and the ARM
-Cortex-M33 core that runs our code.
+specific context for *our* assembly: the [RP2 chip family](03-the-rp2-family.md),
+and the [ARM Cortex-M33 core](04-cortex-m33-and-thumb2.md) that runs
+our code.

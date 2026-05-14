@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+  <style>
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .lab   { font-size: 11px; }
+    .start { fill: #fed7aa; stroke: #ea580c; }
+    .data  { fill: #dbeafe; stroke: #2563eb; }
+    .stop  { fill: #dcfce7; stroke: #16a34a; }
+    .idle  { fill: #f3f4f6; stroke: #9ca3af; }
+    .line  { stroke: #1f2937; stroke-width: 2; fill: none; }
+  </style>
+
+  <text x="20" y="28" class="title">UART frame for the byte 0x41 ('A' = 0100 0001)</text>
+  <text x="20" y="48" class="note">8N1 framing: 1 start bit, 8 data bits LSB-first, 1 stop bit. Idle line is high.</text>
+
+  <!-- Time axis -->
+  <line x1="20" y1="200" x2="740" y2="200" stroke="#9ca3af" stroke-dasharray="4 4" />
+  <text x="380" y="220" text-anchor="middle" class="note">time → 1 bit-time = 1 / 115200 s ≈ 8.7 µs</text>
+
+  <!-- Boxes for each bit -->
+  <g transform="translate(40,80)">
+    <!-- idle -->
+    <rect x="0"   y="0" width="60" height="36" class="idle" />
+    <text x="30"  y="22" text-anchor="middle" class="note">idle (1)</text>
+
+    <rect x="60"  y="0" width="60" height="36" class="start" />
+    <text x="90"  y="22" text-anchor="middle" class="lab">START</text>
+    <text x="90"  y="52" text-anchor="middle" class="note">0</text>
+
+    <!-- data bits 0..7, LSB-first.  0x41 = 0b01000001.  LSB first = 1,0,0,0,0,0,1,0 -->
+    <rect x="120" y="0" width="60" height="36" class="data" />
+    <text x="150" y="22" text-anchor="middle" class="lab">D0</text>
+    <text x="150" y="52" text-anchor="middle" class="note">1</text>
+
+    <rect x="180" y="0" width="60" height="36" class="data" />
+    <text x="210" y="22" text-anchor="middle" class="lab">D1</text>
+    <text x="210" y="52" text-anchor="middle" class="note">0</text>
+
+    <rect x="240" y="0" width="60" height="36" class="data" />
+    <text x="270" y="22" text-anchor="middle" class="lab">D2</text>
+    <text x="270" y="52" text-anchor="middle" class="note">0</text>
+
+    <rect x="300" y="0" width="60" height="36" class="data" />
+    <text x="330" y="22" text-anchor="middle" class="lab">D3</text>
+    <text x="330" y="52" text-anchor="middle" class="note">0</text>
+
+    <rect x="360" y="0" width="60" height="36" class="data" />
+    <text x="390" y="22" text-anchor="middle" class="lab">D4</text>
+    <text x="390" y="52" text-anchor="middle" class="note">0</text>
+
+    <rect x="420" y="0" width="60" height="36" class="data" />
+    <text x="450" y="22" text-anchor="middle" class="lab">D5</text>
+    <text x="450" y="52" text-anchor="middle" class="note">0</text>
+
+    <rect x="480" y="0" width="60" height="36" class="data" />
+    <text x="510" y="22" text-anchor="middle" class="lab">D6</text>
+    <text x="510" y="52" text-anchor="middle" class="note">1</text>
+
+    <rect x="540" y="0" width="60" height="36" class="data" />
+    <text x="570" y="22" text-anchor="middle" class="lab">D7</text>
+    <text x="570" y="52" text-anchor="middle" class="note">0</text>
+
+    <rect x="600" y="0" width="60" height="36" class="stop" />
+    <text x="630" y="22" text-anchor="middle" class="lab">STOP</text>
+    <text x="630" y="52" text-anchor="middle" class="note">1</text>
+
+    <rect x="660" y="0" width="60" height="36" class="idle" />
+    <text x="690" y="22" text-anchor="middle" class="note">idle (1)</text>
+  </g>
+
+  <!-- Waveform underneath -->
+  <g transform="translate(40,150)">
+    <!-- High = y=0, low = y=40 (we offset). idle high, start low, then bits, stop high. -->
+    <path d="M0,0 L60,0
+             L60,40 L120,40
+             L120,0  L180,0
+             L180,40 L240,40
+             L240,40 L300,40
+             L300,40 L360,40
+             L360,40 L420,40
+             L420,40 L480,40
+             L480,0  L540,0
+             L540,40 L600,40
+             L600,0  L660,0
+             L660,0  L720,0"
+          class="line" />
+    <text x="-8" y="2"  text-anchor="end" class="note">H</text>
+    <text x="-8" y="44" text-anchor="end" class="note">L</text>
+  </g>
+
+  <text x="20" y="288" class="note">At 115200 baud a full 10-bit frame ('A') takes ~87 µs on the wire.</text>
+</svg>

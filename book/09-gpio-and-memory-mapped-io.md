@@ -36,6 +36,8 @@ For GPIO, the relevant register blocks are:
   currently high?" and "drive this pin high/low" registers. SIO is
   attached directly to the CPU bus for speed.
 
+![Three blocks per GPIO: function mux, pad, physical pin](figures/gpio-pin-block.svg)
+
 You'll meet all three in this chapter.
 
 ## The simplest possible thing
@@ -82,6 +84,18 @@ That is the bare metal. Every step is a memory access. There's no
 function call, no driver, no abstraction; this is what the silicon
 literally does when `gpio_led_init` runs.
 
+## A look at the CTRL register
+
+Step 1 wrote a `5` to the per-pin CTRL register. That register has
+several fields packed into 32 bits — we wrote only the bottom 5 bits
+(FUNCSEL) and left the others at their reset value of zero.
+
+![GPIO[n].CTRL bit-field layout](figures/gpio-ctrl-register.svg)
+
+For 99% of pin setup you only touch FUNCSEL. The override fields are
+there for advanced cases — forcing an output high regardless of what
+the peripheral wants, inverting an input, etc.
+
 ## The atomic alias trick
 
 Look at step 2 above. It uses the address `0x4003B068`, not
@@ -90,7 +104,8 @@ Storing `0x180` to the CLR alias atomically clears bits 7 and 8 of the
 underlying register — no read-modify-write, no race with an interrupt
 that might touch another bit of the same register.
 
-We met these in chapter 4. To recap:
+We met these in [chapter 4](04-cortex-m33-and-thumb2.md#atomic-register-aliases--the-rp2-trick).
+To recap:
 
 | Offset | Effect on the underlying register |
 | --- | --- |
@@ -241,9 +256,36 @@ Try this on your hardware:
 
 If both LEDs blink, you have a working GPIO driver of your own.
 
+## Exercises
+
+1. **Compute an address.** What is the absolute byte address of the
+   FUNCSEL field for GP12? *(0x40028000 + 4 + 12 × 8 = 0x40028064.)*
+
+2. **Pick a function.** Looking at the CTRL register figure, you want
+   to route GP6 to PWM. Which value goes into FUNCSEL?
+   *(4 — `GPIO_FUNC_PWM`, defined in `include/gpio.inc`.)*
+
+3. **Atomic vs not.** Why does `gpio_set_function` use a *non*-atomic
+   store (just `str`), while `gpio_led_init` uses the +0x3000 CLR
+   alias for the PAD register? *(FUNCSEL is a single 5-bit field that
+   needs to be set to one specific value with the rest zero — a plain
+   store does it in one cycle. The pad register has multiple
+   independent bits set at reset; clearing just two of them without
+   touching the others requires the CLR alias.)*
+
+4. **One toggle is two cycles.** Read the `gpio_led_toggle` source.
+   Trace each instruction's cost. Why is the entire toggle so cheap?
+   *(One LDR address-constant, one MOVS, one LSLS, one STR to the XOR
+   alias. The atomic XOR happens in the SIO hardware, not in CPU
+   instructions.)*
+
+5. **Build a project.** Wire two LEDs (to GP14 and GP15, each through
+   330 Ω). Write a Knight Rider-style scanner that bounces between
+   them. Use only the rp-asm GPIO functions plus your own busy-wait.
+
 ## What's next
 
-The next chapter looks at the UART driver, which sends bytes one at
-a time through a serial port. The pattern is the same — write to
-registers — but the registers are richer, and we'll see how to wait
-for hardware to be ready.
+The [next chapter](10-uart.md) looks at the UART driver, which sends
+bytes one at a time through a serial port. The pattern is the same —
+write to registers — but the registers are richer, and we'll see how
+to wait for hardware to be ready.

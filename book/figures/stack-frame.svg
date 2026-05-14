@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
+  <style>
+    .title  { font-size: 16px; font-weight: bold; }
+    .note   { font-size: 11px; fill: #6b7280; }
+    .frame  { fill: #dcfce7; stroke: #16a34a; }
+    .other  { fill: #f3f4f6; stroke: #9ca3af; stroke-dasharray: 4 4; }
+    .label  { font-weight: bold; }
+    .arrow  { stroke: #2563eb; stroke-width: 1.5; fill: none; }
+    .addr   { font-size: 11px; fill: #6b7280; }
+  </style>
+
+  <text x="20" y="28" class="title">Stack frame for push {r4, r5, r7, lr}</text>
+  <text x="20" y="48" class="note">Stack grows downward (sp decreases). Each slot is 4 bytes / 32 bits.</text>
+
+  <!-- Before column -->
+  <g transform="translate(60,80)">
+    <text x="80" y="-6" text-anchor="middle" class="label">Before push</text>
+    <rect x="0"  y="0"   width="160" height="32" class="other" />
+    <rect x="0"  y="32"  width="160" height="32" class="other" />
+    <rect x="0"  y="64"  width="160" height="32" class="other" />
+    <rect x="0"  y="96"  width="160" height="32" class="other" />
+    <rect x="0"  y="128" width="160" height="32" class="other" />
+    <text x="80" y="20"  text-anchor="middle" class="note">…caller's data…</text>
+    <text x="80" y="84"  text-anchor="middle" class="note">…caller's data…</text>
+    <text x="80" y="148" text-anchor="middle" class="note">previous frame</text>
+    <text x="-10" y="148" text-anchor="end" class="addr">← sp</text>
+  </g>
+
+  <!-- arrow -->
+  <path d="M250,170 L340,170" class="arrow" />
+  <polygon points="340,170 332,166 332,174" fill="#2563eb" />
+  <text x="295" y="158" text-anchor="middle" class="note">push {r4, r5, r7, lr}</text>
+  <text x="295" y="184" text-anchor="middle" class="note">sp -= 16</text>
+
+  <!-- After column -->
+  <g transform="translate(380,80)">
+    <text x="80" y="-6" text-anchor="middle" class="label">After push</text>
+
+    <rect x="0" y="0"   width="160" height="32" class="other" />
+    <rect x="0" y="32"  width="160" height="32" class="other" />
+    <rect x="0" y="64"  width="160" height="32" class="other" />
+    <text x="80" y="20"  text-anchor="middle" class="note">…caller's data…</text>
+    <text x="80" y="84"  text-anchor="middle" class="note">previous frame</text>
+
+    <rect x="0" y="96"  width="160" height="32" class="frame" />
+    <text x="80" y="116" text-anchor="middle" class="label">lr  (return address)</text>
+
+    <rect x="0" y="128" width="160" height="32" class="frame" />
+    <text x="80" y="148" text-anchor="middle" class="label">r7</text>
+
+    <rect x="0" y="160" width="160" height="32" class="frame" />
+    <text x="80" y="180" text-anchor="middle" class="label">r5</text>
+
+    <rect x="0" y="192" width="160" height="32" class="frame" />
+    <text x="80" y="212" text-anchor="middle" class="label">r4</text>
+
+    <text x="-10" y="212" text-anchor="end" class="addr">← sp</text>
+  </g>
+
+  <text x="360" y="380" text-anchor="middle" class="note">pop {r4, r5, r7, pc} reverses this, popping lr into pc to return.</text>
+  <text x="360" y="400" text-anchor="middle" class="note">Each push must be matched by exactly one pop. Stack stays 8-byte aligned at every call boundary.</text>
+</svg>

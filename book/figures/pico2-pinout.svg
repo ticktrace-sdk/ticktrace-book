@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="11">
+  <style>
+    .title  { font-size: 16px; font-weight: bold; font-family: ui-monospace; }
+    .note   { font-size: 11px; fill: #6b7280; }
+    .board  { fill: #1f2937; stroke: #111827; }
+    .label  { fill: #f9fafb; font-weight: bold; }
+    .pin-gp { fill: #1d4ed8; stroke: #1e3a8a; }
+    .pin-gnd{ fill: #374151; stroke: #111827; }
+    .pin-pwr{ fill: #b91c1c; stroke: #7f1d1d; }
+    .pin-sys{ fill: #6b7280; stroke: #374151; }
+    .pin-txt{ fill: #f9fafb; font-size: 10px; font-weight: bold; }
+    .ext-txt{ fill: #1f2937; font-size: 11px; }
+    .led    { fill: #16a34a; stroke: #15803d; }
+    .btn    { fill: #fef3c7; stroke: #b45309; }
+  </style>
+
+  <text x="20" y="28" class="title">Raspberry Pi Pico 2 — pin map (simplified)</text>
+  <text x="20" y="48" class="note">Selected pins relevant to this book. Pin numbering follows the silkscreen.</text>
+
+  <!-- Board outline -->
+  <rect x="200" y="80" width="320" height="340" rx="12" class="board" />
+
+  <!-- USB-C at top -->
+  <rect x="320" y="64" width="80" height="20" rx="4" fill="#9ca3af" stroke="#6b7280" />
+  <text x="360" y="78" text-anchor="middle" font-size="10" fill="#111827">USB-C</text>
+
+  <!-- BOOTSEL button on top of board -->
+  <rect x="424" y="100" width="80" height="22" rx="3" class="btn" />
+  <text x="464" y="115" text-anchor="middle" font-size="11" fill="#111827">BOOTSEL</text>
+
+  <!-- LED on GP25 -->
+  <circle cx="240" cy="200" r="9" class="led" />
+  <text x="252" y="204" class="ext-txt">on-board LED → GP25</text>
+
+  <!-- Board label -->
+  <text x="360" y="260" text-anchor="middle" class="label">RP2350</text>
+  <text x="360" y="280" text-anchor="middle" class="label" font-size="10">Pico 2</text>
+
+  <!-- Left side pins (1-20). pin1 at top-left -->
+  <g>
+    <!-- pin 1: GP0 / UART0 TX -->
+    <rect x="180" y="100" width="22" height="14" class="pin-gp" />
+    <text x="191" y="111" text-anchor="middle" class="pin-txt">1</text>
+    <text x="170" y="111" text-anchor="end" class="ext-txt">GP0 — UART0 TX</text>
+
+    <rect x="180" y="120" width="22" height="14" class="pin-gp" />
+    <text x="191" y="131" text-anchor="middle" class="pin-txt">2</text>
+    <text x="170" y="131" text-anchor="end" class="ext-txt">GP1 — UART0 RX</text>
+
+    <rect x="180" y="140" width="22" height="14" class="pin-gnd" />
+    <text x="191" y="151" text-anchor="middle" class="pin-txt">3</text>
+    <text x="170" y="151" text-anchor="end" class="ext-txt">GND</text>
+
+    <rect x="180" y="160" width="22" height="14" class="pin-gp" />
+    <text x="191" y="171" text-anchor="middle" class="pin-txt">4</text>
+    <text x="170" y="171" text-anchor="end" class="ext-txt">GP2 — I²C1 SDA</text>
+
+    <rect x="180" y="180" width="22" height="14" class="pin-gp" />
+    <text x="191" y="191" text-anchor="middle" class="pin-txt">5</text>
+    <text x="170" y="191" text-anchor="end" class="ext-txt">GP3 — I²C1 SCL</text>
+
+    <rect x="180" y="200" width="22" height="14" class="pin-gp" />
+    <text x="191" y="211" text-anchor="middle" class="pin-txt">6</text>
+    <text x="170" y="211" text-anchor="end" class="ext-txt">GP4</text>
+
+    <rect x="180" y="220" width="22" height="14" class="pin-gp" />
+    <text x="191" y="231" text-anchor="middle" class="pin-txt">7</text>
+    <text x="170" y="231" text-anchor="end" class="ext-txt">GP5</text>
+  </g>
+
+  <!-- Right side pins -->
+  <g>
+    <rect x="518" y="100" width="22" height="14" class="pin-sys" />
+    <text x="529" y="111" text-anchor="middle" class="pin-txt">40</text>
+    <text x="550" y="111" class="ext-txt">VBUS — 5 V from USB</text>
+
+    <rect x="518" y="120" width="22" height="14" class="pin-pwr" />
+    <text x="529" y="131" text-anchor="middle" class="pin-txt">39</text>
+    <text x="550" y="131" class="ext-txt">VSYS — 1.8–5.5 V input</text>
+
+    <rect x="518" y="140" width="22" height="14" class="pin-gnd" />
+    <text x="529" y="151" text-anchor="middle" class="pin-txt">38</text>
+    <text x="550" y="151" class="ext-txt">GND</text>
+
+    <rect x="518" y="160" width="22" height="14" class="pin-pwr" />
+    <text x="529" y="171" text-anchor="middle" class="pin-txt">36</text>
+    <text x="550" y="171" class="ext-txt">3V3 OUT</text>
+
+    <rect x="518" y="220" width="22" height="14" class="pin-gp" />
+    <text x="529" y="231" text-anchor="middle" class="pin-txt">29</text>
+    <text x="550" y="231" class="ext-txt">GP22</text>
+
+    <rect x="518" y="260" width="22" height="14" class="pin-gp" />
+    <text x="529" y="271" text-anchor="middle" class="pin-txt">25</text>
+    <text x="550" y="271" class="ext-txt">GP19 — SPI0 TX</text>
+  </g>
+
+  <!-- legend -->
+  <g transform="translate(20, 410)">
+    <rect x="0"   y="0" width="14" height="14" class="pin-gp"  />
+    <text x="20"  y="12" class="note">GPIO</text>
+    <rect x="80"  y="0" width="14" height="14" class="pin-gnd" />
+    <text x="100" y="12" class="note">GND</text>
+    <rect x="160" y="0" width="14" height="14" class="pin-pwr" />
+    <text x="180" y="12" class="note">power</text>
+    <rect x="240" y="0" width="14" height="14" class="pin-sys" />
+    <text x="260" y="12" class="note">system / USB</text>
+    <circle cx="380" cy="7" r="7" class="led" />
+    <text x="395" y="12" class="note">on-board LED (GP25, internal)</text>
+  </g>
+</svg>
