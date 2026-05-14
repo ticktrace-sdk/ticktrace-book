@@ -184,6 +184,78 @@ my_isr:
     pop     {r4, pc}
 ```
 
+## Scheduler idioms (`src/sched.S`)
+
+```asm
+    @ One-time setup
+    bl      sched_init
+    movs    r0, #TASK_ID          @ task id
+    ldr     r1, =my_task          @ handler fn
+    movs    r2, #PRIO             @ NVIC priority (lower = higher prio)
+    bl      task_create
+
+    @ Post a task — typically from an ISR (~5 cycles)
+    movs    r0, #TASK_ID
+    bl      task_post
+
+    @ Critical section — disable all IRQs briefly
+    bl      critical_enter        @ r0 = saved PRIMASK
+    @ ... shared state mutation ...
+    bl      critical_exit         @ r0 = saved value to restore
+
+    @ sched_run never returns
+    b       sched_run
+```
+
+SPSC byte queue (`src/spsc.S`):
+
+```asm
+    ldr     r0, =my_queue
+    movs    r1, #'A'
+    bl      spsc_byte_push        @ producer
+
+    ldr     r0, =my_queue
+    bl      spsc_byte_pop         @ consumer: r0 = byte, or -1 if empty
+```
+
+## Multicore idioms (`src/multicore.S`, `src/spinlock.S`)
+
+```asm
+    @ Launch core 1 (call once from core 0)
+    ldr     r0, =core1_entry
+    ldr     r1, =_core1_stack_top
+    ldr     r2, =_ram_vectors
+    bl      multicore_launch_core1
+
+    @ FIFO mailbox between cores
+    movs    r0, #0x42
+    bl      multicore_fifo_push_blocking
+    bl      multicore_fifo_pop_blocking   @ r0 = received word
+
+    @ Hardware spinlock
+    movs    r0, #0
+    bl      spin_lock_blocking
+    @ ... critical section ...
+    movs    r0, #0
+    bl      spin_unlock
+```
+
+Core 1 prologue (always required at the top of `core1_entry`):
+
+```asm
+core1_entry:
+    @ Enable CP7 (RCP) on core 1's banked CPACR
+    ldr     r0, =0xE000ED88
+    movs    r1, #0xC0
+    lsls    r1, r1, #8
+    str     r1, [r0]
+    @ Seed RCP canary (see examples/multicore_usb_demo.S:90-105)
+    @ Zero MSPLIM
+    movs    r0, #0
+    msr     msplim, r0
+    @ ... your code ...
+```
+
 ## Build commands
 
 ```console

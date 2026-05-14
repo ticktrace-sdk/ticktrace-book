@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+  <style>
+    text { fill: #1f2937; }
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .label { font-weight: bold; }
+    .c0    { fill: #dbeafe; stroke: #2563eb; }
+    .c1    { fill: #fee2e2; stroke: #dc2626; }
+    .fifo  { fill: #dcfce7; stroke: #16a34a; }
+    .word  { font-family: ui-monospace; font-size: 12px; font-weight: bold; }
+    .arrow { stroke: #374151; stroke-width: 1.5; fill: none; }
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .c0   { fill: #1e3a8a; }
+      .c1   { fill: #7f1d1d; }
+      .fifo { fill: #14532d; }
+    }
+  </style>
+
+  <text x="20" y="28" class="title">multicore_launch_core1 — 6-word SIO FIFO handshake</text>
+  <text x="20" y="48" class="note">Core 0 sends each word; core 1's bootrom echoes it back; mismatch restarts the sequence from the top.</text>
+
+  <!-- Core 0 column -->
+  <g transform="translate(20,80)">
+    <rect x="0" y="0" width="180" height="40" class="c0" rx="6" />
+    <text x="90" y="26" text-anchor="middle" class="label">Core 0</text>
+  </g>
+
+  <!-- FIFO column header -->
+  <g transform="translate(290,80)">
+    <rect x="0" y="0" width="180" height="40" class="fifo" rx="6" />
+    <text x="90" y="26" text-anchor="middle" class="label">SIO FIFO (4-deep)</text>
+  </g>
+
+  <!-- Core 1 column -->
+  <g transform="translate(560,80)">
+    <rect x="0" y="0" width="180" height="40" class="c1" rx="6" />
+    <text x="90" y="26" text-anchor="middle" class="label">Core 1 (bootrom)</text>
+  </g>
+
+  <!-- Six steps -->
+  <g transform="translate(0,140)">
+    <!-- Step 1 -->
+    <text x="20"  y="14" class="note">step 1</text>
+    <text x="110" y="14" text-anchor="middle" class="word">0</text>
+    <path d="M200,12 L290,12" class="arrow" />
+    <polygon points="290,12 282,8 282,16" fill="#374151" />
+    <path d="M470,12 L560,12" class="arrow" />
+    <polygon points="560,12 552,8 552,16" fill="#374151" />
+    <text x="650" y="14" text-anchor="middle" class="word">echo 0</text>
+
+    <!-- Step 2 -->
+    <text x="20"  y="44" class="note">step 2</text>
+    <text x="110" y="44" text-anchor="middle" class="word">0</text>
+    <path d="M200,42 L290,42" class="arrow" />
+    <polygon points="290,42 282,38 282,46" fill="#374151" />
+    <path d="M470,42 L560,42" class="arrow" />
+    <polygon points="560,42 552,38 552,46" fill="#374151" />
+    <text x="650" y="44" text-anchor="middle" class="word">echo 0</text>
+
+    <!-- Step 3 -->
+    <text x="20"  y="74" class="note">step 3</text>
+    <text x="110" y="74" text-anchor="middle" class="word">1</text>
+    <path d="M200,72 L290,72" class="arrow" />
+    <polygon points="290,72 282,68 282,76" fill="#374151" />
+    <path d="M470,72 L560,72" class="arrow" />
+    <polygon points="560,72 552,68 552,76" fill="#374151" />
+    <text x="650" y="74" text-anchor="middle" class="word">echo 1</text>
+
+    <!-- Step 4 -->
+    <text x="20"  y="104" class="note">step 4</text>
+    <text x="110" y="104" text-anchor="middle" class="word">vtable</text>
+    <path d="M200,102 L290,102" class="arrow" />
+    <polygon points="290,102 282,98 282,106" fill="#374151" />
+    <path d="M470,102 L560,102" class="arrow" />
+    <polygon points="560,102 552,98 552,106" fill="#374151" />
+    <text x="650" y="104" text-anchor="middle" class="word">echo vtable</text>
+
+    <!-- Step 5 -->
+    <text x="20"  y="134" class="note">step 5</text>
+    <text x="110" y="134" text-anchor="middle" class="word">sp</text>
+    <path d="M200,132 L290,132" class="arrow" />
+    <polygon points="290,132 282,128 282,136" fill="#374151" />
+    <path d="M470,132 L560,132" class="arrow" />
+    <polygon points="560,132 552,128 552,136" fill="#374151" />
+    <text x="650" y="134" text-anchor="middle" class="word">echo sp</text>
+
+    <!-- Step 6 -->
+    <text x="20"  y="164" class="note">step 6</text>
+    <text x="110" y="164" text-anchor="middle" class="word">entry</text>
+    <path d="M200,162 L290,162" class="arrow" />
+    <polygon points="290,162 282,158 282,166" fill="#374151" />
+    <path d="M470,162 L560,162" class="arrow" />
+    <polygon points="560,162 552,158 552,166" fill="#374151" />
+    <text x="650" y="164" text-anchor="middle" class="word">jumps to entry</text>
+  </g>
+
+  <!-- summary -->
+  <g transform="translate(20,340)">
+    <rect x="0" y="0" width="720" height="140" class="c1" rx="6" />
+    <text x="14"  y="22"  class="label">After the handshake:</text>
+    <text x="14"  y="46"  class="note">• Core 1 starts executing at <tspan class="word">entry</tspan> with its own SP and a private MSPLIM/CPACR state.</text>
+    <text x="14"  y="64"  class="note">• Core 1's first job is its own M33 prologue: enable CP7 (RCP), seed the canary, zero MSPLIM.</text>
+    <text x="14"  y="82"  class="note">• Both cores can read and write SRAM, peripherals, and SIO. There is no hardware partitioning.</text>
+    <text x="14"  y="100" class="note">• Coordination uses one of: SIO FIFO mailbox, SIO hardware spinlocks (32 of them), or shared memory.</text>
+    <text x="14"  y="124" class="note">From the user's side it is one call: <tspan class="word">multicore_launch_core1(entry, sp, vtable)</tspan>.</text>
+  </g>
+</svg>

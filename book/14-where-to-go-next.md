@@ -1,10 +1,10 @@
-# Chapter 12 — Where to go next
+# Chapter 14 — Where to go next
 
 You can now read and write rp-asm. You understand registers,
 instructions, the calling convention, memory-mapped I/O, GPIO, UART,
-and interrupts. That's enough vocabulary to navigate the entire SDK.
-The rest is *what specifically* each peripheral does — i.e., the
-datasheet.
+interrupts, scheduling, and multicore. That's enough vocabulary to
+navigate the entire SDK. The rest is *what specifically* each
+peripheral does — i.e., the datasheet.
 
 This closing chapter is a map of the territory we *didn't* cover, with
 pointers for where to look when you want to.
@@ -37,17 +37,17 @@ what it's for and where to start reading:
 - **`pio.S`** — the **Programmable I/O** state machines. Unique to
   this chip family: a tiny CPU you can program to bit-bang custom
   protocols. `docs/pio.md`, `examples/pio_blink_demo.S`.
-- **`multicore.S`, `spinlock.S`, `interp.S`** — the SIO mailbox for
-  launching core 1, hardware spinlocks, and the interpolator units.
-  See `examples/multicore_usb_demo.S` and `examples/multicore_full_usb_demo.S`.
+- **`multicore.S`, `spinlock.S`, `interp.S`** — covered in
+  [chapter 13](13-multicore.md). The drivers themselves are short
+  and worth reading after the chapter to see the bit-level detail.
 - **`watchdog.S`, `powman.S`, `systick.S`** — chip-level housekeeping.
 - **`qmi.S`, `otp.S`, `bootrom.S`** — the QSPI flash interface, the
   one-time-programmable fuses, and bootrom services like
   "reset to BOOTSEL".
-- **`sched.S`, `spsc.S`, `sched_stats.S`** — a NVIC-priority-based
-  scheduler with single-producer/single-consumer queues. Reading these
-  once you've done chapter 11 is a great way to see "real assembly
-  data structures".
+- **`sched.S`, `spsc.S`, `sched_stats.S`** — covered in
+  [chapter 12](12-scheduling.md). Re-read the source once you've
+  worked through the chapter; it's a small, complete data-structure
+  showcase in pure asm.
 - **`trace.S`** — CoreSight DWT and ITM, for cycle counting and
   on-chip `printf`-style debugging.
 

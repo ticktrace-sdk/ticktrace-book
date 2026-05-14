@@ -76,7 +76,9 @@ Each chapter is short. Run the examples as you go.
 | 9 | [GPIO and memory-mapped I/O](09-gpio-and-memory-mapped-io.md) | pin block, CTRL register |
 | 10 | [UART: talking to the host](10-uart.md) | UART frame, init sequence |
 | 11 | [Timers and interrupts](11-timers-and-interrupts.md) | vector table, IRQ entry |
-| 12 | [Where to go next](12-where-to-go-next.md) | — |
+| 12 | [Scheduling](12-scheduling.md) | scheduler dispatch |
+| 13 | [Multicore](13-multicore.md) | launch handshake |
+| 14 | [Where to go next](14-where-to-go-next.md) | — |
 |   | [Appendix A — Glossary](A-glossary.md) | — |
 |   | [Appendix B — Cheat sheet](B-cheat-sheet.md) | — |
 

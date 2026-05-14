@@ -321,7 +321,6 @@ this. We don't dig deeper here, but the docs do.
 
 ## What's next
 
-The [next and final chapter](12-where-to-go-next.md) points you at the
-rest of rp-asm — DMA, PIO, the dual-core launch handshake, the test
-harness, the C and Rust bridges, and the corners of the chip we didn't
-reach.
+The [next chapter](12-scheduling.md) builds on what you just learned
+— ISRs as building blocks — into a full scheduler that lets you run
+several jobs without a superloop and without an RTOS.

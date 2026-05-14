@@ -81,6 +81,17 @@ A USB standard for serial-like devices. rp-asm's USB driver implements
 CDC-ACM, which makes a Pico 2 appear as `/dev/ttyACM0` on a Linux
 host. See [chapter 10](10-uart.md) and `docs/usb.md`.
 
+**Cooperative scheduling.**
+A scheduler where each task runs until it voluntarily yields. Simple
+to reason about, but a misbehaving task can hold the CPU forever.
+The superloop is the simplest case. See
+[chapter 12](12-scheduling.md).
+
+**Core 0 / Core 1.**
+The two Cortex-M33 cores on the RP2350. Core 0 boots first and runs
+your `main`. Core 1 sits in the bootrom until `multicore_launch_core1`
+sends the 6-word handshake. See [chapter 13](13-multicore.md).
+
 **Cortex-M33.**
 The ARMv8-M Mainline CPU core inside the RP2350. Runs Thumb-2; has a
 full register file with optional FPU and DSP extensions. See
@@ -142,6 +153,12 @@ A signature block at a fixed offset in your binary that tells the
 bootrom how to launch the image. rp-asm emits one in `src/startup.S`.
 See [chapter 3](03-the-rp2-family.md) and `docs/boot.md`.
 
+**Interpolator.**
+A small hardware block (two per core, INTERP0 and INTERP1) that
+computes `((accum >> shift) & mask) + base` in a single cycle. Useful
+for table lookup and fixed-point arithmetic in hot loops. See
+[chapter 13](13-multicore.md) and `src/interp.S`.
+
 **Interrupt / IRQ.**
 A hardware-triggered jump from regular code into an ISR. Handled by
 the NVIC; routed through the vector table. See
@@ -191,6 +208,11 @@ The CPU's interrupt controller. Has per-IRQ enable, pending, active,
 and priority bits. Lives at `0xE000E100`. See
 [chapter 11](11-timers-and-interrupts.md).
 
+**Multicore.**
+The RP2350 has two Cortex-M33 cores that share SRAM and peripherals
+but have separate register files, stacks, NVICs, and vector tables.
+See [chapter 13](13-multicore.md).
+
 **OD bit.**
 A bit in each `PADS_BANK0.GPIO[n]` register that disables the pad's
 output driver. Set at reset alongside ISO; both must be cleared
@@ -212,6 +234,13 @@ input enable. Base address `0x40038000`. See
 The address of the next instruction to execute. Writing to `pc` (via
 `bx`, `pop`, `mov`, etc.) is how branches happen. See
 [chapter 4](04-cortex-m33-and-thumb2.md).
+
+**Preemptive scheduling.**
+A scheduler where the runtime can interrupt a running task and switch
+to another at any instruction. rp-asm's scheduler uses
+NVIC-priority-based preemption: a higher-priority task preempts a
+lower-priority one; same-priority tasks run to completion. See
+[chapter 12](12-scheduling.md).
 
 **Peripheral.**
 A hardware block on the chip outside the CPU core — UART, I²C, SPI,
@@ -240,6 +269,14 @@ A four-wire variant of SPI used for the external flash on the Pico 2.
 The chip's XIP cache fetches code from QSPI at run-time. See
 `src/qmi.S`.
 
+**RTOS — Real-Time Operating System.**
+A piece of software providing a fully-featured scheduler plus
+synchronisation primitives, timers, message queues, and dynamic task
+creation. FreeRTOS, Zephyr, ThreadX, ChibiOS are common examples.
+rp-asm's scheduler is deliberately *not* an RTOS — it covers a
+narrower regime with much less code. See
+[chapter 12](12-scheduling.md).
+
 **RP2040.**
 Raspberry Pi's first chip (2021): dual Cortex-M0+, 264 KB SRAM,
 30 GPIOs. Used in the original Pico. See
@@ -254,6 +291,12 @@ The section for read-only data — string literals, constant lookup
 tables, etc. Lives in flash on hardware builds. See
 [chapter 7](07-assembler-syntax.md).
 
+**SIO FIFO.**
+A 4-deep inter-core word mailbox in the SIO block, at
+`SIO_BASE + 0x050..0x058`. Used for the `multicore_launch_core1`
+handshake and for general-purpose core-to-core notifications. See
+[chapter 13](13-multicore.md).
+
 **SIO — Single-cycle I/O.**
 A peripheral block attached directly to the CPU bus (no APB hop), for
 fast access. Houses GPIO drive bits, hardware spinlocks, the inter-core
@@ -265,13 +308,37 @@ Points at the current top of the stack. Decremented by `push`,
 incremented by `pop`. Must be 8-byte aligned at every call boundary.
 See [chapter 8](08-functions-and-calling-convention.md).
 
+**Spinlock.**
+A busy-wait lock implemented in hardware: read the address to attempt
+acquisition, write to release. The RP2350 has 32 of them at
+`SIO_BASE + 0x100 + n*4`. Use briefly — while one core holds the
+lock, the other spins. See [chapter 13](13-multicore.md).
+
 **SPI — Serial Peripheral Interface.**
 A four-wire full-duplex serial bus. The RP2350 has two PL022 SPI
 controllers. See `src/spi.S` and `docs/spi.md`.
 
+**SPSC — Single-Producer, Single-Consumer queue.**
+A lock-free byte ring buffer in `src/spsc.S`. Used to pass data from
+ISRs (producer) to soft tasks (consumer) without needing locks,
+because run-to-completion scheduling and the SPSC invariant together
+remove the race. See [chapter 12](12-scheduling.md).
+
 **SRAM — Static RAM.**
 Volatile memory. 520 KB on the RP2350, mapped at `0x20000000`. Holds
 the stack, `.bss`, `.data`. See [chapter 4](04-cortex-m33-and-thumb2.md).
+
+**Superloop.**
+The simplest scheduler: a single forever-loop in `main` that calls
+each job in turn. Works when jobs are short and bounded. See
+[chapter 6](06-your-first-program.md) and
+[chapter 12](12-scheduling.md).
+
+**Task (rp-asm).**
+A function installed as an NVIC IRQ handler via `task_create`. Posted
+with `task_post`; runs at the handler's NVIC priority; returns when
+done. All tasks share the main stack. See
+[chapter 12](12-scheduling.md).
 
 **.text.**
 The section for executable code. rp-asm puts each function in its

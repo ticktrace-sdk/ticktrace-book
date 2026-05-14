@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 480" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+  <style>
+    text { fill: #1f2937; }
+    .title { font-size: 16px; font-weight: bold; }
+    .note  { font-size: 11px; fill: #6b7280; }
+    .label { font-weight: bold; }
+    .isr   { fill: #fee2e2; stroke: #dc2626; }
+    .task  { fill: #dbeafe; stroke: #2563eb; }
+    .nvic  { fill: #dcfce7; stroke: #16a34a; }
+    .idle  { fill: #f3f4f6; stroke: #9ca3af; }
+    .arrow { stroke: #374151; stroke-width: 1.5; fill: none; }
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .isr  { fill: #7f1d1d; }
+      .task { fill: #1e3a8a; }
+      .nvic { fill: #14532d; }
+      .idle { fill: #1f2937; }
+    }
+  </style>
+
+  <text x="20" y="28" class="title">rp-asm scheduler — one post, one task fires</text>
+  <text x="20" y="48" class="note">Tasks are NVIC IRQ lines. task_post is one STR to NVIC_ISPR. The CPU's own interrupt logic does the dispatch.</text>
+
+  <!-- ISR / event source -->
+  <g transform="translate(20,90)">
+    <rect x="0" y="0" width="200" height="80" class="isr" rx="6" />
+    <text x="100" y="22" text-anchor="middle" class="label">Event source</text>
+    <text x="100" y="42" text-anchor="middle" class="note">timer alarm, UART RX,</text>
+    <text x="100" y="58" text-anchor="middle" class="note">GPIO edge, etc.</text>
+    <text x="100" y="74" text-anchor="middle" class="note">runs as a hardware ISR</text>
+  </g>
+
+  <text x="125" y="200" text-anchor="middle" class="note">bl task_post(id)</text>
+  <text x="125" y="216" text-anchor="middle" class="note">~5 cycles</text>
+  <path d="M120,170 L120,260" class="arrow" />
+  <polygon points="120,260 116,252 124,252" fill="#374151" />
+
+  <!-- NVIC -->
+  <g transform="translate(20,260)">
+    <rect x="0" y="0" width="200" height="80" class="nvic" rx="6" />
+    <text x="100" y="22" text-anchor="middle" class="label">NVIC</text>
+    <text x="100" y="42" text-anchor="middle" class="note">STR to NVIC_ISPR sets</text>
+    <text x="100" y="58" text-anchor="middle" class="note">the pending bit for IRQ id</text>
+    <text x="100" y="74" text-anchor="middle" class="note">priority decides who fires</text>
+  </g>
+
+  <!-- arrow from NVIC to CPU/dispatch -->
+  <path d="M220,300 L320,300" class="arrow" />
+  <polygon points="320,300 312,296 312,304" fill="#374151" />
+  <text x="270" y="290" text-anchor="middle" class="note">HW dispatch</text>
+  <text x="270" y="316" text-anchor="middle" class="note">+ exception entry</text>
+
+  <!-- Task body -->
+  <g transform="translate(340,260)">
+    <rect x="0" y="0" width="220" height="80" class="task" rx="6" />
+    <text x="110" y="22" text-anchor="middle" class="label">Task body (handler)</text>
+    <text x="110" y="42" text-anchor="middle" class="note">runs at the task's NVIC priority</text>
+    <text x="110" y="58" text-anchor="middle" class="note">to completion, then returns</text>
+    <text x="110" y="74" text-anchor="middle" class="note">no save/restore — shared MSP</text>
+  </g>
+
+  <!-- arrow from task body back to sched_run idle -->
+  <path d="M450,340 L450,400 L240,400" class="arrow" />
+  <polygon points="240,400 248,396 248,404" fill="#374151" />
+  <text x="345" y="392" text-anchor="middle" class="note">return → unwind exception frame</text>
+
+  <!-- sched_run / idle -->
+  <g transform="translate(20,380)">
+    <rect x="0" y="0" width="200" height="60" class="idle" rx="6" />
+    <text x="100" y="22" text-anchor="middle" class="label">sched_run — main loop</text>
+    <text x="100" y="42" text-anchor="middle" class="note">cpsie i; loop { wfi }</text>
+  </g>
+
+  <!-- preemption note -->
+  <g transform="translate(600,90)">
+    <rect x="0" y="0" width="140" height="220" class="task" rx="6" />
+    <text x="70" y="22" text-anchor="middle" class="label">Higher prio?</text>
+    <text x="14"  y="46"  class="note">If a higher-priority</text>
+    <text x="14"  y="62"  class="note">IRQ posts while a</text>
+    <text x="14"  y="78"  class="note">task is running, the</text>
+    <text x="14"  y="94"  class="note">NVIC preempts it,</text>
+    <text x="14"  y="110" class="note">runs the new task,</text>
+    <text x="14"  y="126" class="note">returns, and resumes.</text>
+    <text x="14"  y="156" class="note">Same priority?</text>
+    <text x="14"  y="172" class="note">Run to completion —</text>
+    <text x="14"  y="188" class="note">no preemption between</text>
+    <text x="14"  y="204" class="note">peer tasks.</text>
+  </g>
+
+  <text x="20" y="468" class="note">All tasks share the main stack. No context save/restore. Per-task RAM ~16 bytes (vector slot + IPR byte + bookkeeping).</text>
+</svg>
