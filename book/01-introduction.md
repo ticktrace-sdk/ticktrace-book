@@ -5,9 +5,10 @@ programming on the Raspberry Pi RP2350 microcontroller. It uses
 **rp-asm** — a pure-assembly SDK for that chip — as its running
 codebase.
 
-**Scope:** 12 chapters and two appendices, covering the CPU
-architecture, the toolchain, the calling convention, and the GPIO,
-UART, and timer/interrupt subsystems.
+**Scope:** 14 chapters and two appendices, covering the CPU
+architecture, the toolchain, the calling convention, the GPIO, UART,
+and timer/interrupt subsystems, and the scheduling and multicore
+primitives rp-asm provides.
 
 **Outcome:** the reader will be able to build, flash, and modify
 cycle-counted bare-metal firmware on a Raspberry Pi Pico 2 without
