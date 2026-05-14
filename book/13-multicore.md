@@ -279,3 +279,9 @@ stops being simple.
 The [final chapter](14-where-to-go-next.md) maps the remaining
 peripherals in `src/` — DMA, PIO, the C and Rust bridges — and gives
 you project ideas to build on top of everything we've covered.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 12 — Scheduling](12-scheduling.md) · [Table of contents](README.md) · [Chapter 14 — Where to go next →](14-where-to-go-next.md)

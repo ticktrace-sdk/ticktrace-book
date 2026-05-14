@@ -302,3 +302,9 @@ The [final substantive chapter](11-timers-and-interrupts.md)
 introduces **interrupts** — the mechanism that lets hardware events
 (a timer firing, a UART byte arriving) call your code without you
 polling for it.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 9 — GPIO and memory-mapped I/O](09-gpio-and-memory-mapped-io.md) · [Table of contents](README.md) · [Chapter 11 — Timers and interrupts →](11-timers-and-interrupts.md)

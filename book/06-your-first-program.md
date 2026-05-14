@@ -365,3 +365,9 @@ make sense, even if specific peripheral details are still mysterious.
 
 The [next chapter](07-assembler-syntax.md) rounds out the syntax
 reference so you can read the *driver* code, not just the user code.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 5 — Setting up rp-asm](05-setting-up-rp-asm.md) · [Table of contents](README.md) · [Chapter 7 — Assembler syntax and instructions →](07-assembler-syntax.md)

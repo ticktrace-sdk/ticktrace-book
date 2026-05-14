@@ -210,3 +210,9 @@ toggling a GPIO pin. All in 728 bytes of code.
 
 In the [next chapter](06-your-first-program.md) we'll read the blinky
 code, line by line, and understand every byte.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 4 — The Cortex-M33 and Thumb-2](04-cortex-m33-and-thumb2.md) · [Table of contents](README.md) · [Chapter 6 — Your first program →](06-your-first-program.md)

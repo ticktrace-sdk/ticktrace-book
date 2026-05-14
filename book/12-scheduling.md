@@ -289,3 +289,9 @@ deliberately omits.
 The [next chapter](13-multicore.md) shows how to bring up the second
 CPU core and have both M33s run independent scheduling loops at the
 same time.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 11 — Timers and interrupts](11-timers-and-interrupts.md) · [Table of contents](README.md) · [Chapter 13 — Multicore →](13-multicore.md)

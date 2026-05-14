@@ -315,3 +315,9 @@ from your own apps. The next three chapters apply this to real
 peripherals: GPIO in [chapter 9](09-gpio-and-memory-mapped-io.md),
 UART in [chapter 10](10-uart.md), and timers with interrupts in
 [chapter 11](11-timers-and-interrupts.md).
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 7 — Assembler syntax and instructions](07-assembler-syntax.md) · [Table of contents](README.md) · [Chapter 9 — GPIO and memory-mapped I/O →](09-gpio-and-memory-mapped-io.md)

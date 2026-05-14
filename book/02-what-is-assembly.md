@@ -204,3 +204,9 @@ You now know enough vocabulary — register, memory, instruction, label
 specific context for *our* assembly: the [RP2 chip family](03-the-rp2-family.md),
 and the [ARM Cortex-M33 core](04-cortex-m33-and-thumb2.md) that runs
 our code.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 1 — Introduction](01-introduction.md) · [Table of contents](README.md) · [Chapter 3 — The RP2 family →](03-the-rp2-family.md)

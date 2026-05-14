@@ -324,3 +324,9 @@ this. We don't dig deeper here, but the docs do.
 The [next chapter](12-scheduling.md) builds on what you just learned
 — ISRs as building blocks — into a full scheduler that lets you run
 several jobs without a superloop and without an RTOS.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 10 — UART](10-uart.md) · [Table of contents](README.md) · [Chapter 12 — Scheduling →](12-scheduling.md)

@@ -140,3 +140,9 @@ you can either keep reading linearly or skip ahead to whichever
 peripheral chapter interests you — they are mostly independent.
 
 Onward.
+
+<!-- nav-footer -->
+
+---
+
+[Table of contents](README.md) · [Chapter 2 — What is assembly language? →](02-what-is-assembly.md)

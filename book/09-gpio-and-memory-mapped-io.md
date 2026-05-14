@@ -289,3 +289,9 @@ The [next chapter](10-uart.md) looks at the UART driver, which sends
 bytes one at a time through a serial port. The pattern is the same —
 write to registers — but the registers are richer, and we'll see how
 to wait for hardware to be ready.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 8 — Functions and the calling convention](08-functions-and-calling-convention.md) · [Table of contents](README.md) · [Chapter 10 — UART →](10-uart.md)

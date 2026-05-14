@@ -182,3 +182,9 @@ generate a true random number — and you'll know every byte of how.
 That's not bad for a 728-byte starting point.
 
 Happy hacking.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 13 — Multicore](13-multicore.md) · [Table of contents](README.md) · [Appendix A — Glossary →](A-glossary.md)

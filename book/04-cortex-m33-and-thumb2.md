@@ -262,3 +262,9 @@ You now have a working vocabulary of registers, instructions, and the
 RP2350 memory map. The [next chapter](05-setting-up-rp-asm.md) gets the
 toolchain installed so we can turn assembly source into a runnable
 `.uf2` file.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 3 — The RP2 family](03-the-rp2-family.md) · [Table of contents](README.md) · [Chapter 5 — Setting up rp-asm →](05-setting-up-rp-asm.md)

@@ -335,3 +335,9 @@ in [appendix B](B-cheat-sheet.md).
 The [next chapter](08-functions-and-calling-convention.md) explains
 the *conventions* around how functions push, pop, and call each other
 — the rules that make all the rp-asm drivers compose.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 6 — Your first program](06-your-first-program.md) · [Table of contents](README.md) · [Chapter 8 — Functions and the calling convention →](08-functions-and-calling-convention.md)

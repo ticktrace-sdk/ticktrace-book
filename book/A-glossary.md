@@ -387,3 +387,9 @@ first. The QSPI flash on the Pico 2 is XIP. See `docs/boot.md`.
 **XOSC — Crystal Oscillator.**
 The 12 MHz crystal on the Pico 2 board, fed to the chip's clock
 generator. Source for the PLLs. See `src/xosc.S` and `docs/clocks.md`.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 14 — Where to go next](14-where-to-go-next.md) · [Table of contents](README.md) · [Appendix B — Cheat sheet →](B-cheat-sheet.md)

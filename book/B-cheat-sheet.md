@@ -291,3 +291,9 @@ $ arm-none-eabi-objdump -d build/NAME.elf | less
 $ arm-none-eabi-size build/NAME.elf
 $ arm-none-eabi-nm build/NAME.elf | sort
 ```
+
+<!-- nav-footer -->
+
+---
+
+[← Appendix A — Glossary](A-glossary.md) · [Table of contents](README.md)

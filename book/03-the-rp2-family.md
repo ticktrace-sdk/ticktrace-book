@@ -188,3 +188,9 @@ Why this one?
 itself: the register file, the Thumb-2 instruction set, the memory map,
 and the boot-time state your code inherits. After that we install the
 toolchain and start writing.
+
+<!-- nav-footer -->
+
+---
+
+[← Chapter 2 — What is assembly language?](02-what-is-assembly.md) · [Table of contents](README.md) · [Chapter 4 — The Cortex-M33 and Thumb-2 →](04-cortex-m33-and-thumb2.md)
