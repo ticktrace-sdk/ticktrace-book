@@ -32,7 +32,45 @@ and out-of-order execution. The Cortex-M33 has none of those things in
 any interesting form — it is a simple, in-order processor, and that is
 exactly why it is a good teaching target.
 
-## Why rp-asm?
+## Why I built rp-asm
+
+I write firmware for motor control. In that world, the latency of an
+ISR matters down to the cycle, the jitter on a PWM edge can wreck a
+control loop, and "the compiler probably did the right thing" is not
+an acceptable answer. Deterministic real-time work is hard when you
+don't know what the compiler does.
+
+Before rp-asm I lived in two languages on this chip.
+
+**C, usually with the pico-sdk.** Powerful, and the SDK takes care of
+bring-up, clocks, USB, every block you'd otherwise spend a month on.
+That safety is worth a lot. But the abstractions stack up. The build
+system grows tentacles. You start asking the compiler not to reorder
+this load, not to inline that function, to please honour your timing
+budget — and at some point you realise you've been arguing with a tool
+that doesn't share your goals. Power, yes. Predictability, only if you
+fight for it.
+
+**TinyGo.** A small miracle: Go on a microcontroller, with a syntax I
+genuinely enjoy. For prototyping it's hard to beat. But the runtime,
+the GC, the reflection metadata — they show up in the binary, and for
+the tight inner loops of a motor controller the indirection is exactly
+the thing you can't afford.
+
+Both languages have their place. Neither was the right tool for the
+work I actually wanted to do, which is *write the exact sequence of
+instructions that hits the wire at the exact cycle I expect*.
+
+rp-asm is what that looks like when you take it seriously. Pure
+Thumb-2 assembly. No compiler between you and the silicon. Every
+register, every peripheral, every cycle accounted for in source you
+can read end-to-end. The motto on the front of the README — "every
+cycle matters" — isn't a slogan, it's the reason the project exists.
+
+This book is the introduction I wish I'd had when I was learning to
+think in cycles instead of statements.
+
+## Why a microcontroller is a great place to learn assembly
 
 When you learn a high-level language, you typically start with a "hello,
 world" that hides almost everything: a `main` function appears in a
