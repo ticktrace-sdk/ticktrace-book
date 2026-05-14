@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
   <style>
-    .title { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title { font-size: 16px; font-weight: bold; }
     .note  { font-size: 11px; fill: #6b7280; }
     .obj   { fill: #dbeafe; stroke: #2563eb; }
     .text  { fill: #dcfce7; stroke: #16a34a; }
@@ -8,6 +11,15 @@
     .drop  { fill: #fecaca; stroke: #dc2626; stroke-dasharray: 4 4; }
     .label { font-weight: bold; }
     .arrow { stroke: #374151; stroke-width: 1.5; fill: none; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .obj { fill: #1e3a8a; }
+      .text { fill: #14532d; }
+      .rodat { fill: #78350f; }
+      .drop { fill: #7f1d1d; }
+    }
   </style>
 
   <text x="20" y="28" class="title">Per-function sections → linker garbage collection</text>

@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
   <style>
-    .title { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title { font-size: 16px; font-weight: bold; }
     .note  { font-size: 11px; fill: #6b7280; }
     .lab   { font-size: 11px; }
     .start { fill: #fed7aa; stroke: #ea580c; }
@@ -8,6 +11,15 @@
     .stop  { fill: #dcfce7; stroke: #16a34a; }
     .idle  { fill: #f3f4f6; stroke: #9ca3af; }
     .line  { stroke: #1f2937; stroke-width: 2; fill: none; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .start { fill: #7c2d12; }
+      .data { fill: #1e3a8a; }
+      .stop { fill: #14532d; }
+      .idle { fill: #1f2937; }
+    }
   </style>
 
   <text x="20" y="28" class="title">UART frame for the byte 0x41 ('A' = 0100 0001)</text>

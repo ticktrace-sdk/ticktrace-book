@@ -1,12 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
   <style>
-    .title  { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title  { font-size: 16px; font-weight: bold; }
     .note   { font-size: 11px; fill: #6b7280; }
     .frame  { fill: #dcfce7; stroke: #16a34a; }
     .other  { fill: #f3f4f6; stroke: #9ca3af; stroke-dasharray: 4 4; }
     .label  { font-weight: bold; }
     .arrow  { stroke: #2563eb; stroke-width: 1.5; fill: none; }
     .addr   { font-size: 11px; fill: #6b7280; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .frame { fill: #14532d; }
+      .other { fill: #1f2937; }
+      .addr { fill: #9ca3af; }
+    }
   </style>
 
   <text x="20" y="28" class="title">Stack frame for push {r4, r5, r7, lr}</text>

@@ -1,12 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 600" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
   <style>
-    .title { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title { font-size: 16px; font-weight: bold; }
     .note  { font-size: 11px; fill: #6b7280; }
     .h     { font-weight: bold; }
     .sys   { fill: #fee2e2; stroke: #dc2626; }
     .ext   { fill: #dbeafe; stroke: #2563eb; }
     .sp    { fill: #dcfce7; stroke: #16a34a; }
     .res   { fill: #f3f4f6; stroke: #9ca3af; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .sys { fill: #7f1d1d; }
+      .ext { fill: #1e3a8a; }
+      .sp { fill: #14532d; }
+      .res { fill: #1f2937; }
+    }
   </style>
 
   <text x="20" y="28" class="title">Vector table layout (rp-asm)</text>

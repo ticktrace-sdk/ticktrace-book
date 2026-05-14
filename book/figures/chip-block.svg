@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
   <style>
-    .title  { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title  { font-size: 16px; font-weight: bold; }
     .note   { font-size: 11px; fill: #6b7280; }
     .cpu    { fill: #fee2e2; stroke: #dc2626; }
     .bus    { fill: none; stroke: #374151; stroke-width: 2; }
@@ -9,6 +12,16 @@
     .clock  { fill: #fef3c7; stroke: #b45309; }
     .sio    { fill: #ede9fe; stroke: #7c3aed; }
     .label  { font-weight: bold; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .cpu { fill: #7f1d1d; }
+      .ram { fill: #14532d; }
+      .periph { fill: #1e3a8a; }
+      .clock { fill: #78350f; }
+      .sio { fill: #4c1d95; }
+    }
   </style>
 
   <text x="20" y="28" class="title">RP2350 — chip-level block diagram</text>

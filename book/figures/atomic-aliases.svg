@@ -1,11 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
   <style>
-    .title { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title { font-size: 16px; font-weight: bold; }
     .note  { font-size: 11px; fill: #6b7280; }
     .alias { fill: #dbeafe; stroke: #2563eb; }
     .reg   { fill: #fef3c7; stroke: #b45309; }
     .label { font-weight: bold; }
     .op    { font-size: 12px; fill: #374151; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .alias { fill: #1e3a8a; }
+      .reg { fill: #78350f; }
+      .op { fill: #d1d5db; }
+    }
   </style>
 
   <text x="20" y="28" class="title">Four addresses, one hardware register</text>

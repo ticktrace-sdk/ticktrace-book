@@ -1,12 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 600" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
   <style>
-    .name { font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.name { font-weight: bold; }
     .role { font-size: 12px; fill: #374151; }
     .preserve-yes { fill: #dcfce7; stroke: #16a34a; }
     .preserve-no  { fill: #fee2e2; stroke: #dc2626; }
     .special      { fill: #dbeafe; stroke: #2563eb; }
     .bitlabel     { font-size: 10px; fill: #6b7280; }
     .title        { font-size: 16px; font-weight: bold; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .role { fill: #d1d5db; }
+      .preserve-yes { fill: #14532d; }
+      .preserve-no { fill: #7f1d1d; }
+      .special { fill: #1e3a8a; }
+      .bitlabel { fill: #9ca3af; }
+    }
   </style>
 
   <text x="20" y="28" class="title">ARM Cortex-M33 register file</text>

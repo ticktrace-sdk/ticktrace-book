@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
   <style>
-    .title  { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title  { font-size: 16px; font-weight: bold; }
     .addr   { font-size: 11px; fill: #374151; }
     .label  { font-weight: bold; }
     .note   { font-size: 11px; fill: #6b7280; }
@@ -11,6 +14,19 @@
     .sio    { fill: #ede9fe; stroke: #7c3aed; }
     .system { fill: #fee2e2; stroke: #dc2626; }
     .gap    { fill: #f3f4f6; stroke: #d1d5db; stroke-dasharray: 4 4; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .addr { fill: #d1d5db; }
+      .note { fill: #9ca3af; }
+      .rom { fill: #78350f; }
+      .flash { fill: #92400e; }
+      .ram { fill: #14532d; }
+      .periph { fill: #1e3a8a; }
+      .sio { fill: #4c1d95; }
+      .system { fill: #7f1d1d; }
+      .gap { fill: #1f2937; }
+    }
   </style>
 
   <text x="20" y="28" class="title">RP2350 memory map (top of 32-bit address space)</text>

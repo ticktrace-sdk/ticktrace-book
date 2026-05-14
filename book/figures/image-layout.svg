@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
   <style>
-    .title { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title { font-size: 16px; font-weight: bold; }
     .note  { font-size: 11px; fill: #6b7280; }
     .label { font-weight: bold; }
     .vec   { fill: #fee2e2; stroke: #dc2626; }
@@ -9,6 +12,17 @@
     .rodat { fill: #dcfce7; stroke: #16a34a; }
     .bss   { fill: #ede9fe; stroke: #7c3aed; }
     .addr  { font-size: 11px; fill: #6b7280; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .vec { fill: #7f1d1d; }
+      .imgd { fill: #78350f; }
+      .text { fill: #1e3a8a; }
+      .rodat { fill: #14532d; }
+      .bss { fill: #4c1d95; }
+      .addr { fill: #9ca3af; }
+    }
   </style>
 
   <text x="20" y="28" class="title">Image layout in flash (after linking with flash.ld)</text>

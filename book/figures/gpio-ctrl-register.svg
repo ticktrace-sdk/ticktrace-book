@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
   <style>
-    .title { font-size: 16px; font-weight: bold; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title { font-size: 16px; font-weight: bold; }
     .note  { font-size: 11px; fill: #6b7280; }
     .lab   { font-size: 11px; }
     .lab-b { font-size: 11px; font-weight: bold; }
@@ -11,6 +14,18 @@
     .oe      { fill: #fef3c7; stroke: #b45309; }
     .in      { fill: #fed7aa; stroke: #ea580c; }
     .irq     { fill: #fee2e2; stroke: #dc2626; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .b-num { fill: #9ca3af; }
+      .reserved { fill: #1f2937; }
+      .funcsel { fill: #1e3a8a; }
+      .out { fill: #14532d; }
+      .oe { fill: #78350f; }
+      .in { fill: #7c2d12; }
+      .irq { fill: #7f1d1d; }
+    }
   </style>
 
   <text x="20" y="28" class="title">IO_BANK0.GPIO[n].CTRL — 32-bit register layout</text>

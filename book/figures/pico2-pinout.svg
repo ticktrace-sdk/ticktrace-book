@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="11">
   <style>
-    .title  { font-size: 16px; font-weight: bold; font-family: ui-monospace; }
+    /* Light theme defaults: text falls back to near-black. */
+    text { fill: #1f2937; }
+
+.title  { font-size: 16px; font-weight: bold; font-family: ui-monospace; }
     .note   { font-size: 11px; fill: #6b7280; }
     .board  { fill: #1f2937; stroke: #111827; }
     .label  { fill: #f9fafb; font-weight: bold; }
@@ -12,6 +15,18 @@
     .ext-txt{ fill: #1f2937; font-size: 11px; }
     .led    { fill: #16a34a; stroke: #15803d; }
     .btn    { fill: #fef3c7; stroke: #b45309; }
+
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e5e7eb; }
+      .note { fill: #9ca3af; }
+      .board { fill: #e5e7eb; }
+      .label { fill: #161b22; }
+      .pin-gnd { fill: #d1d5db; }
+      .pin-sys { fill: #9ca3af; }
+      .pin-txt { fill: #161b22; }
+      .ext-txt { fill: #e5e7eb; }
+      .btn { fill: #78350f; }
+    }
   </style>
 
   <text x="20" y="28" class="title">Raspberry Pi Pico 2 — pin map (simplified)</text>
