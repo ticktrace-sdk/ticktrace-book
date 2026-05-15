@@ -122,7 +122,7 @@
     <text x="100" y="164" class="lab">program counter</text>
     <text x="305" y="164" text-anchor="middle" class="lab">special</text>
 
-    <text x="0" y="184" class="note">Flags: N Z C V — set by instructions ending in <tspan class="codek">s</tspan> (adds, subs, cmp…)</text>
+    <text x="0" y="184" class="note">Flags: N Z C V (set by 's'-suffix: adds, subs, cmp…)</text>
   </g>
 
   <!-- Atomic aliases -->
@@ -284,21 +284,19 @@
     <line x1="0" y1="-10" x2="720" y2="-10" class="divider" />
     <text x="0" y="6" class="h">Build &amp; flash</text>
 
-    <rect x="-6" y="14" width="356" height="92" rx="4" class="panel-amber" />
+    <rect x="-6" y="14" width="356" height="78" rx="4" class="panel-amber" />
     <text x="0"  y="32" class="code">$ make                          </text><text x="180" y="32" class="note"># SRAM variants</text>
     <text x="0"  y="46" class="code">$ make build/blinky_flash.uf2   </text><text x="180" y="46" class="note"># flash UF2</text>
-    <text x="0"  y="60" class="code">$ make test                     </text><text x="180" y="60" class="note"># T1+T2</text>
-    <text x="0"  y="74" class="code">$ make test-all                 </text><text x="180" y="74" class="note"># +T3 Renode</text>
-    <text x="0"  y="88" class="code">$ arm-none-eabi-size build/X.elf</text><text x="180" y="88" class="note"># size report</text>
-    <text x="0"  y="102" class="code">$ arm-none-eabi-objdump -d X.elf</text><text x="180" y="102" class="note"># disassemble</text>
+    <text x="0"  y="60" class="code">$ make test / make test-all     </text><text x="180" y="60" class="note"># T1+T2 / +T3</text>
+    <text x="0"  y="74" class="code">$ arm-none-eabi-objdump -d X.elf</text><text x="180" y="74" class="note"># disassemble</text>
+    <text x="0"  y="88" class="code">$ arm-none-eabi-size    X.elf   </text><text x="180" y="88" class="note"># size report</text>
 
-    <rect x="370" y="14" width="356" height="92" rx="4" class="panel-rose" />
+    <rect x="370" y="14" width="356" height="78" rx="4" class="panel-rose" />
     <text x="376"  y="32" class="codek">Flashing on hardware</text>
-    <text x="376"  y="48" class="lab">1. Hold BOOTSEL while plugging USB in.</text>
+    <text x="376"  y="48" class="lab">1. Hold BOOTSEL while plugging in USB.</text>
     <text x="376"  y="62" class="lab">2. Pico mounts as RPI-RP2 mass-storage.</text>
     <text x="376"  y="76" class="lab">3. Drag build/&lt;name&gt;_flash.uf2 onto it.</text>
-    <text x="376"  y="90" class="lab">4. Open serial @ 115200 8N1 on UART0 TX</text>
-    <text x="376"  y="104" class="lab">   (GP0, pin 1) or /dev/ttyACM0 for USB CDC.</text>
+    <text x="376"  y="90" class="lab">4. Open serial @ 115200 8N1 on GP0 (or ttyACM0).</text>
   </g>
 
   <!-- ============================================================ -->
