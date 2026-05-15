@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 510" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
   <style>
     /* Light theme defaults: text falls back to near-black. */
     text { fill: #1f2937; }
@@ -58,6 +58,6 @@
     <text x="250" y="320" class="addr">0x20000000+</text>
   </g>
 
-  <text x="20" y="430" class="note">The linker groups every per-function .text.foo section into one .text block and orders by name.</text>
-  <text x="20" y="448" class="note">.bss lives in SRAM and is filled with zero by the reset handler before main runs.</text>
+  <text x="20" y="470" class="note">The linker groups every per-function .text.foo section into one .text block and orders by name.</text>
+  <text x="20" y="488" class="note">.bss lives in SRAM and is filled with zero by the reset handler before main runs.</text>
 </svg>
