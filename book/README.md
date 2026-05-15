@@ -82,6 +82,7 @@ Each chapter is short. Run the examples as you go.
 |   | [Appendix A: Glossary](A-glossary.md) |  |
 |   | [Appendix B: Cheat sheet](B-cheat-sheet.md) | + [printable infographic](figures/cheat-sheet-print.svg) |
 |   | [Appendix C: Debugging](C-debugging.md) |  |
+|   | [Appendix D: Memory layouts and execution patterns](D-memory-layouts.md) | execution patterns |
 
 Every chapter from 2 onward ends with exercises. Skim them even if
 you don't work them, they're often the questions a reader actually

@@ -70,6 +70,10 @@ particularly fun ones to try once you have the toolchain working:
   consumer.
 - `examples/watchdog_usb_demo.S`, feed-the-watchdog, then stop, then
   watch the chip reset itself.
+- `examples/ramfunc_demo.S`, the same busy loop linked into both
+  flash and `.ramfunc`; measures min/max cycles for each path with
+  DWT. Use it to see XIP cache variance go away when code moves to
+  SRAM. See [Appendix D](D-memory-layouts.md).
 
 The Makefile knows about every `.S` in `examples/`; `make` builds
 them all. `make build/NAME_flash.uf2` builds the flash variant of one.

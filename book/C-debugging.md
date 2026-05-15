@@ -203,4 +203,4 @@ print-ready Letter/A4 version at
 
 ---
 
-[← Appendix B: Cheat sheet](B-cheat-sheet.md) · [Table of contents](README.md)
+[← Appendix B: Cheat sheet](B-cheat-sheet.md) · [Table of contents](README.md) · [Appendix D: Memory layouts and execution patterns →](D-memory-layouts.md)

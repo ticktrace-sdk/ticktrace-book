@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="11">
+  <style>
+    text { fill: #1f2937; }
+    .title { font-size: 16px; font-weight: bold; }
+    .panel-title { font-size: 13px; font-weight: bold; fill: #111827; }
+    .lbl { font-size: 10px; fill: #6b7280; }
+    .code-flash { fill: #fef3c7; stroke: #b45309; }
+    .code-sram  { fill: #dcfce7; stroke: #16a34a; }
+    .empty      { fill: #f3f4f6; stroke: #9ca3af; stroke-dasharray: 4 4; }
+    .data       { fill: #dbeafe; stroke: #2563eb; }
+    .region-l   { font-size: 10px; fill: #374151; font-weight: bold; }
+    .arrow      { stroke: #374151; stroke-width: 1.4; fill: none; }
+    .note       { font-size: 10px; fill: #6b7280; }
+
+    @media (prefers-color-scheme: dark) {
+      text          { fill: #e5e7eb; }
+      .panel-title  { fill: #f3f4f6; }
+      .lbl          { fill: #9ca3af; }
+      .code-flash   { fill: #78350f; }
+      .code-sram    { fill: #14532d; }
+      .empty        { fill: #1f2937; }
+      .data         { fill: #1e3a8a; }
+      .region-l     { fill: #d1d5db; }
+      .note         { fill: #9ca3af; }
+    }
+  </style>
+
+  <text x="20" y="28" class="title">Four execution patterns on the RP2350</text>
+  <text x="20" y="48" class="note">Where code is stored (flash) versus where it is fetched from (flash via XIP cache, or SRAM directly).</text>
+
+  <!-- 4 panels at x=20, 200, 380, 560.  Each 170 wide. -->
+
+  <!-- Panel 1: Pure XIP -->
+  <g transform="translate(20,72)">
+    <text x="85" y="0" text-anchor="middle" class="panel-title">Pure XIP (flash)</text>
+    <text x="85" y="14" text-anchor="middle" class="lbl">make build/x_flash.uf2</text>
+
+    <text x="0"  y="36" class="region-l">Flash 0x10000000</text>
+    <rect x="0" y="42" width="170" height="60" class="code-flash" />
+    <text x="85" y="65" text-anchor="middle" class="lbl">all .text</text>
+    <text x="85" y="80" text-anchor="middle" class="lbl">.rodata</text>
+    <text x="85" y="95" text-anchor="middle" class="lbl">.ramfunc (LMA)</text>
+
+    <text x="0"  y="130" class="region-l">SRAM 0x20000000</text>
+    <rect x="0" y="136" width="170" height="60" class="data" />
+    <text x="85" y="158" text-anchor="middle" class="lbl">.bss</text>
+    <text x="85" y="173" text-anchor="middle" class="lbl">stack</text>
+    <text x="85" y="188" text-anchor="middle" class="lbl">heap (if any)</text>
+
+    <text x="85" y="222" text-anchor="middle" class="note">CPU fetches code from</text>
+    <text x="85" y="236" text-anchor="middle" class="note">flash via XIP cache.</text>
+    <text x="85" y="254" text-anchor="middle" class="note">Variance on cache miss.</text>
+  </g>
+
+  <!-- Panel 2: Selective ramfunc -->
+  <g transform="translate(210,72)">
+    <text x="85" y="0" text-anchor="middle" class="panel-title">Selective .ramfunc</text>
+    <text x="85" y="14" text-anchor="middle" class="lbl">flash + hot RAM copy</text>
+
+    <text x="0"  y="36" class="region-l">Flash 0x10000000</text>
+    <rect x="0" y="42" width="170" height="60" class="code-flash" />
+    <text x="85" y="65" text-anchor="middle" class="lbl">cold .text</text>
+    <text x="85" y="80" text-anchor="middle" class="lbl">.rodata</text>
+    <text x="85" y="95" text-anchor="middle" class="lbl">.ramfunc (LMA)</text>
+
+    <text x="0"  y="130" class="region-l">SRAM 0x20000000</text>
+    <rect x="0" y="136" width="170" height="30" class="code-sram" />
+    <text x="85" y="156" text-anchor="middle" class="lbl">.ramfunc (VMA, hot code)</text>
+    <rect x="0" y="166" width="170" height="30" class="data" />
+    <text x="85" y="186" text-anchor="middle" class="lbl">.bss / stack</text>
+
+    <path d="M85,102 L85,134" class="arrow" />
+    <polygon points="85,134 81,126 89,126" fill="#374151" />
+    <text x="105" y="120" class="note">copy</text>
+
+    <text x="85" y="222" text-anchor="middle" class="note">Cold code: XIP from flash.</text>
+    <text x="85" y="236" text-anchor="middle" class="note">Hot code: SRAM, flat timing.</text>
+    <text x="85" y="254" text-anchor="middle" class="note">rp-asm supports this.</text>
+  </g>
+
+  <!-- Panel 3: Copy-to-RAM -->
+  <g transform="translate(400,72)">
+    <text x="85" y="0" text-anchor="middle" class="panel-title">Copy-to-RAM</text>
+    <text x="85" y="14" text-anchor="middle" class="lbl">flash storage, RAM exec</text>
+
+    <text x="0"  y="36" class="region-l">Flash 0x10000000</text>
+    <rect x="0" y="42" width="170" height="60" class="code-flash" />
+    <text x="85" y="65" text-anchor="middle" class="lbl">.text (LMA only)</text>
+    <text x="85" y="80" text-anchor="middle" class="lbl">.rodata (LMA)</text>
+    <text x="85" y="95" text-anchor="middle" class="lbl">copied on boot</text>
+
+    <text x="0"  y="130" class="region-l">SRAM 0x20000000</text>
+    <rect x="0" y="136" width="170" height="60" class="code-sram" />
+    <text x="85" y="158" text-anchor="middle" class="lbl">all .text (VMA)</text>
+    <text x="85" y="173" text-anchor="middle" class="lbl">.rodata</text>
+    <text x="85" y="188" text-anchor="middle" class="lbl">.bss / stack</text>
+
+    <path d="M85,102 L85,134" class="arrow" />
+    <polygon points="85,134 81,126 89,126" fill="#374151" />
+    <text x="105" y="120" class="note">all</text>
+
+    <text x="85" y="222" text-anchor="middle" class="note">Persistent + uniform timing.</text>
+    <text x="85" y="236" text-anchor="middle" class="note">~2x RAM footprint.</text>
+    <text x="85" y="254" text-anchor="middle" class="note">Not in rp-asm yet.</text>
+  </g>
+
+  <!-- Panel 4: SRAM-resident -->
+  <g transform="translate(590,72)">
+    <text x="85" y="0" text-anchor="middle" class="panel-title">SRAM-resident</text>
+    <text x="85" y="14" text-anchor="middle" class="lbl">make build/x.uf2</text>
+
+    <text x="0"  y="36" class="region-l">Flash 0x10000000</text>
+    <rect x="0" y="42" width="170" height="60" class="empty" />
+    <text x="85" y="76" text-anchor="middle" class="lbl">(unused)</text>
+
+    <text x="0"  y="130" class="region-l">SRAM 0x20000000</text>
+    <rect x="0" y="136" width="170" height="60" class="code-sram" />
+    <text x="85" y="158" text-anchor="middle" class="lbl">all .text</text>
+    <text x="85" y="173" text-anchor="middle" class="lbl">.rodata, .bss, stack</text>
+    <text x="85" y="188" text-anchor="middle" class="lbl">.ramfunc (VMA = LMA)</text>
+
+    <text x="85" y="222" text-anchor="middle" class="note">Fully deterministic;</text>
+    <text x="85" y="236" text-anchor="middle" class="note">volatile (BOOTSEL each</text>
+    <text x="85" y="254" text-anchor="middle" class="note">power cycle).</text>
+  </g>
+</svg>
