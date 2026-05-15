@@ -52,10 +52,12 @@
     <text x="100" y="108" text-anchor="middle" class="note">.rodata.uart_lut</text>
   </g>
 
-  <!-- arrow -->
-  <path d="M230,250 L320,250" class="arrow" />
-  <polygon points="320,250 312,246 312,254" fill="#374151" />
-  <text x="270" y="240" text-anchor="middle" class="note">ld + flash.ld + --gc-sections</text>
+  <!-- arrow: spans the full 140-px gap from gpio.o right edge to output left edge -->
+  <path d="M220,240 L360,240" class="arrow" />
+  <polygon points="360,240 352,236 352,244" fill="#374151" />
+  <!-- Label split onto two lines so each fits inside the 140-px gap. -->
+  <text x="290" y="232" text-anchor="middle" class="note">ld + flash.ld</text>
+  <text x="290" y="256" text-anchor="middle" class="note">--gc-sections</text>
 
   <!-- output .elf -->
   <g transform="translate(360,80)">
@@ -74,7 +76,7 @@
     <rect x="14" y="180" width="192" height="22" class="rodat" />
     <text x="110" y="196" text-anchor="middle" class="note">.rodata.uart_lut</text>
 
-    <text x="110" y="240" text-anchor="middle" class="note">Unused gpio_pull_up + gpio_set_irq</text>
+    <text x="110" y="240" text-anchor="middle" class="note">Unused gpio_pull_up + set_irq</text>
     <text x="110" y="256" text-anchor="middle" class="note">never appear in the final image.</text>
     <text x="110" y="288" text-anchor="middle" class="note">Result: tiny .uf2 — blinky is</text>
     <text x="110" y="304" text-anchor="middle" class="note">just 728 bytes of code.</text>
