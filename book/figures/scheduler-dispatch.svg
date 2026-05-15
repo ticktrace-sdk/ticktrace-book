@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 480" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="12">
   <style>
     text { fill: #1f2937; }
     .title { font-size: 16px; font-weight: bold; }
@@ -31,10 +31,11 @@
     <text x="100" y="74" text-anchor="middle" class="note">runs as a hardware ISR</text>
   </g>
 
-  <text x="125" y="200" text-anchor="middle" class="note">bl task_post(id)</text>
-  <text x="125" y="216" text-anchor="middle" class="note">~5 cycles</text>
+  <!-- ISR → NVIC down-arrow, labels to the right of the arrow line -->
   <path d="M120,170 L120,260" class="arrow" />
   <polygon points="120,260 116,252 124,252" fill="#374151" />
+  <text x="135" y="200" class="note">bl task_post(id)</text>
+  <text x="135" y="216" class="note">~5 cycles</text>
 
   <!-- NVIC -->
   <g transform="translate(20,260)">
@@ -45,11 +46,11 @@
     <text x="100" y="74" text-anchor="middle" class="note">priority decides who fires</text>
   </g>
 
-  <!-- arrow from NVIC to CPU/dispatch -->
-  <path d="M220,300 L320,300" class="arrow" />
-  <polygon points="320,300 312,296 312,304" fill="#374151" />
-  <text x="270" y="290" text-anchor="middle" class="note">HW dispatch</text>
-  <text x="270" y="316" text-anchor="middle" class="note">+ exception entry</text>
+  <!-- NVIC → Task body arrow (extended to touch Task body's left edge x=340) -->
+  <path d="M220,300 L340,300" class="arrow" />
+  <polygon points="340,300 332,296 332,304" fill="#374151" />
+  <text x="280" y="290" text-anchor="middle" class="note">HW dispatch</text>
+  <text x="280" y="316" text-anchor="middle" class="note">exception entry</text>
 
   <!-- Task body -->
   <g transform="translate(340,260)">
@@ -60,7 +61,7 @@
     <text x="110" y="74" text-anchor="middle" class="note">no save/restore — shared MSP</text>
   </g>
 
-  <!-- arrow from task body back to sched_run idle (ends at sched_run's right edge x=220) -->
+  <!-- Return arrow: Task body bottom → sched_run right edge -->
   <path d="M450,340 L450,400 L220,400" class="arrow" />
   <polygon points="220,400 228,396 228,404" fill="#374151" />
   <text x="345" y="392" text-anchor="middle" class="note">return → unwind exception frame</text>
@@ -72,21 +73,24 @@
     <text x="100" y="42" text-anchor="middle" class="note">cpsie i; loop { wfi }</text>
   </g>
 
-  <!-- preemption note -->
-  <g transform="translate(600,90)">
-    <rect x="0" y="0" width="140" height="220" class="task" rx="6" />
-    <text x="70" y="22" text-anchor="middle" class="label">Higher prio?</text>
-    <text x="14"  y="46"  class="note">If a higher-priority</text>
-    <text x="14"  y="62"  class="note">IRQ posts while a</text>
-    <text x="14"  y="78"  class="note">task is running, the</text>
-    <text x="14"  y="94"  class="note">NVIC preempts it,</text>
-    <text x="14"  y="110" class="note">runs the new task,</text>
-    <text x="14"  y="126" class="note">returns, and resumes.</text>
-    <text x="14"  y="156" class="note">Same priority?</text>
-    <text x="14"  y="172" class="note">Run to completion —</text>
-    <text x="14"  y="188" class="note">no preemption between</text>
-    <text x="14"  y="204" class="note">peer tasks.</text>
+  <!-- Preemption note panel: widened from 140 to 170 so the longest -->
+  <!-- lines (21 chars) clear the right edge with a few px of margin. -->
+  <g transform="translate(580,90)">
+    <rect x="0" y="0" width="170" height="220" class="task" rx="6" />
+    <text x="85" y="22" text-anchor="middle" class="label">Higher prio?</text>
+    <text x="14" y="46"  class="note">If a higher-priority</text>
+    <text x="14" y="62"  class="note">IRQ posts while a</text>
+    <text x="14" y="78"  class="note">task is running, the</text>
+    <text x="14" y="94"  class="note">NVIC preempts it,</text>
+    <text x="14" y="110" class="note">runs the new task,</text>
+    <text x="14" y="126" class="note">returns, and resumes.</text>
+    <text x="14" y="156" class="note">Same priority?</text>
+    <text x="14" y="172" class="note">Run to completion —</text>
+    <text x="14" y="188" class="note">no preemption between</text>
+    <text x="14" y="204" class="note">peer tasks.</text>
   </g>
 
-  <text x="20" y="468" class="note">All tasks share the main stack. No context save/restore. Per-task RAM ~16 bytes (vector slot + IPR byte + bookkeeping).</text>
+  <!-- Bottom notes split onto two lines so they fit inside viewBox -->
+  <text x="20" y="468" class="note">All tasks share the main stack. No context save/restore.</text>
+  <text x="20" y="484" class="note">Per-task RAM ~16 bytes (vector slot + IPR byte + bookkeeping).</text>
 </svg>
