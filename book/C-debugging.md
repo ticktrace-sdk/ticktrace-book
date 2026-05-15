@@ -1,7 +1,7 @@
-# Appendix C — Debugging
+# Appendix C: Debugging
 
 This appendix is a quick map of the debugging options available to a
-rp-asm program. It is not a tutorial — it's a "which tool when"
+rp-asm program. It is not a tutorial, it's a "which tool when"
 reference. Deeper coverage of GDB/OpenOCD will come in a later
 revision once the on-chip debug surface in rp-asm is more mature.
 
@@ -23,7 +23,7 @@ or `uart0_putc` to send bytes. Open a terminal on the host
 | --- | --- |
 | Hardware needed | USB-to-TTL adapter (~$3), 3 jumper wires (TX/RX/GND) |
 | Bandwidth | ~11.5 KB/s at 115200 baud |
-| Setup time | Seconds — works as soon as `uart0_init` returns |
+| Setup time | Seconds, works as soon as `uart0_init` returns |
 | Failure modes | None silicon-related; lights work even on early boot |
 | Blocks pins | GP0 and GP1 are committed to UART |
 | Power cost | Negligible |
@@ -44,7 +44,7 @@ limiting.
 The RP2350's on-chip USB controller, configured by `src/usb.S`, can
 present itself as a USB CDC-ACM serial device. After
 `usb_cdc_init`, the Pico 2 appears on the host as `/dev/ttyACM0`
-(Linux) or a COM port (Windows) — no extra hardware, just the USB-C
+(Linux) or a COM port (Windows), no extra hardware, just the USB-C
 cable you're already using to power the board.
 
 | Property | Value |
@@ -57,7 +57,7 @@ cable you're already using to power the board.
 | Power cost | A few mA continuously |
 | Driver footprint | `src/usb.S` is the biggest driver in the tree (~45 KB) |
 
-When it works, it's the nicest debug surface — fast, one cable, no
+When it works, it's the nicest debug surface, fast, one cable, no
 extra hardware. The tradeoff is that the USB driver is the most
 complex piece in rp-asm, and if you're debugging *the USB driver*
 you obviously can't rely on it for output. That's why every project
@@ -72,10 +72,10 @@ needs more than a few hundred bytes/sec.
 
 ### 3. The DWT cycle counter
 
-DWT — the **Data Watchpoint and Trace** unit — is a block in the
+DWT, the **Data Watchpoint and Trace** unit, is a block in the
 Cortex-M33 itself, not a peripheral. It includes a 32-bit free-running
 cycle counter at `DWT_CYCCNT` (`0xE0001004`) that increments every
-processor clock — once per ~6.67 ns at 150 MHz.
+processor clock, once per ~6.67 ns at 150 MHz.
 
 This is not a print mechanism. It is a **measurement** mechanism.
 
@@ -101,8 +101,8 @@ a 3-million-iteration loop, including overhead).
 | Hardware needed | None |
 | Resolution | One processor clock cycle |
 | What you measure | Anything between two `dwt_read` calls |
-| Side effect on the code | None — DWT runs independently of the CPU |
-| Limitation | No output channel of its own — pair with UART/CDC to log results |
+| Side effect on the code | None, DWT runs independently of the CPU |
+| Limitation | No output channel of its own, pair with UART/CDC to log results |
 | Driver footprint | `src/trace.S`, a few hundred bytes |
 
 DWT is how you actually know whether your ISR fits in its cycle
@@ -116,8 +116,8 @@ runs in 30 cycles" deserves a DWT measurement, not a guess.
 
 ## Beyond print debugging: GDB and OpenOCD
 
-The full Cortex-M debug protocol — single-step, breakpoints, memory
-inspection, register dumps from a hung core — runs over **SWD**
+The full Cortex-M debug protocol, single-step, breakpoints, memory
+inspection, register dumps from a hung core, runs over **SWD**
 (Serial Wire Debug), a two-pin protocol exposed on the Pico 2's
 SWCLK/SWDIO pins (the three small pads near the USB connector).
 
@@ -135,8 +135,8 @@ Once set up, you can:
 
 - Pause the chip at any instruction.
 - Inspect every register, including the NVIC, MPU, and DWT.
-- Set hardware breakpoints (limited number — the M33 has six).
-- Set data watchpoints (~four) — break when memory at address X is
+- Set hardware breakpoints (limited number, the M33 has six).
+- Set data watchpoints (~four), break when memory at address X is
   written.
 - Continue, step instruction, step source line.
 
@@ -145,8 +145,8 @@ runs out of steam (hard faults during early boot, race conditions
 between cores, peripherals that lock up the chip).
 
 For now, rp-asm's coverage of SWD/GDB is intentionally thin. We will
-add a fuller setup recipe — probe firmware, OpenOCD configuration,
-GDB scripts for the rp-asm vector table, common-bug walkthrough — in
+add a fuller setup recipe, probe firmware, OpenOCD configuration,
+GDB scripts for the rp-asm vector table, common-bug walkthrough, in
 a later revision of this book. Until then, see
 [the Raspberry Pi Pico SDK debug guide](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)
 for a complete probe-side setup; everything from the host onwards
@@ -170,8 +170,8 @@ keep UART working as your last-resort safety net**.
 ## Three small habits that pay off
 
 1. **Print a banner at boot.** Every rp-asm program should send
-   something identifiable on its first UART/CDC output —
-   `"rp-asm myapp v0.3"` — so when the chip is misbehaving you know
+   something identifiable on its first UART/CDC output,
+   `"rp-asm myapp v0.3"`, so when the chip is misbehaving you know
    *which* firmware is on it.
 
 2. **Cycle-count anything you call "fast".** A claim like "this ISR
@@ -186,12 +186,12 @@ keep UART working as your last-resort safety net**.
 
 ## Where to read more
 
-- `src/trace.S` and `docs/trace.md` — DWT, ITM, TPIU, ETM details.
-- `src/uart.S` and `docs/uart.md` — UART driver, including the
+- `src/trace.S` and `docs/trace.md`, DWT, ITM, TPIU, ETM details.
+- `src/uart.S` and `docs/uart.md`, UART driver, including the
   IRQ-driven and DMA paths if your prints become a hot path.
-- `src/usb.S` and `docs/usb.md` — USB CDC bring-up.
-- `examples/trace_usb_demo.S` — a worked DWT example.
-- `examples/sched_usb_demo.S` — `sched_stats` reporting per-task
+- `src/usb.S` and `docs/usb.md`, USB CDC bring-up.
+- `examples/trace_usb_demo.S`, a worked DWT example.
+- `examples/sched_usb_demo.S`, `sched_stats` reporting per-task
   cycle counts over CDC.
 
 A printable summary of debug commands and the rest of the rp-asm
@@ -203,4 +203,4 @@ print-ready Letter/A4 version at
 
 ---
 
-[← Appendix B — Cheat sheet](B-cheat-sheet.md) · [Table of contents](README.md)
+[← Appendix B: Cheat sheet](B-cheat-sheet.md) · [Table of contents](README.md)

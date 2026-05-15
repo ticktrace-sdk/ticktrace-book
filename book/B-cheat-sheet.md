@@ -1,11 +1,11 @@
-# Appendix B — Cheat sheet
+# Appendix B: Cheat sheet
 
 Everything you need to read or write a rp-asm function, in one place.
 
 > **Print-ready version:**
 > [`figures/cheat-sheet-print.svg`](figures/cheat-sheet-print.svg) is a
 > single-page Letter/A4 infographic of the most-used items from this
-> appendix. Open it in a browser and print to Letter or A4 — it scales
+> appendix. Open it in a browser and print to Letter or A4, it scales
 > cleanly to either, with dark-mode-aware colours when viewed on
 > screen.
 
@@ -13,15 +13,15 @@ Everything you need to read or write a rp-asm function, in one place.
 
 | Reg | Alias | Role | Preserved? |
 | --- | --- | --- | --- |
-| r0 | — | arg 1 / return (low) | caller |
-| r1 | — | arg 2 / return (high) | caller |
-| r2 | — | arg 3 | caller |
-| r3 | — | arg 4 | caller |
-| r4–r11 | — | general-purpose | **callee** |
+| r0 |  | arg 1 / return (low) | caller |
+| r1 |  | arg 2 / return (high) | caller |
+| r2 |  | arg 3 | caller |
+| r3 |  | arg 4 | caller |
+| r4–r11 |  | general-purpose | **callee** |
 | r12 | ip | intra-procedure scratch | caller |
 | r13 | sp | stack pointer | special, 8-byte aligned |
 | r14 | lr | return address | clobbered by `bl` |
-| r15 | pc | program counter | — |
+| r15 | pc | program counter |  |
 
 Flags: **N** Z **C** **V** (negative, zero, carry, overflow).
 Set by instructions ending in `s` (`adds`, `subs`, `lsls`, `cmp`, …).
@@ -200,11 +200,11 @@ my_isr:
     movs    r2, #PRIO             @ NVIC priority (lower = higher prio)
     bl      task_create
 
-    @ Post a task — typically from an ISR (~5 cycles)
+    @ Post a task : typically from an ISR (~5 cycles)
     movs    r0, #TASK_ID
     bl      task_post
 
-    @ Critical section — disable all IRQs briefly
+    @ Critical section : disable all IRQs briefly
     bl      critical_enter        @ r0 = saved PRIMASK
     @ ... shared state mutation ...
     bl      critical_exit         @ r0 = saved value to restore
@@ -302,4 +302,4 @@ $ arm-none-eabi-nm build/NAME.elf | sort
 
 ---
 
-[← Appendix A — Glossary](A-glossary.md) · [Table of contents](README.md) · [Appendix C — Debugging →](C-debugging.md)
+[← Appendix A: Glossary](A-glossary.md) · [Table of contents](README.md) · [Appendix C: Debugging →](C-debugging.md)

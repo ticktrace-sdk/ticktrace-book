@@ -18,7 +18,7 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">multicore_launch_core1 — 6-word SIO FIFO handshake</text>
+  <text x="20" y="28" class="title">multicore_launch_core1, 6-word SIO FIFO handshake</text>
   <text x="20" y="48" class="note">Core 0 sends each word; core 1's bootrom echoes it back; mismatch restarts the sequence from the top.</text>
 
   <!-- Core 0 column -->

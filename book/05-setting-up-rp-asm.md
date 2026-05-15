@@ -1,4 +1,4 @@
-# Chapter 5 — Setting up rp-asm
+# Chapter 5: Setting up rp-asm
 
 In this chapter we install the toolchain, clone rp-asm, and build the
 default `blinky.uf2`. By the end you'll be one drag-and-drop away from
@@ -8,7 +8,7 @@ a running program.
 
 Three things:
 
-1. The **GNU ARM embedded toolchain** — the assembler (`arm-none-eabi-as`),
+1. The **GNU ARM embedded toolchain**, the assembler (`arm-none-eabi-as`),
    linker (`arm-none-eabi-ld`), and a few helpers like `objcopy`.
 2. **Python 3** and a couple of Python libraries, used by the test
    harness and the UF2 packer.
@@ -27,7 +27,7 @@ $ sudo apt install binutils-arm-none-eabi python3 python3-venv git
 ```
 
 That's the full host-side setup. On other distributions, install the
-equivalent packages — Fedora has `arm-none-eabi-binutils-cs`, Arch has
+equivalent packages, Fedora has `arm-none-eabi-binutils-cs`, Arch has
 `arm-none-eabi-binutils`, and so on.
 
 ## macOS
@@ -60,7 +60,7 @@ $ python3 --version
 Python 3.11.x
 ```
 
-If any of those error out, fix that before continuing — nothing later
+If any of those error out, fix that before continuing, nothing later
 will work.
 
 ## Cloning rp-asm
@@ -81,12 +81,12 @@ rust_apps/ rust_bridge/ src/      tests/     tools/
 
 The directories you'll care about most as a beginner:
 
-- `src/` — the driver implementations, one `.S` file per peripheral.
-- `examples/` — short demo programs. We'll be making more of these.
-- `include/` — the register/bitfield definitions for every peripheral.
-- `link/` — linker scripts. `flash.ld` lays your program out for real
+- `src/`, the driver implementations, one `.S` file per peripheral.
+- `examples/`, short demo programs. We'll be making more of these.
+- `include/`, the register/bitfield definitions for every peripheral.
+- `link/`, linker scripts. `flash.ld` lays your program out for real
   hardware; `sram.ld` builds an emulation-only image.
-- `tools/uf2.py` — the script that packs a raw binary into the UF2
+- `tools/uf2.py`, the script that packs a raw binary into the UF2
   format the bootrom expects.
 
 ## Installing the Python dependencies
@@ -125,7 +125,7 @@ $ ls -lh build/blinky.uf2
 
 That's a complete program for the RP2350: clock-tree bring-up, GPIO,
 UART, the banner, and the LED toggle loop, packaged in 2 KB. Most of
-that is UF2 overhead — the underlying program is only 728 bytes of
+that is UF2 overhead, the underlying program is only 728 bytes of
 machine code.
 
 This `blinky.uf2` is the **SRAM** variant, useful for emulation and
@@ -146,7 +146,7 @@ $ make test
 ```
 
 You should see hundreds of passing tests. If anything fails, that's
-worth investigating before proceeding — the tests catch most toolchain
+worth investigating before proceeding, the tests catch most toolchain
 mismatches.
 
 ## Running it on hardware
@@ -179,7 +179,7 @@ $ minicom -D /dev/ttyUSB0 -b 115200
 …or `screen /dev/ttyUSB0 115200`, or `picocom`, or whatever you like.
 
 If you don't have a USB-serial adapter, several examples use the Pico's
-built-in USB controller as a USB-CDC serial device — those work on
+built-in USB controller as a USB-CDC serial device, those work on
 nothing but the original USB-C cable. We'll get to those in chapter 10.
 
 ## What just happened?
@@ -205,7 +205,7 @@ toggling a GPIO pin. All in 728 bytes of code.
 
 4. **Smoke-test without hardware.** Run `make test-all` and watch which
    tiers pass. If T3 (Renode) is skipped because Renode isn't
-   installed, that's fine — T1 and T2 alone exercise every public
+   installed, that's fine, T1 and T2 alone exercise every public
    driver function.
 
 In the [next chapter](06-your-first-program.md) we'll read the blinky
@@ -215,4 +215,4 @@ code, line by line, and understand every byte.
 
 ---
 
-[← Chapter 4 — The Cortex-M33 and Thumb-2](04-cortex-m33-and-thumb2.md) · [Table of contents](README.md) · [Chapter 6 — Your first program →](06-your-first-program.md)
+[← Chapter 4: The Cortex-M33 and Thumb-2](04-cortex-m33-and-thumb2.md) · [Table of contents](README.md) · [Chapter 6: Your first program →](06-your-first-program.md)

@@ -1,10 +1,10 @@
-# Chapter 14 — Where to go next
+# Chapter 14: Where to go next
 
 You can now read and write rp-asm. You understand registers,
 instructions, the calling convention, memory-mapped I/O, GPIO, UART,
 interrupts, scheduling, and multicore. That's enough vocabulary to
 navigate the entire SDK. The rest is *what specifically* each
-peripheral does — i.e., the datasheet.
+peripheral does, i.e., the datasheet.
 
 This closing chapter is a map of the territory we *didn't* cover, with
 pointers for where to look when you want to.
@@ -15,40 +15,40 @@ The drivers we touched explicitly were `gpio`, `uart`, `timer`, and
 `nvic`. Here's the rest of the `src/` tree, with one line each on
 what it's for and where to start reading:
 
-- **`xosc.S`, `pll.S`, `clocks.S`, `tick.S`** — the clock-tree
+- **`xosc.S`, `pll.S`, `clocks.S`, `tick.S`**, the clock-tree
   bring-up. `docs/clocks.md` walks through the math. Read these once
   to understand how `clk_sys` becomes 150 MHz.
-- **`dma.S`** — the DMA controller. 16 channels that copy memory or
+- **`dma.S`**, the DMA controller. 16 channels that copy memory or
   drive peripherals without CPU involvement. `docs/dma.md`. Try
   `examples/dma_memcpy_demo.S`.
-- **`pwm.S`** — pulse-width modulation. 12 slices, useful for fading
+- **`pwm.S`**, pulse-width modulation. 12 slices, useful for fading
   LEDs, driving servos, generating audio. `docs/pwm.md`, plus
   `examples/pwm_fade_demo.S` and `examples/pwm_servo_demo.S`.
-- **`i2c.S`** — DesignWare I2C controller. Master and slave modes.
+- **`i2c.S`**, DesignWare I2C controller. Master and slave modes.
   `docs/i2c.md`, `examples/i2c_eeprom_demo.S`.
-- **`spi.S`** — PL022 SPI controller. Full-duplex, DMA-friendly.
+- **`spi.S`**, PL022 SPI controller. Full-duplex, DMA-friendly.
   `docs/spi.md`.
-- **`usb.S`** — the USB device controller. Implements a CDC-ACM
+- **`usb.S`**, the USB device controller. Implements a CDC-ACM
   endpoint so the Pico shows up as `/dev/ttyACM0`. Big file; reading
   it is a real expedition. `docs/usb.md`.
-- **`adc.S`, `trng.S`, `sha256.S`** — analog input, true random
+- **`adc.S`, `trng.S`, `sha256.S`**, analog input, true random
   numbers, hardware SHA-256. Small, focused drivers. The
   `examples/data_usb_demo.S` exercises all three.
-- **`pio.S`** — the **Programmable I/O** state machines. Unique to
+- **`pio.S`**, the **Programmable I/O** state machines. Unique to
   this chip family: a tiny CPU you can program to bit-bang custom
   protocols. `docs/pio.md`, `examples/pio_blink_demo.S`.
-- **`multicore.S`, `spinlock.S`, `interp.S`** — covered in
+- **`multicore.S`, `spinlock.S`, `interp.S`**, covered in
   [chapter 13](13-multicore.md). The drivers themselves are short
   and worth reading after the chapter to see the bit-level detail.
-- **`watchdog.S`, `powman.S`, `systick.S`** — chip-level housekeeping.
-- **`qmi.S`, `otp.S`, `bootrom.S`** — the QSPI flash interface, the
+- **`watchdog.S`, `powman.S`, `systick.S`**, chip-level housekeeping.
+- **`qmi.S`, `otp.S`, `bootrom.S`**, the QSPI flash interface, the
   one-time-programmable fuses, and bootrom services like
   "reset to BOOTSEL".
-- **`sched.S`, `spsc.S`, `sched_stats.S`** — covered in
+- **`sched.S`, `spsc.S`, `sched_stats.S`**, covered in
   [chapter 12](12-scheduling.md). Re-read the source once you've
   worked through the chapter; it's a small, complete data-structure
   showcase in pure asm.
-- **`trace.S`** — CoreSight DWT and ITM, for cycle counting and
+- **`trace.S`**, CoreSight DWT and ITM, for cycle counting and
   on-chip `printf`-style debugging.
 
 For each driver: read the `docs/` file, then skim the matching `src/`
@@ -60,15 +60,15 @@ standards (most under 600 lines).
 Around 40 standalone programs, each building to its own UF2. Some
 particularly fun ones to try once you have the toolchain working:
 
-- `examples/multicore_full_usb_demo.S` — both M33 cores running, one
+- `examples/multicore_full_usb_demo.S`, both M33 cores running, one
   blinking the LED, the other writing to USB CDC, communicating via
   spinlock-protected shared state and an interpolator.
-- `examples/pio_blink_demo.S` — a 9-instruction PIO program that
+- `examples/pio_blink_demo.S`, a 9-instruction PIO program that
   blinks the LED *without* the CPU's help.
-- `examples/sched_usb_demo.S` — the NVIC-priority scheduler driving a
+- `examples/sched_usb_demo.S`, the NVIC-priority scheduler driving a
   timer task that pushes bytes through an SPSC queue to a USB
   consumer.
-- `examples/watchdog_usb_demo.S` — feed-the-watchdog, then stop, then
+- `examples/watchdog_usb_demo.S`, feed-the-watchdog, then stop, then
   watch the chip reset itself.
 
 The Makefile knows about every `.S` in `examples/`; `make` builds
@@ -78,14 +78,14 @@ them all. `make build/NAME_flash.uf2` builds the flash variant of one.
 
 rp-asm has a four-tier test setup:
 
-- **T1** (`tests/unicorn/`) — Python tests that run each driver
+- **T1** (`tests/unicorn/`), Python tests that run each driver
   function inside the Unicorn emulator and verify the exact sequence
   of register writes it produces. Fast (milliseconds per test) and
   great for catching regressions.
-- **T2** (`tests/qemu/`) — generic Cortex-M33 sanity inside QEMU.
-- **T3** (`tests/renode/`) — full peripheral models in Renode for
+- **T2** (`tests/qemu/`), generic Cortex-M33 sanity inside QEMU.
+- **T3** (`tests/renode/`), full peripheral models in Renode for
   end-to-end interaction tests.
-- **T4** — manual hardware verification on a real Pico 2.
+- **T4**, manual hardware verification on a real Pico 2.
 
 If you ever want to add a feature: add a unicorn test first, watch
 it fail, write the asm to make it pass. The harness is genuinely good
@@ -96,9 +96,9 @@ to develop against.
 If you want assembly drivers but a higher-level language for the app
 on top:
 
-- **`c_bridge/`** + **`c_apps/hello_c/`** — write `main` in C, call
+- **`c_bridge/`** + **`c_apps/hello_c/`**, write `main` in C, call
   `gpio_led_toggle` and friends through AAPCS. `docs/c_bridge.md`.
-- **`rust_bridge/`** + **`rust_apps/hello_rust/`** — same for Rust,
+- **`rust_bridge/`** + **`rust_apps/hello_rust/`**, same for Rust,
   via a `no_std` crate that links to `librp_asm.a`.
   `docs/rust_bridge.md`.
 
@@ -110,29 +110,29 @@ ABI-compatible language.
 
 Two appendices that you'll probably keep open while you work:
 
-- **[Appendix A — Glossary](A-glossary.md).** Every term we've used,
+- **[Appendix A: Glossary](A-glossary.md).** Every term we've used,
   defined once and indexed. When you forget what AAPCS or VTOR stands
   for, look here.
-- **[Appendix B — Cheat sheet](B-cheat-sheet.md).** Every instruction,
+- **[Appendix B: Cheat sheet](B-cheat-sheet.md).** Every instruction,
   directive, and idiom we've used, in one printable page.
 
 ## Further reading
 
-- **The RP2350 datasheet** — Raspberry Pi's main reference. About 1300
+- **The RP2350 datasheet**, Raspberry Pi's main reference. About 1300
   pages, free PDF. Search for "RP2350 datasheet". The peripheral
   chapters are very readable; the system-level ones less so. Keep it
   open while you write drivers.
-- **The ARMv8-M Architecture Reference Manual** — the formal
+- **The ARMv8-M Architecture Reference Manual**, the formal
   specification of the instruction set. Dense but authoritative. Free
   from ARM with a (free) developer account.
-- **The Cortex-M33 Technical Reference Manual** — implementation-level
+- **The Cortex-M33 Technical Reference Manual**, implementation-level
   details of the specific core in the RP2350.
-- **The ARM Cortex-M Generic User Guide** — the friendly,
+- **The ARM Cortex-M Generic User Guide**, the friendly,
   programmer-oriented summary of the architecture. This is the one to
   read first.
-- **The picobin spec** — Raspberry Pi's format for the IMAGE_DEF
+- **The picobin spec**, Raspberry Pi's format for the IMAGE_DEF
   block in your binary. See `docs/boot.md`.
-- **The pico-sdk** (in C, on GitHub) — even though it's C, the
+- **The pico-sdk** (in C, on GitHub), even though it's C, the
   pico-sdk's peripheral code is a useful cross-reference when the
   datasheet is ambiguous. Sometimes you'll spot an erratum workaround
   in the pico-sdk and want to mirror it in rp-asm.
@@ -169,15 +169,15 @@ the code, and the silicon does *exactly and only* what the code says.
 
 That clarity makes you a better programmer in every language. The
 next time you write a one-line Python expression that loads a CSV,
-joins three tables, and writes a chart, you'll have a feeling — a
-real, mechanical sense — for the millions of instructions that
+joins three tables, and writes a chart, you'll have a feeling, a
+real, mechanical sense, for the millions of instructions that
 expression is going to become. You'll know that, somewhere down at
 the bottom of the stack, *somebody* had to do exactly the kind of
 work you've been doing in this book.
 
 You'll also have a Pico 2 that can blink an LED, talk to a serial
 terminal, fade an LED with PWM, read a temperature sensor, and
-generate a true random number — and you'll know every byte of how.
+generate a true random number, and you'll know every byte of how.
 
 That's not bad for a 728-byte starting point.
 
@@ -187,4 +187,4 @@ Happy hacking.
 
 ---
 
-[← Chapter 13 — Multicore](13-multicore.md) · [Table of contents](README.md) · [Appendix A — Glossary →](A-glossary.md)
+[← Chapter 13: Multicore](13-multicore.md) · [Table of contents](README.md) · [Appendix A: Glossary →](A-glossary.md)

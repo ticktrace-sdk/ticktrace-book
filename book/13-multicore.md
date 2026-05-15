@@ -1,4 +1,4 @@
-# Chapter 13 — Multicore
+# Chapter 13: Multicore
 
 The RP2350 has **two** Cortex-M33 cores on the same die. They share
 SRAM, peripherals, and the SIO block; each has its own register file,
@@ -34,7 +34,7 @@ its own ideas about what the world looks like.
 ## Launching core 1
 
 When the chip boots, only core 0 runs your firmware. Core 1 sits in
-its bootrom waiting for a wake-up sequence over the **SIO FIFO** —
+its bootrom waiting for a wake-up sequence over the **SIO FIFO**,
 the inter-core mailbox at `SIO_BASE + 0x050..0x058`.
 
 The wake-up sequence, from `src/multicore.S:12-16`, is six 32-bit
@@ -51,7 +51,7 @@ is its initial stack pointer, and `entry` is the address core 1
 should jump to once the handshake completes. All three are arguments
 the user supplies.
 
-![multicore_launch_core1 — the 6-word SIO FIFO handshake](figures/multicore-launch.svg)
+![multicore_launch_core1: the 6-word SIO FIFO handshake](figures/multicore-launch.svg)
 
 You don't write this by hand. rp-asm wraps it as a single call:
 
@@ -81,7 +81,7 @@ core1_entry:
     lsls    r1, r1, #8
     str     r1, [r0]
 
-    @ Seed RCP canary (idempotent — guarded against double init)
+    @ Seed RCP canary (idempotent : guarded against double init)
     @ ... see examples/multicore_usb_demo.S:90-105 ...
 
     @ Zero MSPLIM so pushes don't fault
@@ -109,14 +109,14 @@ mailbox in each direction. Each core can push a 32-bit word and the
 other can pop it.
 
 ```asm
-multicore_fifo_drain()                — empty the inbound FIFO
-multicore_fifo_push_blocking(word)    — spin on RDY, write, SEV
-multicore_fifo_pop_blocking() -> r0   — spin on VLD (with wfe), read
+multicore_fifo_drain()                : empty the inbound FIFO
+multicore_fifo_push_blocking(word)    : spin on RDY, write, SEV
+multicore_fifo_pop_blocking() -> r0   : spin on VLD (with wfe), read
 ```
 
 Use it when one core wants to hand the other a small piece of news:
 a counter snapshot, a "go" signal, a single sample. It's too shallow
-to be a real queue — for bulk data, put a ring buffer in SRAM and
+to be a real queue, for bulk data, put a ring buffer in SRAM and
 use the FIFO just for the "wake up, there is something for you"
 notification.
 
@@ -128,13 +128,13 @@ non-zero if you got the lock and 0 if someone else has it; any write
 releases it.
 
 ```asm
-spin_try_lock(idx)      -> r0   — 0 = busy, non-zero = acquired
-spin_lock_blocking(idx)         — busy-wait until acquired
-spin_unlock(idx)                — release
+spin_try_lock(idx)      -> r0   : 0 = busy, non-zero = acquired
+spin_lock_blocking(idx)         : busy-wait until acquired
+spin_unlock(idx)                : release
 ```
 
 Use a spinlock when both cores will mutate the same data structure.
-Hold it for as few cycles as possible — these are *busy-wait* locks,
+Hold it for as few cycles as possible, these are *busy-wait* locks,
 not blocking ones; while one core holds the lock, the other burns
 power spinning.
 
@@ -152,8 +152,8 @@ do shift-mask-add in a single cycle:
 result = ((ACCUMx >> SHIFT) & mask) + BASEy
 ```
 
-They aren't really a multicore primitive — they're per-core hardware
-— but they show up in multicore examples because each core has its
+They aren't really a multicore primitive, they're per-core hardware
+but they show up in multicore examples because each core has its
 own pair and they're useful for the kind of tight fixed-point work
 people do *inside* a core 1 hot loop.
 
@@ -161,8 +161,8 @@ people do *inside* a core 1 hot loop.
 interp_set_accum(idx, lane, value)
 interp_set_base (idx, lane, value)
 interp_set_ctrl (idx, lane, ctrl_word)
-interp_peek (idx, which) -> result   — read without advancing
-interp_pop  (idx, which) -> result   — read and advance accumulators
+interp_peek (idx, which) -> result   : read without advancing
+interp_pop  (idx, which) -> result   : read and advance accumulators
 ```
 
 The classical use case is texture mapping, table lookup with
@@ -173,13 +173,13 @@ worked use.
 ## The canonical pattern
 
 Read `examples/multicore_usb_demo.S` and
-`examples/multicore_full_usb_demo.S` — they're the templates.
+`examples/multicore_full_usb_demo.S`, they're the templates.
 
 A simplified shape:
 
 ```asm
     @ ============================================================
-    @ Core 0 — owns USB, prints heartbeat
+    @ Core 0 : owns USB, prints heartbeat
     @ ============================================================
 main:
     bl      xosc_init
@@ -201,7 +201,7 @@ main:
     b       .Lloop_c0
 
     @ ============================================================
-    @ Core 1 — owns the LED
+    @ Core 1 : owns the LED
     @ ============================================================
 core1_entry:
     @ ... CPACR + RCP + MSPLIM prologue ...
@@ -213,7 +213,7 @@ core1_entry:
 ```
 
 Two independent main loops, sharing only the GPIO/SIO hardware. No
-locks needed — they touch disjoint pins. The pattern scales: if both
+locks needed, they touch disjoint pins. The pattern scales: if both
 cores want to read or write the same shared variable, wrap the
 access in a spinlock; if one core wants to notify the other, send
 through the FIFO.
@@ -253,14 +253,14 @@ stops being simple.
    - Reading an SD card over SPI to load a config file at startup.
 
 2. **Lock or no lock?** Two cores both increment a shared `uint32_t`
-   counter. Does this need a spinlock on the RP2350? *(Yes — the
+   counter. Does this need a spinlock on the RP2350? *(Yes, the
    read-modify-write is not atomic across cores even though a single
    STR is. Wrap the increment in `spin_lock_blocking(0)` /
    `spin_unlock(0)`.)*
 
 3. **FIFO depth.** The SIO FIFO holds 4 words. If core 0 pushes 5
    words back-to-back and core 1 isn't reading, what happens to the
-   5th push? *(It blocks — `multicore_fifo_push_blocking` spins on
+   5th push? *(It blocks, `multicore_fifo_push_blocking` spins on
    the RDY flag until there's room.)*
 
 4. **Why does core 1 need its own prologue?** Why doesn't core 0's
@@ -277,11 +277,11 @@ stops being simple.
 ## What's next
 
 The [final chapter](14-where-to-go-next.md) maps the remaining
-peripherals in `src/` — DMA, PIO, the C and Rust bridges — and gives
+peripherals in `src/`, DMA, PIO, the C and Rust bridges, and gives
 you project ideas to build on top of everything we've covered.
 
 <!-- nav-footer -->
 
 ---
 
-[← Chapter 12 — Scheduling](12-scheduling.md) · [Table of contents](README.md) · [Chapter 14 — Where to go next →](14-where-to-go-next.md)
+[← Chapter 12: Scheduling](12-scheduling.md) · [Table of contents](README.md) · [Chapter 14: Where to go next →](14-where-to-go-next.md)

@@ -1,7 +1,7 @@
-# Chapter 4 — The Cortex-M33 and Thumb-2
+# Chapter 4: The Cortex-M33 and Thumb-2
 
 This chapter is a closer look at the processor that runs your rp-asm
-code. Don't try to memorise everything here — treat it as a reference
+code. Don't try to memorise everything here, treat it as a reference
 to come back to. You'll absorb the details as you write programs.
 
 ## The register file
@@ -13,8 +13,8 @@ documentation refers to them by the names below.
 
 | Name | Alias | Role |
 | --- | --- | --- |
-| `r0`–`r3` | — | Argument and return registers. **Caller-saved.** |
-| `r4`–`r11` | — | General-purpose. **Callee-saved.** |
+| `r0`–`r3` |  | Argument and return registers. **Caller-saved.** |
+| `r4`–`r11` |  | General-purpose. **Callee-saved.** |
 | `r12` | `ip` | Scratch / intra-procedure temporary. **Caller-saved.** |
 | `r13` | `sp` | Stack pointer. |
 | `r14` | `lr` | Link register (return address). |
@@ -25,8 +25,8 @@ saves it before the call. "Callee-saved" means: a called function must
 preserve the value, so the caller can rely on it surviving the call.
 We unpack this fully in [chapter 8](08-functions-and-calling-convention.md).
 
-There is also a hidden register called `APSR` — the Application
-Program Status Register — containing the four condition flags:
+There is also a hidden register called `APSR`, the Application
+Program Status Register, containing the four condition flags:
 
 - **N** (negative): set if the result was negative.
 - **Z** (zero): set if the result was zero.
@@ -64,8 +64,8 @@ follows is Thumb code, so set bit 0 of its address". The bottom bit of
 any function pointer on Cortex-M means "I am Thumb code"; if you ever
 jump to an address with the bottom bit *clear*, the CPU will fault.
 
-You don't need to think about this directly — `.thumb_func` does it for
-you — but it explains a few small mysteries down the road.
+You don't need to think about this directly, `.thumb_func` does it for
+you, but it explains a few small mysteries down the road.
 
 ## The instruction set, in broad strokes
 
@@ -83,7 +83,7 @@ working set is small. Here's what you'll see constantly in rp-asm:
 
 `movs` with `#` takes a small immediate (up to 8 bits in most short
 forms; up to a 12-bit modified immediate in 32-bit forms). When you
-need a full 32-bit constant, write `ldr r0, =VALUE` — the assembler
+need a full 32-bit constant, write `ldr r0, =VALUE`, the assembler
 will park the constant in a nearby pool and turn the instruction into
 a PC-relative load.
 
@@ -141,7 +141,7 @@ You'll see them all in real rp-asm code.
 
 `bl` saves the address of the next instruction into `lr` so that the
 called function can return to it. `bx lr` returns by jumping to `lr`.
-The `x` in `bx` means "interworking" — the CPU looks at bit 0 to know
+The `x` in `bx` means "interworking", the CPU looks at bit 0 to know
 whether the destination is Thumb. Since all our code is Thumb, bit 0
 is always 1, and `bx lr` is what a function-return looks like.
 
@@ -169,7 +169,7 @@ ones you'll care about in this book are:
 | `0x00000000`–`0x00007fff` | Bootrom (32 KB, read-only) |
 | `0x10000000`–`0x103fffff` | QSPI flash, mapped via XIP cache (4 MB on Pico 2) |
 | `0x20000000`–`0x20081fff` | SRAM (520 KB) |
-| `0x40000000`–`0x4fffffff` | APB peripherals — UART, GPIO, I2C, etc. |
+| `0x40000000`–`0x4fffffff` | APB peripherals, UART, GPIO, I2C, etc. |
 | `0xd0000000`–`0xd000ffff` | SIO (single-cycle I/O, includes GPIO out) |
 | `0xe0000000`–`0xe00fffff` | Cortex-M33 system control (NVIC, SysTick) |
 
@@ -180,7 +180,7 @@ specific offset from that base to control it. We meet this concept
 formally in [chapter 9](09-gpio-and-memory-mapped-io.md) as
 **memory-mapped I/O**.
 
-## Atomic register aliases — the RP2 trick
+## Atomic register aliases: the RP2 trick
 
 Most peripheral registers on most chips require read-modify-write to
 change one bit: read the register, OR in a bit, write it back. That
@@ -227,7 +227,7 @@ When the bootrom hands off to your reset handler, you can rely on:
 - The XOSC is running at 12 MHz and is the source for `clk_sys`.
 
 You inherit a clean machine. From there, what happens next is whatever
-you write — which is the whole point of this book.
+you write, which is the whole point of this book.
 
 ## Exercises
 
@@ -244,7 +244,7 @@ you write — which is the whole point of this book.
 
 3. **Atomic alias arithmetic.** Suppose `RESETS_RESET` is at
    `0x40020000`. What address do you write to atomically clear bits in
-   it? *(0x40023000 — base + 0x3000 CLR alias.)*
+   it? *(0x40023000, base + 0x3000 CLR alias.)*
 
 4. **Why bit 0?** Why does the `.thumb_func` directive set bit 0 of a
    symbol's address? What happens if you `bx` to an even address?
@@ -267,4 +267,4 @@ toolchain installed so we can turn assembly source into a runnable
 
 ---
 
-[← Chapter 3 — The RP2 family](03-the-rp2-family.md) · [Table of contents](README.md) · [Chapter 5 — Setting up rp-asm →](05-setting-up-rp-asm.md)
+[← Chapter 3: The RP2 family](03-the-rp2-family.md) · [Table of contents](README.md) · [Chapter 5: Setting up rp-asm →](05-setting-up-rp-asm.md)

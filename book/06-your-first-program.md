@@ -1,9 +1,9 @@
-# Chapter 6 — Your first program: blinky
+# Chapter 6: Your first program: blinky
 
 Time to read code.
 
 Open `src/main.S` in your editor and we'll go through it line by line.
-This is the program you flashed at the end of chapter 5 — the one that
+This is the program you flashed at the end of chapter 5, the one that
 boots the RP2350, brings up the clock tree, and starts blinking the
 green LED while a banner prints over UART.
 
@@ -82,7 +82,7 @@ main:
 ```
 
 Thirty-five lines of source, including comments and blank lines. We
-will read it five times — once for each conceptual layer.
+will read it five times, once for each conceptual layer.
 
 ## Pass 1: the assembler directives
 
@@ -95,13 +95,13 @@ instructions to the **assembler**:
     .thumb
 ```
 
-- `.syntax unified` — Use the modern, unified ARM/Thumb syntax (the
+- `.syntax unified`, Use the modern, unified ARM/Thumb syntax (the
   one we've been writing throughout this book). The alternative is the
   pre-2008 "divided" syntax that distinguishes ARM and Thumb mnemonics;
   nobody uses it anymore.
-- `.cpu cortex-m33` — Tell the assembler which CPU we're targeting,
+- `.cpu cortex-m33`, Tell the assembler which CPU we're targeting,
   so it knows which instructions are legal.
-- `.thumb` — Emit Thumb encodings (which is the only option on M33
+- `.thumb`, Emit Thumb encodings (which is the only option on M33
   anyway, but explicit is good).
 
 These three lines appear at the top of every `.S` file in rp-asm.
@@ -129,12 +129,12 @@ banner:
 This puts a string in **read-only data** at a label called `banner`.
 Breaking it down:
 
-- `.section .rodata.banner, "a"` — Start a new output section named
+- `.section .rodata.banner, "a"`, Start a new output section named
   `.rodata.banner`, with the "allocate" attribute (`a`), meaning it
   takes up space in the final image but isn't executable.
-- `banner:` — A label. The address of the next byte will be remembered
+- `banner:`, A label. The address of the next byte will be remembered
   under this name.
-- `.asciz "rp-asm M2 - clk_sys = 150 MHz\r\n"` — Emit the string,
+- `.asciz "rp-asm M2 - clk_sys = 150 MHz\r\n"`, Emit the string,
   followed by a zero byte. (Without the `z`, `.ascii` would omit the
   terminator.) The `\r\n` is the conventional terminal-friendly
   line-ending: carriage return, then newline.
@@ -151,13 +151,13 @@ in flash. We'll pass its address to `uart0_puts` later.
 main:
 ```
 
-- `.section .text.main, "ax"` — A new section, with the "allocate"
+- `.section .text.main, "ax"`, A new section, with the "allocate"
   and "executable" attributes. Code goes here.
-- `.thumb_func` — The next symbol is a Thumb function. The assembler
+- `.thumb_func`, The next symbol is a Thumb function. The assembler
   will set bit 0 of its address so that `bx`/`bl` to it works correctly.
-- `.global main` — Make the symbol `main` visible to the linker, so
+- `.global main`, Make the symbol `main` visible to the linker, so
   other files (in our case, `startup.S`) can call it.
-- `main:` — The label itself.
+- `main:`, The label itself.
 
 The rp-asm reset handler in `src/startup.S` eventually does a
 `b main`, which is how this function gets entered.
@@ -183,7 +183,7 @@ What each call does, briefly:
    for it to stabilise. The chip can now use the crystal as a clock
    source.
 
-2. **`pll_sys_150_mhz`** programs PLL_SYS — a phase-locked loop — to
+2. **`pll_sys_150_mhz`** programs PLL_SYS, a phase-locked loop, to
    multiply the 12 MHz crystal up to 150 MHz, and waits for lock.
 
 3. **`pll_usb_48_mhz`** does the same for PLL_USB, producing 48 MHz
@@ -262,7 +262,7 @@ implement our own version in chapter 10.
 The forever-loop. Three pieces:
 
 - **`.Lloop:` and `b .Lloop`** form the outer loop. The leading `.L`
-  is a GNU convention for *local* labels — symbols that exist only
+  is a GNU convention for *local* labels, symbols that exist only
   within this assembly file, not exposed to the linker. We use it to
   avoid polluting the global namespace.
 
@@ -279,7 +279,7 @@ The forever-loop. Three pieces:
   ```
 
   `ldr r0, =12500000` puts the iteration count in r0. `1:` is a *local
-  numeric label* — these are reusable; you can have many `1:`s in a
+  numeric label*, these are reusable; you can have many `1:`s in a
   function. `subs r0, #1` decrements r0 and sets the zero flag if the
   result is zero. `bne 1b` means "branch to the nearest label `1`
   **backwards** if not equal (not zero)". So this loops 12,500,000
@@ -299,7 +299,7 @@ The forever-loop. Three pieces:
 It doesn't return. The unconditional `b .Lloop` at the bottom sends
 control back to the top of the loop forever. If you removed it and
 let execution "fall through" past the end of `main`, you'd hit
-whatever happened to be the next instruction in flash — usually random
+whatever happened to be the next instruction in flash, usually random
 data, which the CPU would try to execute and trap on.
 
 A microcontroller's `main` **must** be an infinite loop. There is no
@@ -313,7 +313,7 @@ the initial stack pointer and word 1 as the initial program counter,
 and jumps to that PC. That PC is `_reset`. `_reset` finishes the M33
 prologue (enabling the floating-point coprocessor, seeding the random
 canary protection, pointing VTOR at the vector table) and then
-branches to `main`. Open `src/startup.S` and skim it — you've seen
+branches to `main`. Open `src/startup.S` and skim it, you've seen
 enough by now that most of it will make sense.
 
 ## Building it yourself
@@ -326,7 +326,7 @@ $ make build/blinky_flash.uf2
 $ cp build/blinky_flash.uf2 /media/$USER/RPI-RP2/
 ```
 
-Then watch the LED. Try doubling `DELAY_COUNT_150MHZ` — does it blink
+Then watch the LED. Try doubling `DELAY_COUNT_150MHZ`, does it blink
 half as fast? (It should.)
 
 ## What you now understand
@@ -345,7 +345,7 @@ make sense, even if specific peripheral details are still mysterious.
 
 2. **Replace the banner.** Change the `.asciz` string to something
    personal. Rebuild and watch the serial output. *(Note: keep the
-   `\r\n` at the end — most terminal programs need both.)*
+   `\r\n` at the end, most terminal programs need both.)*
 
 3. **Count cycles.** The inner busy-loop is `subs r0, #1` / `bne 1b`.
    At 150 MHz, how many *seconds* would `DELAY_COUNT_150MHZ = 1`
@@ -370,4 +370,4 @@ reference so you can read the *driver* code, not just the user code.
 
 ---
 
-[← Chapter 5 — Setting up rp-asm](05-setting-up-rp-asm.md) · [Table of contents](README.md) · [Chapter 7 — Assembler syntax and instructions →](07-assembler-syntax.md)
+[← Chapter 5: Setting up rp-asm](05-setting-up-rp-asm.md) · [Table of contents](README.md) · [Chapter 7: Assembler syntax and instructions →](07-assembler-syntax.md)

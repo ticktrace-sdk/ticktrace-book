@@ -69,27 +69,27 @@
   <g transform="translate(0,266)">
     <rect x="130" y="0"  width="450" height="24" class="preserve-no" />
     <text x="115" y="17" text-anchor="end" class="name">r12</text>
-    <text x="142" y="17" class="role">ip — intra-procedure scratch</text>
+    <text x="142" y="17" class="role">ip, intra-procedure scratch</text>
     <text x="590" y="17" class="tag">caller-saved</text>
 
     <rect x="130" y="28" width="450" height="24" class="special" />
     <text x="115" y="45" text-anchor="end" class="name">r13</text>
-    <text x="142" y="45" class="role">sp — stack pointer (8-byte aligned)</text>
+    <text x="142" y="45" class="role">sp, stack pointer (8-byte aligned)</text>
     <text x="590" y="45" class="tag">special</text>
 
     <rect x="130" y="56" width="450" height="24" class="special" />
     <text x="115" y="73" text-anchor="end" class="name">r14</text>
-    <text x="142" y="73" class="role">lr — link register (return address)</text>
+    <text x="142" y="73" class="role">lr, link register (return address)</text>
     <text x="590" y="73" class="tag">special</text>
 
     <rect x="130" y="84" width="450" height="24" class="special" />
     <text x="115" y="101" text-anchor="end" class="name">r15</text>
-    <text x="142" y="101" class="role">pc — program counter</text>
+    <text x="142" y="101" class="role">pc, program counter</text>
     <text x="590" y="101" class="tag">special</text>
   </g>
 
   <!-- Flags note (APSR) -->
-  <text x="20" y="396" class="tag">Plus flags (N, Z, C, V) in APSR — set by 'adds', 'subs', 'cmp', …</text>
+  <text x="20" y="396" class="tag">Plus flags (N, Z, C, V) in APSR, set by 'adds', 'subs', 'cmp', …</text>
 
   <!-- ============================================================ -->
   <!-- Legend                                                        -->

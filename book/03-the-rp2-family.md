@@ -1,7 +1,7 @@
-# Chapter 3 — The RP2 family
+# Chapter 3: The RP2 family
 
 The "RP2" in rp-asm refers to the family of microcontrollers designed
-by Raspberry Pi Ltd themselves — first the RP2040 (launched in 2021)
+by Raspberry Pi Ltd themselves, first the RP2040 (launched in 2021)
 and then the RP2350 (launched in 2024). They are the silicon at the
 heart of the Raspberry Pi Pico and Pico 2 boards.
 
@@ -17,7 +17,7 @@ A **microcontroller** is a chip that contains, on a single die:
 - One or more CPU cores
 - Some RAM
 - Some non-volatile storage (usually flash)
-- A bunch of peripherals — UART, SPI, I2C, USB, ADC, timers, GPIO
+- A bunch of peripherals, UART, SPI, I2C, USB, ADC, timers, GPIO
 - A clock generator
 - A bootloader in ROM
 
@@ -43,7 +43,7 @@ The RP2040, released in 2021, was Raspberry Pi's first chip. It has:
 - Two UARTs, two SPIs, two I2Cs
 - A USB 1.1 device/host controller
 - 16-channel DMA
-- **PIO** — Programmable I/O, two state-machine engines that can
+- **PIO**, Programmable I/O, two state-machine engines that can
   implement custom peripheral protocols
 
 The Cortex-M0+ is the smallest, simplest CPU in ARM's lineup. It has a
@@ -75,7 +75,7 @@ substantial upgrade from the RP2040:
 The headline change for our purposes is the CPU. The **Cortex-M33** is
 a much more capable processor than the M0+:
 
-- Full **Thumb-2** instruction set — every register (`r0`–`r12`) is
+- Full **Thumb-2** instruction set, every register (`r0`–`r12`) is
   usable in every common encoding, plus 32-bit instructions for things
   the 16-bit ones can't express.
 - Hardware integer divide.
@@ -88,7 +88,7 @@ You can also boot the RP2350 into a *RISC-V* mode where two Hazard3
 cores replace the ARM ones, sharing the same peripherals. rp-asm
 ignores this entirely and runs the chip as a pair of Cortex-M33s. (If
 you ever want to learn RISC-V assembly, this chip is also a friendly
-place to do it — but that's a different book.)
+place to do it, but that's a different book.)
 
 ## What's on the Pico 2 board
 
@@ -120,7 +120,7 @@ When you power on a Pico 2, here's what happens:
 ```mermaid
 flowchart TD
     A[Power on / reset] --> B{BOOTSEL held?}
-    B -- yes --> M[Bootrom: present as USB Mass Storage<br/>RPI-RP2 — drag-and-drop mode]
+    B -- yes --> M[Bootrom: present as USB Mass Storage<br/>RPI-RP2 : drag-and-drop mode]
     B -- no  --> S[Bootrom: scan flash for IMAGE_DEF block]
     S --> V{Valid signature?}
     V -- no  --> M
@@ -132,7 +132,7 @@ flowchart TD
 1. The RP2350's internal **bootrom** runs first. It is a 32 KB read-only
    program baked into the silicon at Raspberry Pi's factory.
 2. The bootrom checks whether BOOTSEL is held. If so, it presents
-   itself as a USB Mass Storage device — that's the "drag-and-drop a
+   itself as a USB Mass Storage device, that's the "drag-and-drop a
    UF2 file" mode.
 3. Otherwise, it reads the first few hundred bytes of QSPI flash,
    verifies an `IMAGE_DEF` signature block, and jumps to your firmware's
@@ -140,7 +140,7 @@ flowchart TD
 4. Your reset handler sets up the C-runtime-style state (stack pointer,
    .bss, vector table), brings up the clock tree, and calls `main`.
 
-rp-asm provides all of step 4 for you — see `src/startup.S` and
+rp-asm provides all of step 4 for you, see `src/startup.S` and
 `src/main.S`. From your perspective, "boot" just means "`main` gets
 called". We will read the bootrom-to-`main` handoff in [chapter 6](06-your-first-program.md).
 
@@ -156,7 +156,7 @@ Why this one?
   files. There are no NDAs.
 - **Cheap and available.** US$5 for a Pico 2, easy to source globally.
 - **Modern Cortex-M33.** Old enough to have lots of tutorials, new
-  enough to have full Thumb-2 — which makes assembly much easier than
+  enough to have full Thumb-2, which makes assembly much easier than
   on, say, an STM32F0.
 - **Cool peripherals.** PIO in particular is unique to this chip
   family and a delight to program.
@@ -173,7 +173,7 @@ Why this one?
 
 3. **Bootrom hand-off.** From the boot flowchart, what is in `r13`
    (the stack pointer) at the instant `_reset` starts executing?
-   *(The value the bootrom loaded from word 0 of the vector table —
+   *(The value the bootrom loaded from word 0 of the vector table,
    i.e. the symbol `_stack_top` declared in `src/startup.S`.)*
 
 4. **Why no SRAM boot?** The README notes that SRAM-resident images
@@ -193,4 +193,4 @@ toolchain and start writing.
 
 ---
 
-[← Chapter 2 — What is assembly language?](02-what-is-assembly.md) · [Table of contents](README.md) · [Chapter 4 — The Cortex-M33 and Thumb-2 →](04-cortex-m33-and-thumb2.md)
+[← Chapter 2: What is assembly language?](02-what-is-assembly.md) · [Table of contents](README.md) · [Chapter 4: The Cortex-M33 and Thumb-2 →](04-cortex-m33-and-thumb2.md)

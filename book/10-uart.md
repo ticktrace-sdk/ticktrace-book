@@ -1,7 +1,7 @@
-# Chapter 10 — UART: talking to the host
+# Chapter 10: UART: talking to the host
 
 A blinking LED is satisfying but limited. To debug real programs you
-need a way for the chip to *say things* — print numbers, log states,
+need a way for the chip to *say things*, print numbers, log states,
 report errors. The classic way to do that on a microcontroller is a
 **UART**: a serial port that sends bytes one at a time over a single
 wire.
@@ -22,8 +22,8 @@ A standard frame is:
 - 8 **data bits** (least-significant first)
 - One **stop bit** (line goes high)
 
-That's 10 bit-times per byte. At 115200 baud — the rate rp-asm
-defaults to — each byte takes about 87 µs.
+That's 10 bit-times per byte. At 115200 baud, the rate rp-asm
+defaults to, each byte takes about 87 µs.
 
 ![UART frame for the byte 'A' = 0x41](figures/uart-frame.svg)
 
@@ -41,8 +41,8 @@ right now:
 
 | Name | Offset | Function |
 | --- | --- | --- |
-| `UARTDR` | 0x000 | Data register — write to send, read to receive |
-| `UARTFR` | 0x018 | Flag register — busy/full/empty status |
+| `UARTDR` | 0x000 | Data register, write to send, read to receive |
+| `UARTFR` | 0x018 | Flag register, busy/full/empty status |
 | `UARTIBRD` | 0x024 | Integer baud divisor |
 | `UARTFBRD` | 0x028 | Fractional baud divisor |
 | `UARTLCR_H` | 0x02C | Line control: data bits, stop bits, parity, FIFO enable |
@@ -54,13 +54,13 @@ right now:
 
 The base address is `0x40070000` for UART0 and `0x40078000` for UART1.
 
-We won't program every bit — that's what the driver does — but it's
+We won't program every bit, that's what the driver does, but it's
 worth knowing the shape of the hardware so the driver isn't a black
 box.
 
 ## Bringing a UART up
 
-The init sequence has a particular shape — six steps in order, and
+The init sequence has a particular shape, six steps in order, and
 the order matters because the PL011 latches some settings only on
 specific writes:
 
@@ -71,7 +71,7 @@ flowchart TD
     C --> D[Set GP0/GP1 FUNCSEL = UART, clear ISO/OD on pads]
     D --> E[Compute IBRD + FBRD for target baud]
     E --> F[Write IBRD, then FBRD]
-    F --> G[Write LCR_H — latches baud, sets 8N1, enables FIFO]
+    F --> G[Write LCR_H : latches baud, sets 8N1, enables FIFO]
     G --> H[Write CR = UARTEN | TXE | RXE]
     H --> I[UART is ready]
 ```
@@ -97,7 +97,7 @@ After this, writes to `UARTDR` are transmitted.
 
 In rp-asm you don't have to do this yourself; you call `uart0_init`
 (which in turn calls `uart_init(0, 115200, 12000000)`) and the driver
-does the dance. Take a moment to read `src/uart.S` — at this point you
+does the dance. Take a moment to read `src/uart.S`, at this point you
 should be able to follow most of it. The `M_UART_BASE_FROM_IDX` macro
 at the top is a particularly nice idiom: it converts an index 0/1 into
 the base address without a multiply.
@@ -189,11 +189,11 @@ Walk through:
   ```
 
 - We keep the string pointer in `r4` and the UART base in `r5` so they
-  survive across loop iterations — registers `r0`–`r3` get clobbered
+  survive across loop iterations, registers `r0`–`r3` get clobbered
   by the busy-wait `ldr`/`tst` cycle if it took a long route.
 - `ldrb r0, [r4]` loads one byte (zero-extended) from the address in
   `r4`.
-- `cbz r0, .Ldone` is "compare and branch if zero" — a single
+- `cbz r0, .Ldone` is "compare and branch if zero", a single
   instruction that combines a zero-test and a branch. It's the natural
   way to test for the NUL terminator.
 - The inner `1:` loop polls the flag register; the `str` writes the
@@ -207,7 +207,7 @@ see every concept we've discussed.
 
 ## A complete example program
 
-Here is a full standalone program — `examples/myhello.S` if you want
+Here is a full standalone program, `examples/myhello.S` if you want
 to add it to your tree:
 
 ```asm
@@ -256,8 +256,8 @@ without any extra hardware.
 
 The rp-asm USB driver (`src/usb.S`) implements this. Many of the
 `*_usb_demo.S` examples use it. Reading the USB driver is a much
-longer journey than reading the UART driver — USB is genuinely
-complicated — so we don't take that detour in this book. But know
+longer journey than reading the UART driver, USB is genuinely
+complicated, so we don't take that detour in this book. But know
 that the *interface* the rest of your code sees is similar:
 `cdc_putc(byte)`, `cdc_puts(ptr)`, `cdc_getc()`.
 
@@ -273,12 +273,12 @@ that the *interface* the rest of your code sees is similar:
 3. **Why the order?** Looking at the init flowchart, what happens if
    you write `LCR_H` *before* `IBRD`/`FBRD`? *(The new baud divisors
    don't take effect until LCR_H is written, so the UART runs at the
-   old rate. Writing LCR_H twice is also a valid alternative — the
+   old rate. Writing LCR_H twice is also a valid alternative, the
    second write latches.)*
 
 4. **Spin-loop reasoning.** In our `my_puts`, why is the FIFO-full
    poll inside the per-byte loop and not outside it? *(The FIFO is 32
-   bytes deep — for a short string, the loop never spins. For a long
+   bytes deep, for a short string, the loop never spins. For a long
    string the FIFO fills up around byte 32 and we wait per-byte after
    that. Polling once at the start would only let us send 32 bytes.)*
 
@@ -293,13 +293,13 @@ that the *interface* the rest of your code sees is similar:
    1:
    ```
    What does this do? *(Drops bytes when the FIFO is full instead of
-   waiting. Sometimes that's what you want — non-blocking sends — but
+   waiting. Sometimes that's what you want, non-blocking sends, but
    it's a different contract from `puts`.)*
 
 ## What's next
 
 The [final substantive chapter](11-timers-and-interrupts.md)
-introduces **interrupts** — the mechanism that lets hardware events
+introduces **interrupts**, the mechanism that lets hardware events
 (a timer firing, a UART byte arriving) call your code without you
 polling for it.
 
@@ -307,4 +307,4 @@ polling for it.
 
 ---
 
-[← Chapter 9 — GPIO and memory-mapped I/O](09-gpio-and-memory-mapped-io.md) · [Table of contents](README.md) · [Chapter 11 — Timers and interrupts →](11-timers-and-interrupts.md)
+[← Chapter 9: GPIO and memory-mapped I/O](09-gpio-and-memory-mapped-io.md) · [Table of contents](README.md) · [Chapter 11: Timers and interrupts →](11-timers-and-interrupts.md)

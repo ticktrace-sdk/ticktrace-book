@@ -1,10 +1,10 @@
-# Chapter 2 — What is assembly language?
+# Chapter 2: What is assembly language?
 
 Before we touch a Pico, let's get clear on what assembly *is*.
 
 ## The two-sentence answer
 
-A CPU executes binary instructions — patterns of bits the silicon knows
+A CPU executes binary instructions, patterns of bits the silicon knows
 how to interpret. Assembly language is a human-readable, one-to-one
 spelling of those instructions, so that you can write them without
 juggling hex by hand.
@@ -22,7 +22,7 @@ chip. There are only three things to know.
 
 A **register** is a small, named storage slot inside the CPU itself.
 On the ARM Cortex-M33 you have 16 of them, named `r0` through `r15`.
-Each holds 32 bits — a single 4-byte word.
+Each holds 32 bits, a single 4-byte word.
 
 ![ARM Cortex-M33 register file](figures/register-file.svg)
 
@@ -45,7 +45,7 @@ A few of the registers are special:
 - `r15` is the **program counter** (`pc`). It points at the instruction
   about to execute. Writing to it is how branches work under the hood.
 
-The other thirteen — `r0` through `r12` — are general-purpose. You can
+The other thirteen, `r0` through `r12`, are general-purpose. You can
 use them for whatever you like, subject to a few conventions we'll meet
 in chapter 8.
 
@@ -53,7 +53,7 @@ in chapter 8.
 
 Outside the CPU there's a much bigger, much slower pool of storage:
 **memory**. On the RP2350 this is 520 KB of SRAM. Every byte has an
-address — a number — and instructions like "load" and "store" move data
+address, a number, and instructions like "load" and "store" move data
 between registers and memory.
 
 You can't add two numbers that live in memory directly. The pattern is
@@ -66,8 +66,8 @@ always:
 
 This load-store discipline is the defining feature of RISC ("reduced
 instruction set computer") architectures like ARM. It is *not* how an
-x86 instruction set works — `add [some_address], 5` is perfectly legal
-on x86 — but it is how every modern phone, tablet, and most embedded
+x86 instruction set works, `add [some_address], 5` is perfectly legal
+on x86, but it is how every modern phone, tablet, and most embedded
 chips work.
 
 ### 3. Instructions
@@ -84,11 +84,11 @@ a few kinds:
   instruction looks at.
 - **Branches.** `b label` jumps unconditionally. `beq label` jumps only
   if the zero flag is set. `bl func` ("branch and link") jumps and saves
-  the return address in `lr` — that's how function calls work.
+  the return address in `lr`, that's how function calls work.
 
-That is the entire toolkit. Even the most elaborate program — a
+That is the entire toolkit. Even the most elaborate program, a
 1300-page operating system kernel, a web browser, this very text editor
-— is, somewhere inside, a sequence of these primitive instructions.
+is, somewhere inside, a sequence of these primitive instructions.
 
 The CPU runs that sequence in a tight loop:
 
@@ -136,7 +136,7 @@ conditional branch can react to the result. Plain `add` adds but
 leaves the flags alone.
 
 On the Cortex-M0+ inside the original Raspberry Pi Pico, almost every
-short-form instruction sets flags whether you want to or not — the
+short-form instruction sets flags whether you want to or not, the
 `s` is encoded into the 16-bit instruction shape. On the Cortex-M33
 inside the Pico 2 you have more flexibility. We'll come back to this in
 chapter 4.
@@ -146,7 +146,7 @@ chapter 4.
 When the assembler sees `movs r0, #3`, it looks up the bit pattern for
 "move-immediate-with-flag-update", fills in the register field (r0 = 0)
 and the immediate field (3), and emits the 16-bit value `0x2003`. That's
-all an assembler does — it is a glorified table lookup.
+all an assembler does, it is a glorified table lookup.
 
 The word `movs` is called a **mnemonic**. The bit pattern is called an
 **opcode** (more precisely the opcode and operand fields packed
@@ -157,11 +157,11 @@ information.
 
 Real assembly files contain more than instructions. They contain:
 
-- **Labels** like `main:` or `1:` — names attached to addresses.
-- **Directives** like `.section .text` or `.equ FOO, 42` — instructions
+- **Labels** like `main:` or `1:`, names attached to addresses.
+- **Directives** like `.section .text` or `.equ FOO, 42`, instructions
   to the *assembler*, not to the CPU. They control output layout,
   define constants, align things, and so on.
-- **Comments** — `@ ...` to end of line.
+- **Comments**, `@ ...` to end of line.
 
 Chapter 7 covers the syntax in detail. For now, when you see something
 that starts with a dot, it's a directive; when you see something that
@@ -199,8 +199,8 @@ ends with a colon, it's a label.
 
 ## What's next
 
-You now know enough vocabulary — register, memory, instruction, label
-— to read any assembly program. The next two chapters give you the
+You now know enough vocabulary, register, memory, instruction, label
+to read any assembly program. The next two chapters give you the
 specific context for *our* assembly: the [RP2 chip family](03-the-rp2-family.md),
 and the [ARM Cortex-M33 core](04-cortex-m33-and-thumb2.md) that runs
 our code.
@@ -209,4 +209,4 @@ our code.
 
 ---
 
-[← Chapter 1 — Introduction](01-introduction.md) · [Table of contents](README.md) · [Chapter 3 — The RP2 family →](03-the-rp2-family.md)
+[← Chapter 1: Introduction](01-introduction.md) · [Table of contents](README.md) · [Chapter 3: The RP2 family →](03-the-rp2-family.md)

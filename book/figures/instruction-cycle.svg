@@ -53,7 +53,7 @@
   <!-- loop back arrow -->
   <path d="M615,150 L615,200 L75,200 L75,150" class="arrow" />
   <polygon points="75,150 71,158 79,158" fill="#374151" />
-  <text x="345" y="222" text-anchor="middle" class="note">repeat — billions of times per second</text>
+  <text x="345" y="222" text-anchor="middle" class="note">repeat, billions of times per second</text>
 
   <!-- registers panel -->
   <g transform="translate(20,250)">

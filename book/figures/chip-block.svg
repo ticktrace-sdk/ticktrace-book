@@ -24,7 +24,7 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">RP2350 — chip-level block diagram</text>
+  <text x="20" y="28" class="title">RP2350, chip-level block diagram</text>
 
   <!-- CPU cluster -->
   <g transform="translate(40,60)">

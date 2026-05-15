@@ -238,7 +238,7 @@
 
   <!-- GPIO idioms -->
   <g transform="translate(410, 540)">
-    <text x="0" y="0" class="h">GPIO idioms — pin 25 LED</text>
+    <text x="0" y="0" class="h">GPIO idioms, pin 25 LED</text>
     <rect x="-6" y="8" width="356" height="140" rx="4" class="panel-green" />
     <text x="0"  y="26" class="code">@ drive HIGH (atomic SET)</text>
     <text x="0"  y="40" class="code">ldr   r0, =SIO_BASE + SIO_GPIO_OUT_SET_OFFS</text>
@@ -264,12 +264,12 @@
 
   <!-- Scheduler / multicore (mini) -->
   <g transform="translate(410, 814)">
-    <text x="0" y="0" class="h">Scheduler &amp; multicore — one-liners</text>
+    <text x="0" y="0" class="h">Scheduler &amp; multicore, one-liners</text>
     <rect x="-6" y="8" width="356" height="146" rx="4" class="panel-violet" />
     <text x="0"  y="26" class="code">bl      sched_init</text>
     <text x="0"  y="40" class="code">@ task_create(id, fn, prio)</text>
     <text x="0"  y="54" class="code">bl      task_create</text>
-    <text x="0"  y="68" class="code">@ task_post(id) — 5 cycles, STR to ISPR</text>
+    <text x="0"  y="68" class="code">@ task_post(id), 5 cycles, STR to ISPR</text>
     <text x="0"  y="82" class="code">bl      task_post</text>
     <text x="0"  y="96" class="code">b       sched_run     @ never returns</text>
     <text x="0"  y="118" class="code">@ multicore_launch_core1(entry, sp, vtbl)</text>
@@ -300,7 +300,7 @@
   </g>
 
   <!-- ============================================================ -->
-  <!-- Bottom strip — branding                                       -->
+  <!-- Bottom strip, branding                                       -->
   <!-- ============================================================ -->
   <line x1="40" y1="1090" x2="760" y2="1090" class="divider" />
   <text x="40"  y="1108" class="footer">github.com/amken3d/rp-asm · pure Thumb-2 SDK for Pico 2 · book/ has the full reference</text>

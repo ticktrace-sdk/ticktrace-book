@@ -1,11 +1,11 @@
-# Chapter 8 — Functions and the calling convention
+# Chapter 8: Functions and the calling convention
 
 Up to now we've been calling rp-asm driver functions without thinking
 too hard about *how* the calling works. In this chapter we make the
 rules explicit, so that you can write your own functions and have
 them play nicely with the rest of the SDK.
 
-The set of rules we're about to learn is called **AAPCS** — the ARM
+The set of rules we're about to learn is called **AAPCS**, the ARM
 Architecture Procedure Call Standard. Every driver in `src/` obeys
 it. Every example in `examples/` obeys it. If your code obeys it too,
 your functions can call drivers, drivers can call your functions, and
@@ -35,9 +35,9 @@ ARM assembly should follow if it wants to interoperate.
 | `r3` | Argument 4 | Save before call if needed | May freely clobber |
 | `r4`–`r11` | General-purpose | Don't need to save | **Must save/restore** if used |
 | `r12` (ip) | Scratch | Save before call if needed | May freely clobber |
-| `r13` (sp) | Stack pointer | — | Must keep 8-byte aligned at call boundaries |
-| `r14` (lr) | Return address | — | Must restore before returning |
-| `r15` (pc) | Program counter | — | — |
+| `r13` (sp) | Stack pointer |  | Must keep 8-byte aligned at call boundaries |
+| `r14` (lr) | Return address |  | Must restore before returning |
+| `r15` (pc) | Program counter |  |, |
 
 In one sentence: **r0–r3 and r12 are scratch; r4–r11 must be preserved
 across calls.**
@@ -66,7 +66,7 @@ shape. If you do too, your functions compose with everything else.
 
 ## Anatomy of a well-behaved function
 
-The simplest case — a leaf function (one that doesn't call anything
+The simplest case, a leaf function (one that doesn't call anything
 else):
 
 ```asm
@@ -82,7 +82,7 @@ No push, no pop. We didn't touch `r4`–`r11`, so nothing to save. We
 didn't `bl` anything, so `lr` is still our return address. `bx lr`
 returns.
 
-Next case — a function that uses one callee-saved register:
+Next case, a function that uses one callee-saved register:
 
 ```asm
     .section .text.double_then_inc, "ax"
@@ -98,11 +98,11 @@ double_then_inc:
 
 Walking through:
 
-- `push {r4, lr}` — Save `r4` (because we're about to overwrite it)
+- `push {r4, lr}`, Save `r4` (because we're about to overwrite it)
   and `lr` (because `bl add_one` will overwrite it).
 - We stash the input in `r4` because `bl` is going to clobber `r0`.
 - After the call, `r0` holds `arg + 1`. We add the saved arg back.
-- `pop {r4, pc}` — Restore `r4`, and pop the saved `lr` directly into
+- `pop {r4, pc}`, Restore `r4`, and pop the saved `lr` directly into
   `pc`, which returns. This is the standard return-with-restore idiom.
 
 ## Why `pop {…, pc}` works as a return
@@ -172,14 +172,14 @@ takes 3 args, so it fits), the convention is the same as in C.
 ## Interrupt handlers are different
 
 There is one important exception: an **interrupt handler** is not
-called by code — it's called by the hardware. The CPU itself pushes a
+called by code, it's called by the hardware. The CPU itself pushes a
 specific set of registers (`r0`–`r3`, `r12`, `lr`, `pc`, and the
 PSR) onto the current stack and jumps to your handler.
 
 Because the hardware already saved the caller-saved set, your handler
 can clobber `r0`–`r3` freely without saving them. But you still have
 to save `r4`–`r11` if you use them. And you return by branching to the
-special `lr` value (`EXC_RETURN`) the hardware loaded — usually you
+special `lr` value (`EXC_RETURN`) the hardware loaded, usually you
 do this implicitly by `bx lr` or, more commonly, by `pop {…, pc}`
 just like a regular function.
 
@@ -187,7 +187,7 @@ Chapter 11 has a worked example.
 
 ## Worked example: a function that reads a pin
 
-Let's write our own driver function. We want `gpio_read(pin)` — return
+Let's write our own driver function. We want `gpio_read(pin)`, return
 1 if the pin reads high, 0 if low.
 
 The hardware register we need is `SIO_GPIO_IN`, at address
@@ -222,7 +222,7 @@ Read it:
 - Shifts that snapshot right by `pin` positions, putting the bit we
   want into position 0.
 - Masks to bit 0 and returns it in `r0`.
-- Touches only `r0` and `r1` — both caller-saved — so no push/pop is
+- Touches only `r0` and `r1`, both caller-saved, so no push/pop is
   needed and `lr` is untouched.
 
 You'd place this function in a file `mygpio.S`, assemble it alongside
@@ -257,7 +257,7 @@ variation on this template.
 A few patterns that go wrong, with their symptoms:
 
 - **Forgetting to push `lr` before a `bl`.** Your function will
-  "return" to whatever was in `lr` on entry — which is the address of
+  "return" to whatever was in `lr` on entry, which is the address of
   *its* caller. The bug is silent until you observe weirdness much
   later.
 - **Pushing `lr` and then `bx lr` instead of `pop {…, pc}`.** You leak
@@ -267,8 +267,8 @@ A few patterns that go wrong, with their symptoms:
 - **Unbalanced push/pop.** Stack pointer drifts. The next `pop` returns
   to garbage.
 
-The compiler catches none of these for you — you're writing assembly
-— so develop the habit of reviewing every function's prologue/epilogue
+The compiler catches none of these for you, you're writing assembly
+so develop the habit of reviewing every function's prologue/epilogue
 pair as one unit. They should always match.
 
 ## Exercises
@@ -299,12 +299,12 @@ pair as one unit. They should always match.
    still on the stack. Next caller's frame is now misaligned.)*
 
 4. **Why `pop {…, pc}`?** Why is `pop {r4, pc}` strictly better than
-   `pop {r4, lr}; bx lr`? *(One fewer instruction, same effect — the
+   `pop {r4, lr}; bx lr`? *(One fewer instruction, same effect, the
    popped value goes straight into `pc` and the bottom-bit-thumb-marker
    trick still works.)*
 
 5. **ISR rules.** True or false: an ISR can freely clobber `r0`–`r3`
-   and `r12` without saving them. *(True — the hardware saved them on
+   and `r12` without saving them. *(True, the hardware saved them on
    the way in. But `r4`–`r11` must still be saved if the ISR uses
    them. We meet this again in [chapter 11](11-timers-and-interrupts.md).)*
 
@@ -320,4 +320,4 @@ UART in [chapter 10](10-uart.md), and timers with interrupts in
 
 ---
 
-[← Chapter 7 — Assembler syntax and instructions](07-assembler-syntax.md) · [Table of contents](README.md) · [Chapter 9 — GPIO and memory-mapped I/O →](09-gpio-and-memory-mapped-io.md)
+[← Chapter 7: Assembler syntax and instructions](07-assembler-syntax.md) · [Table of contents](README.md) · [Chapter 9: GPIO and memory-mapped I/O →](09-gpio-and-memory-mapped-io.md)

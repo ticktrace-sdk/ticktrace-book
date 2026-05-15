@@ -1,4 +1,4 @@
-# Chapter 7 — Assembler syntax and instructions
+# Chapter 7: Assembler syntax and instructions
 
 You've read one program end-to-end. This chapter zooms in on the
 *syntax* of GNU ARM assembly so you can read driver code, not just
@@ -60,11 +60,11 @@ Three flavours, all interchangeable:
 rp-asm prefers `@` for short trailing comments and a banner of
 `@ ===...` for section headings.
 
-## Directives — words starting with a dot
+## Directives: words starting with a dot
 
 A **directive** is an instruction to the assembler, not to the CPU.
-They don't produce machine code (well, some do — `.word` produces 4
-bytes — but they're not CPU instructions). Here are the ones you'll
+They don't produce machine code (well, some do, `.word` produces 4
+bytes, but they're not CPU instructions). Here are the ones you'll
 meet most:
 
 ### Selecting sections
@@ -116,7 +116,7 @@ You always pair `.global` with `.thumb_func` for an exported function.
     .include "rp2350.inc"
 ```
 
-Direct textual inclusion — like `#include` in C, but without a
+Direct textual inclusion, like `#include` in C, but without a
 preprocessor. The `.inc` files in rp-asm contain only `.equ`
 definitions, no code.
 
@@ -132,12 +132,12 @@ my_function:                    @ global label
 
 Three rules:
 
-1. **Global labels** — anything that doesn't start with `.L` and isn't
+1. **Global labels**, anything that doesn't start with `.L` and isn't
    purely numeric. Visible to the linker, can be referenced from other
    files (with `.global` for export).
-2. **File-local labels** — start with `.L`. Invisible to the linker;
+2. **File-local labels**, start with `.L`. Invisible to the linker;
    you can have `.Lloop` in fifty different files without conflict.
-3. **Numeric labels** — just a digit. Reusable. Reference them with a
+3. **Numeric labels**, just a digit. Reusable. Reference them with a
    direction suffix: `1f` means "the next `1:` forward", `1b` means
    "the previous `1:` backward". Used for tight inline loops where
    inventing a name would be noise.
@@ -158,13 +158,13 @@ Now the instruction syntax itself. The general form is:
     MNEMONIC{S}{COND}  DEST, SRC1, SRC2{, SHIFT}
 ```
 
-- **MNEMONIC** — the instruction (e.g. `add`, `mov`, `ldr`).
-- **`S` suffix** — update condition flags.
-- **`COND` suffix** — conditional execution (e.g. `addeq` = add if
+- **MNEMONIC**, the instruction (e.g. `add`, `mov`, `ldr`).
+- **`S` suffix**, update condition flags.
+- **`COND` suffix**, conditional execution (e.g. `addeq` = add if
   equal). Used less in Thumb-2 than in classic ARM; we mostly use
   conditional branches instead.
-- **DEST, SRC1, SRC2** — registers or immediates.
-- **SHIFT** — optional barrel-shift on the second operand.
+- **DEST, SRC1, SRC2**, registers or immediates.
+- **SHIFT**, optional barrel-shift on the second operand.
 
 ### Immediates
 
@@ -184,8 +184,8 @@ pseudo-instruction:
     ldr     r1, =my_symbol      @ load an address
 ```
 
-The assembler tucks the constant into a nearby **literal pool** —
-a block of 4-byte values placed at the end of a function — and turns
+The assembler tucks the constant into a nearby **literal pool**,
+a block of 4-byte values placed at the end of a function, and turns
 your instruction into a PC-relative `ldr`. You don't usually have to
 think about literal pools, but if you have a very long function and
 the pool ends up too far away you'll get a "relocation truncated" error
@@ -202,7 +202,7 @@ last operand:
     orr     r0, r1, r2, lsr #4  @ r0 = r1 | (r2 >> 4)
 ```
 
-This is occasionally useful in rp-asm — for example when computing
+This is occasionally useful in rp-asm, for example when computing
 "pin × 8 + offset" to find a per-pin GPIO control register.
 
 ### Memory addressing modes
@@ -237,19 +237,19 @@ gpio_set_function:
 
 Five instructions. Read it:
 
-1. `lsls r2, r0, #3` — Shift `r0` (the pin number) left by 3, putting
+1. `lsls r2, r0, #3`, Shift `r0` (the pin number) left by 3, putting
    the result in `r2`. Shifting left by 3 is multiplying by 8. The
    GPIO control registers are 8 bytes apart per pin.
-2. `adds r2, #IO_BANK0_GPIO_CTRL_OFFS` — Add 4 (the offset of the
+2. `adds r2, #IO_BANK0_GPIO_CTRL_OFFS`, Add 4 (the offset of the
    `CTRL` register within each per-pin block) to `r2`. Now `r2` holds
    `4 + pin*8`, the offset of the CTRL register for the requested pin.
-3. `ldr r3, =IO_BANK0_BASE` — Load the IO bank's base address into
+3. `ldr r3, =IO_BANK0_BASE`, Load the IO bank's base address into
    `r3`. That's `0x40028000` on the RP2350.
-4. `str r1, [r3, r2]` — Store the function code (passed in `r1`) to
+4. `str r1, [r3, r2]`, Store the function code (passed in `r1`) to
    the address `r3 + r2`, i.e. the GPIO CTRL register for that pin.
-5. `bx lr` — Return to the caller.
+5. `bx lr`, Return to the caller.
 
-The function takes two arguments — `r0` = pin, `r1` = function code —
+The function takes two arguments, `r0` = pin, `r1` = function code,
 following the AAPCS calling convention we'll formalise in chapter 8.
 It clobbers `r0`–`r3` (and the assembler is content to do so, because
 those are caller-saved). It does not touch `r4`–`r11`, so it does not
@@ -272,10 +272,10 @@ even if you only use one. With per-function sections, the linker can
 
 The linker script in `link/flash.ld` then groups all `.text.*` sections
 into one final `.text` output section, all `.rodata.*` into `.rodata`,
-and so on. The result is laid out in flash starting at `0x10000000` —
+and so on. The result is laid out in flash starting at `0x10000000`,
 see the image-layout figure in [chapter 6](06-your-first-program.md).
 
-You don't have to write linker scripts to follow this book — `flash.ld`
+You don't have to write linker scripts to follow this book, `flash.ld`
 already exists and the Makefile uses it. But it's good to know the
 mechanism is there.
 
@@ -328,16 +328,16 @@ in [appendix B](B-cheat-sheet.md).
 5. **Why per-function sections?** Looking at the section-linking
    figure, what would change in the final binary if every function
    in `gpio.S` were in one big `.text.gpio` section?
-   *(The linker couldn't drop unused functions individually — the
+   *(The linker couldn't drop unused functions individually, the
    whole gpio block would either be included or excluded together,
    blowing up the binary.)*
 
 The [next chapter](08-functions-and-calling-convention.md) explains
 the *conventions* around how functions push, pop, and call each other
-— the rules that make all the rp-asm drivers compose.
+the rules that make all the rp-asm drivers compose.
 
 <!-- nav-footer -->
 
 ---
 
-[← Chapter 6 — Your first program](06-your-first-program.md) · [Table of contents](README.md) · [Chapter 8 — Functions and the calling convention →](08-functions-and-calling-convention.md)
+[← Chapter 6: Your first program](06-your-first-program.md) · [Table of contents](README.md) · [Chapter 8: Functions and the calling convention →](08-functions-and-calling-convention.md)

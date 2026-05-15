@@ -19,7 +19,7 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">rp-asm scheduler — one post, one task fires</text>
+  <text x="20" y="28" class="title">rp-asm scheduler, one post, one task fires</text>
   <text x="20" y="48" class="note">Tasks are NVIC IRQ lines. task_post is one STR to NVIC_ISPR. The CPU's own interrupt logic does the dispatch.</text>
 
   <!-- ISR / event source -->
@@ -58,7 +58,7 @@
     <text x="110" y="22" text-anchor="middle" class="label">Task body (handler)</text>
     <text x="110" y="42" text-anchor="middle" class="note">runs at the task's NVIC priority</text>
     <text x="110" y="58" text-anchor="middle" class="note">to completion, then returns</text>
-    <text x="110" y="74" text-anchor="middle" class="note">no save/restore — shared MSP</text>
+    <text x="110" y="74" text-anchor="middle" class="note">no save/restore, shared MSP</text>
   </g>
 
   <!-- Return arrow: Task body bottom → sched_run right edge -->
@@ -69,7 +69,7 @@
   <!-- sched_run / idle -->
   <g transform="translate(20,380)">
     <rect x="0" y="0" width="200" height="60" class="idle" rx="6" />
-    <text x="100" y="22" text-anchor="middle" class="label">sched_run — main loop</text>
+    <text x="100" y="22" text-anchor="middle" class="label">sched_run, main loop</text>
     <text x="100" y="42" text-anchor="middle" class="note">cpsie i; loop { wfi }</text>
   </g>
 
@@ -85,7 +85,7 @@
     <text x="14" y="110" class="note">runs the new task,</text>
     <text x="14" y="126" class="note">returns, and resumes.</text>
     <text x="14" y="156" class="note">Same priority?</text>
-    <text x="14" y="172" class="note">Run to completion —</text>
+    <text x="14" y="172" class="note">Run to completion;</text>
     <text x="14" y="188" class="note">no preemption between</text>
     <text x="14" y="204" class="note">peer tasks.</text>
   </g>

@@ -28,7 +28,7 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">IO_BANK0.GPIO[n].CTRL — 32-bit register layout</text>
+  <text x="20" y="28" class="title">IO_BANK0.GPIO[n].CTRL, 32-bit register layout</text>
   <text x="20" y="48" class="note">One per pin. Address = IO_BANK0_BASE + 4 + n × 8.</text>
 
   <!-- 32 cells, 20px wide each = 640px wide row at x=60 -->
@@ -82,20 +82,20 @@
   <!-- Field descriptions -->
   <g transform="translate(20,160)">
     <rect x="0" y="0" width="14" height="14" class="funcsel" />
-    <text x="22" y="12" class="lab"><tspan font-weight="bold">FUNCSEL</tspan> — peripheral function (0..31). 5 = SIO, 2 = UART, 3 = I²C, 6 = PIO0, …</text>
+    <text x="22" y="12" class="lab"><tspan font-weight="bold">FUNCSEL</tspan>, peripheral function (0..31). 5 = SIO, 2 = UART, 3 = I²C, 6 = PIO0, …</text>
 
     <rect x="0" y="22" width="14" height="14" class="out" />
-    <text x="22" y="34" class="lab"><tspan font-weight="bold">OUTOVER</tspan> — override the output signal (0 = pass through, 2 = drive low, 3 = drive high).</text>
+    <text x="22" y="34" class="lab"><tspan font-weight="bold">OUTOVER</tspan>, override the output signal (0 = pass through, 2 = drive low, 3 = drive high).</text>
 
     <rect x="0" y="44" width="14" height="14" class="oe" />
-    <text x="22" y="56" class="lab"><tspan font-weight="bold">OEOVER</tspan> — override the output enable (0 = pass through, 3 = always-enabled).</text>
+    <text x="22" y="56" class="lab"><tspan font-weight="bold">OEOVER</tspan>, override the output enable (0 = pass through, 3 = always-enabled).</text>
 
     <rect x="0" y="66" width="14" height="14" class="in" />
-    <text x="22" y="78" class="lab"><tspan font-weight="bold">INOVER</tspan> — override the input value seen by the peripheral.</text>
+    <text x="22" y="78" class="lab"><tspan font-weight="bold">INOVER</tspan>, override the input value seen by the peripheral.</text>
 
     <rect x="0" y="88" width="14" height="14" class="irq" />
-    <text x="22" y="100" class="lab"><tspan font-weight="bold">IRQOVER</tspan> — override the interrupt source signal.</text>
+    <text x="22" y="100" class="lab"><tspan font-weight="bold">IRQOVER</tspan>, override the interrupt source signal.</text>
   </g>
 
-  <text x="20" y="290" class="note">rp-asm's gpio_set_function(pin, func) writes FUNCSEL with other fields zero — overrides off, peripheral in control.</text>
+  <text x="20" y="290" class="note">rp-asm's gpio_set_function(pin, func) writes FUNCSEL with other fields zero, overrides off, peripheral in control.</text>
 </svg>

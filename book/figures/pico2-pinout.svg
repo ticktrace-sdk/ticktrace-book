@@ -29,7 +29,7 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">Raspberry Pi Pico 2 — pin map (simplified)</text>
+  <text x="20" y="28" class="title">Raspberry Pi Pico 2, pin map (simplified)</text>
   <text x="20" y="48" class="note">Selected pins relevant to this book. Pin numbering follows the silkscreen.</text>
 
   <!-- Board outline -->
@@ -56,11 +56,11 @@
     <!-- pin 1: GP0 / UART0 TX -->
     <rect x="180" y="100" width="22" height="14" class="pin-gp" />
     <text x="191" y="111" text-anchor="middle" class="pin-txt">1</text>
-    <text x="170" y="111" text-anchor="end" class="ext-txt">GP0 — UART0 TX</text>
+    <text x="170" y="111" text-anchor="end" class="ext-txt">GP0, UART0 TX</text>
 
     <rect x="180" y="120" width="22" height="14" class="pin-gp" />
     <text x="191" y="131" text-anchor="middle" class="pin-txt">2</text>
-    <text x="170" y="131" text-anchor="end" class="ext-txt">GP1 — UART0 RX</text>
+    <text x="170" y="131" text-anchor="end" class="ext-txt">GP1, UART0 RX</text>
 
     <rect x="180" y="140" width="22" height="14" class="pin-gnd" />
     <text x="191" y="151" text-anchor="middle" class="pin-txt">3</text>
@@ -68,11 +68,11 @@
 
     <rect x="180" y="160" width="22" height="14" class="pin-gp" />
     <text x="191" y="171" text-anchor="middle" class="pin-txt">4</text>
-    <text x="170" y="171" text-anchor="end" class="ext-txt">GP2 — I²C1 SDA</text>
+    <text x="170" y="171" text-anchor="end" class="ext-txt">GP2, I²C1 SDA</text>
 
     <rect x="180" y="180" width="22" height="14" class="pin-gp" />
     <text x="191" y="191" text-anchor="middle" class="pin-txt">5</text>
-    <text x="170" y="191" text-anchor="end" class="ext-txt">GP3 — I²C1 SCL</text>
+    <text x="170" y="191" text-anchor="end" class="ext-txt">GP3, I²C1 SCL</text>
 
     <rect x="180" y="200" width="22" height="14" class="pin-gp" />
     <text x="191" y="211" text-anchor="middle" class="pin-txt">6</text>
@@ -87,11 +87,11 @@
   <g>
     <rect x="518" y="100" width="22" height="14" class="pin-sys" />
     <text x="529" y="111" text-anchor="middle" class="pin-txt">40</text>
-    <text x="550" y="111" class="ext-txt">VBUS — 5 V from USB</text>
+    <text x="550" y="111" class="ext-txt">VBUS, 5 V from USB</text>
 
     <rect x="518" y="120" width="22" height="14" class="pin-pwr" />
     <text x="529" y="131" text-anchor="middle" class="pin-txt">39</text>
-    <text x="550" y="131" class="ext-txt">VSYS — 1.8–5.5 V input</text>
+    <text x="550" y="131" class="ext-txt">VSYS, 1.8–5.5 V input</text>
 
     <rect x="518" y="140" width="22" height="14" class="pin-gnd" />
     <text x="529" y="151" text-anchor="middle" class="pin-txt">38</text>
@@ -107,7 +107,7 @@
 
     <rect x="518" y="260" width="22" height="14" class="pin-gp" />
     <text x="529" y="271" text-anchor="middle" class="pin-txt">25</text>
-    <text x="550" y="271" class="ext-txt">GP19 — SPI0 TX</text>
+    <text x="550" y="271" class="ext-txt">GP19, SPI0 TX</text>
   </g>
 
   <!-- legend (below the board outline at y=420) -->

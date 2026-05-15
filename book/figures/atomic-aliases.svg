@@ -20,7 +20,7 @@
   </style>
 
   <text x="20" y="28" class="title">Four addresses, one hardware register</text>
-  <text x="20" y="48" class="note">Atomic alias windows on RP2350 APB peripherals — write 1s to set/clear/toggle bits.</text>
+  <text x="20" y="48" class="note">Atomic alias windows on RP2350 APB peripherals, write 1s to set/clear/toggle bits.</text>
 
   <!-- Four alias addresses on the left -->
   <g transform="translate(20,90)">

@@ -1,4 +1,4 @@
-# Chapter 12 — Scheduling
+# Chapter 12: Scheduling
 
 [Chapter 11](11-timers-and-interrupts.md) introduced interrupts as a
 way to react to single hardware events. Real firmware usually has more
@@ -8,14 +8,14 @@ for *which job runs when*. That story is **scheduling**.
 
 This chapter covers the two basic flavours of scheduling, names the
 RTOSes you'll meet in the wild, and then explains what rp-asm's
-scheduler does — and, just as importantly, what it does not.
+scheduler does, and, just as importantly, what it does not.
 
 ## Cooperative scheduling
 
 In a **cooperative** scheduler, each task runs until it voluntarily
 yields. The runtime cannot take the CPU back.
 
-The simplest possible cooperative scheduler is the **superloop** —
+The simplest possible cooperative scheduler is the **superloop**,
 the pattern you've already used in chapter 6:
 
 ```asm
@@ -35,7 +35,7 @@ task and explicit yield points. Tasks "suspend" by returning, the
 scheduler picks the next one, runs it until *it* returns, and so on.
 This is essentially what async/await looks like on a microcontroller.
 
-**Pros:** trivial to reason about — no race conditions inside a task,
+**Pros:** trivial to reason about, no race conditions inside a task,
 no preemption surprises, no per-task stacks needed (one shared stack).
 **Cons:** a misbehaving task can hold the CPU forever; latency depends
 on the sum of every other task's worst-case runtime.
@@ -49,9 +49,9 @@ task runs, eventually control returns.
 
 Preemption is usually driven by either:
 
-- **A periodic timer interrupt** — the classical "tick-based" RTOS.
+- **A periodic timer interrupt**, the classical "tick-based" RTOS.
   Every N µs the scheduler wakes up and decides who runs next.
-- **Event-driven preemption** — an interrupt that triggers a
+- **Event-driven preemption**, an interrupt that triggers a
   *higher-priority* task immediately yanks the CPU away from a
   lower-priority one.
 
@@ -70,17 +70,17 @@ synchronisation primitives, timers, message queues, dynamic task
 creation, and usually some form of memory protection. The ones you'll
 encounter in embedded work:
 
-- **FreeRTOS** — by far the most common. C, BSD-style licence, runs
+- **FreeRTOS**, by far the most common. C, BSD-style licence, runs
   on almost every microcontroller. Tick-based preemption, dynamic
   task creation, queues, mutexes, software timers. The pico-sdk ships
   an integration.
-- **Zephyr** — newer, Linux Foundation project, much larger in scope
+- **Zephyr**, newer, Linux Foundation project, much larger in scope
   (device tree, networking, Bluetooth). Used in increasingly serious
   industrial work.
-- **ThreadX** — Microsoft (formerly Express Logic). Heavyweight,
+- **ThreadX**, Microsoft (formerly Express Logic). Heavyweight,
   certified for medical/aviation use.
-- **embOS, RTX, ChibiOS, NuttX, Mbed OS, …** — there are dozens.
-- **QV / QXK** — the "Quantum Leaps" kernels by Miro Samek. QV is a
+- **embOS, RTX, ChibiOS, NuttX, Mbed OS, …**, there are dozens.
+- **QV / QXK**, the "Quantum Leaps" kernels by Miro Samek. QV is a
   *cooperative-within-priority-bands* kernel running on the NVIC.
   rp-asm's scheduler is directly inspired by QV.
 
@@ -90,7 +90,7 @@ ms," or "queue an arbitrary-sized message between producer and
 consumer with deep buffering." Once you reach that complexity, build
 on an RTOS rather than inventing one.
 
-But — and this is the rp-asm thesis — there is a useful regime
+But, and this is the rp-asm thesis, there is a useful regime
 *below* an RTOS where you can get most of the benefits of preemptive
 priority scheduling without paying the size, complexity, or
 indeterminism of a general kernel.
@@ -112,7 +112,7 @@ return. rp-asm just reuses it.
 The mapping:
 
 - A **task** is an NVIC IRQ line. Posting it is one `STR` to
-  `NVIC_ISPR` (interrupt set-pending) — about 5 cycles.
+  `NVIC_ISPR` (interrupt set-pending), about 5 cycles.
 - The CPU's exception entry runs the task body at the IRQ's
   priority.
 - When the task returns, the exception unwinds and (if there's
@@ -127,16 +127,16 @@ The mapping:
 From `docs/sched.md` and `src/sched.S`:
 
 ```
-sched_init()                          — set up NVIC pending bits, enable SEVONPEND
-task_create(id, fn, prio)             — install fn as the handler for IRQ id at prio
-task_post(id)                         — set NVIC_ISPR bit for id (~5 cycles)
-task_post_n(mask)                     — post several tasks atomically (~6 cycles)
-task_clear(id)                        — cancel a pending post via NVIC_ICPR
-sched_run()                           — never returns: cpsie i; loop { wfi }
-critical_enter() -> saved_primask     — disable all IRQs, return previous state
-critical_exit(saved_primask)          — restore PRIMASK
-critical_enter_basepri(prio) -> saved — mask IRQs below prio, allow higher to preempt
-critical_exit_basepri(saved)          — restore BASEPRI
+sched_init()                          : set up NVIC pending bits, enable SEVONPEND
+task_create(id, fn, prio)             : install fn as the handler for IRQ id at prio
+task_post(id)                         : set NVIC_ISPR bit for id (~5 cycles)
+task_post_n(mask)                     : post several tasks atomically (~6 cycles)
+task_clear(id)                        : cancel a pending post via NVIC_ICPR
+sched_run()                           : never returns: cpsie i; loop { wfi }
+critical_enter() -> saved_primask     : disable all IRQs, return previous state
+critical_exit(saved_primask)          : restore PRIMASK
+critical_enter_basepri(prio) -> saved : mask IRQs below prio, allow higher to preempt
+critical_exit_basepri(saved)          : restore BASEPRI
 ```
 
 The discipline that makes this work is that **every task runs to
@@ -150,7 +150,7 @@ running again," you arm a TIMER alarm whose ISR calls
 - `task_post`: 5 cycles, single STR.
 - `task_post` to task entry: 17 cycles (5 + 12 cycle hardware
   exception entry).
-- Context switch: **0 cycles** — there is no save/restore, because
+- Context switch: **0 cycles**, there is no save/restore, because
   tasks share MSP and the NVIC already does the IRQ frame for you.
 - RAM per task: ~16 bytes (a vector slot, a priority byte, some
   bookkeeping). Eight task slots is the default; raise `MAX_TASKS`
@@ -168,14 +168,14 @@ task), use the lock-free **single-producer, single-consumer** byte
 queue in `src/spsc.S`:
 
 ```
-spsc_byte_push(queue_ptr, byte)       — ~14 cycles
-spsc_byte_pop(queue_ptr)  -> r0       — ~10 cycles, -1 if empty
-spsc_byte_count(queue_ptr) -> r0      — ~8 cycles
+spsc_byte_push(queue_ptr, byte)       : ~14 cycles
+spsc_byte_pop(queue_ptr)  -> r0       : ~10 cycles, -1 if empty
+spsc_byte_count(queue_ptr) -> r0      : ~8 cycles
 spsc_reset(queue_ptr)
 ```
 
 Because the queue is single-producer/single-consumer and the
-scheduler is run-to-completion, no locks are needed at all — the
+scheduler is run-to-completion, no locks are needed at all, the
 hardware ordering guarantees are enough.
 
 A 64-byte queue (declared via the `M_SPSC_BYTE_QUEUE` macro) holds 63
@@ -189,9 +189,9 @@ a 25-cycle trampoline that reads the DWT cycle counter before and
 after each invocation. Then:
 
 ```
-task_stats_total(id)        — total cycles consumed
-task_stats_invocations(id)  — call count
-task_stats_max(id)          — worst-case cycles in a single invocation
+task_stats_total(id)        : total cycles consumed
+task_stats_invocations(id)  : call count
+task_stats_max(id)          : worst-case cycles in a single invocation
 task_stats_reset(id)
 task_stats_reset_all()
 ```
@@ -235,7 +235,7 @@ Reach for `src/sched.S` when:
 - The jobs have an obvious priority order (a control loop should
   preempt a USB CDC writer; a UART receive should preempt a status
   LED blink).
-- Each job is short and bounded — under a few thousand cycles is
+- Each job is short and bounded, under a few thousand cycles is
   typical.
 - You want hard latency guarantees you can prove with cycle counts.
 
@@ -279,7 +279,7 @@ deliberately omits.
 4. **Why 8 task slots?** Why does the scheduler default to 8 and not,
    say, 64? *(Each slot consumes a vector table entry and an NVIC
    priority byte; 8 is a sensible default for small applications.
-   Raise `MAX_TASKS` if you need more — the cost is just RAM.)*
+   Raise `MAX_TASKS` if you need more, the cost is just RAM.)*
 
 5. **Read the source.** Open `src/sched.S` and find `task_post`.
    Confirm it is, in fact, one `STR` plus the AAPCS prologue/epilogue.
@@ -294,4 +294,4 @@ same time.
 
 ---
 
-[← Chapter 11 — Timers and interrupts](11-timers-and-interrupts.md) · [Table of contents](README.md) · [Chapter 13 — Multicore →](13-multicore.md)
+[← Chapter 11: Timers and interrupts](11-timers-and-interrupts.md) · [Table of contents](README.md) · [Chapter 13: Multicore →](13-multicore.md)

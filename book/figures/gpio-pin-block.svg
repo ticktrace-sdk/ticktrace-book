@@ -61,11 +61,11 @@
     <rect x="0" y="0" width="180" height="160" class="pad" rx="6" />
     <text x="90" y="22" text-anchor="middle" class="label">PAD</text>
     <text x="90" y="44" text-anchor="middle" class="note">PADS_BANK0.GPIO[n]</text>
-    <text x="90" y="68" text-anchor="middle" class="note">ISO bit — output isolate</text>
-    <text x="90" y="86" text-anchor="middle" class="note">OD  bit — output disable</text>
-    <text x="90" y="104" text-anchor="middle" class="note">IE  bit — input enable</text>
-    <text x="90" y="122" text-anchor="middle" class="note">PUE/PDE — pull-up / pull-down</text>
-    <text x="90" y="140" text-anchor="middle" class="note">DRIVE — 2/4/8/12 mA</text>
+    <text x="90" y="68" text-anchor="middle" class="note">ISO bit, output isolate</text>
+    <text x="90" y="86" text-anchor="middle" class="note">OD  bit, output disable</text>
+    <text x="90" y="104" text-anchor="middle" class="note">IE  bit, input enable</text>
+    <text x="90" y="122" text-anchor="middle" class="note">PUE/PDE, pull-up / pull-down</text>
+    <text x="90" y="140" text-anchor="middle" class="note">DRIVE, 2/4/8/12 mA</text>
   </g>
 
   <!-- Physical pin -->

@@ -1,12 +1,12 @@
-# Chapter 9 — GPIO and memory-mapped I/O
+# Chapter 9: GPIO and memory-mapped I/O
 
 The chip's CPU and its peripherals are separate hardware blocks, but
 they share an address space. To talk to a peripheral you just read or
-write memory — at certain *special* addresses. This is called
+write memory, at certain *special* addresses. This is called
 **memory-mapped I/O**, or MMIO, and it is the foundation of every
 peripheral driver you'll write.
 
-This chapter walks through GPIO — the simplest peripheral — and shows
+This chapter walks through GPIO, the simplest peripheral, and shows
 the patterns that recur everywhere else.
 
 ## What is GPIO?
@@ -18,21 +18,21 @@ drives it high or low).
 
 The RP2350 has 48 user GPIOs, numbered GP0 through GP47. On the Pico 2
 board, 30 of them are broken out to header pins. GP25 is wired to the
-onboard green LED — that's the one we've been blinking.
+onboard green LED, that's the one we've been blinking.
 
 ## Memory-mapped registers
 
-Every peripheral on the RP2350 has a block of **registers** — 32-bit
+Every peripheral on the RP2350 has a block of **registers**, 32-bit
 slots at known memory addresses. Reading and writing those slots is
 how you control the peripheral.
 
 For GPIO, the relevant register blocks are:
 
-- **IO_BANK0** at `0x40028000` — per-pin configuration (function select,
+- **IO_BANK0** at `0x40028000`, per-pin configuration (function select,
   interrupt enables).
-- **PADS_BANK0** at `0x40038000` — per-pad electrical settings (drive
+- **PADS_BANK0** at `0x40038000`, per-pad electrical settings (drive
   strength, pull-up/down, input/output enable).
-- **SIO** at `0xD0000000` — single-cycle I/O. The actual "is this pin
+- **SIO** at `0xD0000000`, single-cycle I/O. The actual "is this pin
   currently high?" and "drive this pin high/low" registers. SIO is
   attached directly to the CPU bus for speed.
 
@@ -87,13 +87,13 @@ literally does when `gpio_led_init` runs.
 ## A look at the CTRL register
 
 Step 1 wrote a `5` to the per-pin CTRL register. That register has
-several fields packed into 32 bits — we wrote only the bottom 5 bits
+several fields packed into 32 bits, we wrote only the bottom 5 bits
 (FUNCSEL) and left the others at their reset value of zero.
 
 ![GPIO[n].CTRL bit-field layout](figures/gpio-ctrl-register.svg)
 
 For 99% of pin setup you only touch FUNCSEL. The override fields are
-there for advanced cases — forcing an output high regardless of what
+there for advanced cases, forcing an output high regardless of what
 the peripheral wants, inverting an input, etc.
 
 ## The atomic alias trick
@@ -101,7 +101,7 @@ the peripheral wants, inverting an input, etc.
 Look at step 2 above. It uses the address `0x4003B068`, not
 `0x40038068`. The difference is `0x3000`, which is the CLR alias offset.
 Storing `0x180` to the CLR alias atomically clears bits 7 and 8 of the
-underlying register — no read-modify-write, no race with an interrupt
+underlying register, no read-modify-write, no race with an interrupt
 that might touch another bit of the same register.
 
 We met these in [chapter 4](04-cortex-m33-and-thumb2.md#atomic-register-aliases--the-rp2-trick).
@@ -110,9 +110,9 @@ To recap:
 | Offset | Effect on the underlying register |
 | --- | --- |
 | `+0x0000` | Normal read/write |
-| `+0x1000` | Atomic XOR — `reg ^= value` for set bits |
-| `+0x2000` | Atomic SET — `reg \|= value` for set bits |
-| `+0x3000` | Atomic CLR — `reg &= ~value` for set bits |
+| `+0x1000` | Atomic XOR, `reg ^= value` for set bits |
+| `+0x2000` | Atomic SET, `reg \|= value` for set bits |
+| `+0x3000` | Atomic CLR, `reg &= ~value` for set bits |
 
 You will use these constantly. rp-asm's headers define handy symbols
 for them: look in `include/rp2350.inc` for `ATOMIC_XOR_OFFS`,
@@ -222,8 +222,8 @@ Same pattern as before: load a base, read/write through it.
 ## Generalising: any peripheral
 
 GPIO is a special case in one sense (it has the super-fast SIO bank),
-but the *pattern* — base address plus register offset plus atomic
-alias — is universal on this chip. Here's how the other peripherals
+but the *pattern*, base address plus register offset plus atomic
+alias, is universal on this chip. Here's how the other peripherals
 look at the same level of abstraction:
 
 | Peripheral | Base | Pattern |
@@ -238,7 +238,7 @@ look at the same level of abstraction:
 
 Every driver is "compute a register address, store/load a value,
 return". That's it. The complexity is in *which* register and *which*
-bits — i.e. in the datasheet — not in the CPU instructions.
+bits, i.e. in the datasheet, not in the CPU instructions.
 
 ## A larger exercise
 
@@ -263,12 +263,12 @@ If both LEDs blink, you have a working GPIO driver of your own.
 
 2. **Pick a function.** Looking at the CTRL register figure, you want
    to route GP6 to PWM. Which value goes into FUNCSEL?
-   *(4 — `GPIO_FUNC_PWM`, defined in `include/gpio.inc`.)*
+   *(4, `GPIO_FUNC_PWM`, defined in `include/gpio.inc`.)*
 
 3. **Atomic vs not.** Why does `gpio_set_function` use a *non*-atomic
    store (just `str`), while `gpio_led_init` uses the +0x3000 CLR
    alias for the PAD register? *(FUNCSEL is a single 5-bit field that
-   needs to be set to one specific value with the rest zero — a plain
+   needs to be set to one specific value with the rest zero, a plain
    store does it in one cycle. The pad register has multiple
    independent bits set at reset; clearing just two of them without
    touching the others requires the CLR alias.)*
@@ -286,12 +286,12 @@ If both LEDs blink, you have a working GPIO driver of your own.
 ## What's next
 
 The [next chapter](10-uart.md) looks at the UART driver, which sends
-bytes one at a time through a serial port. The pattern is the same —
-write to registers — but the registers are richer, and we'll see how
+bytes one at a time through a serial port. The pattern is the same,
+write to registers, but the registers are richer, and we'll see how
 to wait for hardware to be ready.
 
 <!-- nav-footer -->
 
 ---
 
-[← Chapter 8 — Functions and the calling convention](08-functions-and-calling-convention.md) · [Table of contents](README.md) · [Chapter 10 — UART →](10-uart.md)
+[← Chapter 8: Functions and the calling convention](08-functions-and-calling-convention.md) · [Table of contents](README.md) · [Chapter 10: UART →](10-uart.md)

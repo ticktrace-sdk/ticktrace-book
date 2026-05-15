@@ -1,4 +1,4 @@
-# Chapter 1 — Introduction
+# Chapter 1: Introduction
 
 This book is a working introduction to ARM Thumb-2 assembly
 programming on the Raspberry Pi RP2350 microcontroller. It uses
@@ -19,8 +19,8 @@ invoking a C compiler at any step in the pipeline.
 
 It is a beginner's introduction to **assembly language**, taught through
 a concrete project: writing firmware for the Raspberry Pi Pico 2 using
-the rp-asm SDK. We will spend a chapter or two on theory — what a CPU is,
-what an instruction is, what the RP2350 chip looks like — and then we
+the rp-asm SDK. We will spend a chapter or two on theory, what a CPU is,
+what an instruction is, what the RP2350 chip looks like, and then we
 spend the rest of the book writing real code that runs on real hardware.
 
 ## What this book is not
@@ -52,13 +52,13 @@ bring-up, clocks, USB, every block you'd otherwise spend a month on.
 That safety is worth a lot. But the abstractions stack up. The build
 system grows tentacles. You start asking the compiler not to reorder
 this load, not to inline that function, to please honour your timing
-budget — and at some point you realise you've been arguing with a tool
+budget, and at some point you realise you've been arguing with a tool
 that doesn't share your goals. Power, yes. Predictability, only if you
 fight for it.
 
 **TinyGo.** A small miracle: Go on a microcontroller, with a syntax I
 genuinely enjoy. For prototyping it's hard to beat. But the runtime,
-the GC, the reflection metadata — they show up in the binary, and for
+the GC, the reflection metadata, they show up in the binary, and for
 the tight inner loops of a motor controller the indirection is exactly
 the thing you can't afford.
 
@@ -69,8 +69,8 @@ instructions that hits the wire at the exact cycle I expect*.
 rp-asm is what that looks like when you take it seriously. Pure
 Thumb-2 assembly. **No compiler between you and the silicon**. Every
 register, every peripheral, every cycle accounted for in source you
-can read end-to-end. The motto on the front of the README — "every
-cycle matters" — isn't a slogan, it's the reason the project exists.
+can read end-to-end. The motto on the front of the README, "every
+cycle matters", isn't a slogan, it's the reason the project exists.
 
 This book is the introduction I wish I'd had when I was learning to
 think in cycles instead of statements.
@@ -84,8 +84,8 @@ the words appear on a terminal. The whole stack is opaque.
 
 When you learn assembly on a desktop OS, you get *almost* the same
 problem in reverse: you can write `mov` and `add` instructions all day,
-but the moment you want to actually *do* something — read a file, draw
-a pixel, sleep for a second — you have to call into an operating system
+but the moment you want to actually *do* something, read a file, draw
+a pixel, sleep for a second, you have to call into an operating system
 that hides almost everything below it.
 
 A microcontroller has no operating system. The chip boots, jumps to your
@@ -134,7 +134,7 @@ rather than copy-pasting; the muscle memory is part of the point.
 
 When you finish chapter 6 you will have a working program. From there
 you can either keep reading linearly or skip ahead to whichever
-peripheral chapter interests you — they are mostly independent.
+peripheral chapter interests you, they are mostly independent.
 
 Onward.
 
@@ -142,4 +142,4 @@ Onward.
 
 ---
 
-[Table of contents](README.md) · [Chapter 2 — What is assembly language? →](02-what-is-assembly.md)
+[Table of contents](README.md) · [Chapter 2: What is assembly language? →](02-what-is-assembly.md)

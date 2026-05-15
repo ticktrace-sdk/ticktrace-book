@@ -3,11 +3,11 @@
 A book for total beginners who want to understand what a CPU really does
 and write their own bare-metal firmware for the Raspberry Pi Pico 2.
 
-> "Every cycle matters." — the rp-asm motto.
+> "Every cycle matters.", the rp-asm motto.
 
 ## Who this book is for
 
-You should be comfortable with **some** programming language — C, Python,
+You should be comfortable with **some** programming language, C, Python,
 Rust, JavaScript, anything where you've written a `for` loop and called a
 function. You do **not** need any prior experience with:
 
@@ -44,7 +44,7 @@ is the right default. But assembly is still worth learning because:
   drive USB, an LED, and a timer, knowing what each cycle costs stops being
   academic.
 - **It is fun.** There is a particular pleasure in seeing a 728-byte binary
-  bring up a clock tree, configure a UART, and start blinking an LED — and
+  bring up a clock tree, configure a UART, and start blinking an LED, and
   understanding every byte.
 
 rp-asm is, to our knowledge, the only fully-featured SDK for the RP2350
@@ -53,10 +53,10 @@ no C compiler hiding details) every line is something you can read.
 
 ## How to read this book
 
-Chapters build on each other. The first half of the book — chapters 1–6 —
+Chapters build on each other. The first half of the book, chapters 1–6,
 is the foundation. After chapter 6 you will have a blinking LED and a
 "hello, world" banner on a serial terminal, written in your own assembly.
-The second half — chapters 7–12 — explains the rp-asm idioms in depth and
+The second half, chapters 7–12, explains the rp-asm idioms in depth and
 walks you through GPIO, UART, and interrupts.
 
 Each chapter is short. Run the examples as you go.
@@ -65,7 +65,7 @@ Each chapter is short. Run the examples as you go.
 
 | # | Chapter | Has figures? |
 | --- | --- | --- |
-| 1 | [Introduction](01-introduction.md) | — |
+| 1 | [Introduction](01-introduction.md) |  |
 | 2 | [What is assembly language?](02-what-is-assembly.md) | register file, fetch/decode cycle |
 | 3 | [The RP2 family](03-the-rp2-family.md) | chip block diagram, Pico 2 pinout, boot flow |
 | 4 | [The ARM Cortex-M33 and Thumb-2](04-cortex-m33-and-thumb2.md) | register file, memory map, atomic aliases |
@@ -78,18 +78,18 @@ Each chapter is short. Run the examples as you go.
 | 11 | [Timers and interrupts](11-timers-and-interrupts.md) | vector table, IRQ entry |
 | 12 | [Scheduling](12-scheduling.md) | scheduler dispatch |
 | 13 | [Multicore](13-multicore.md) | launch handshake |
-| 14 | [Where to go next](14-where-to-go-next.md) | — |
-|   | [Appendix A — Glossary](A-glossary.md) | — |
-|   | [Appendix B — Cheat sheet](B-cheat-sheet.md) | + [printable infographic](figures/cheat-sheet-print.svg) |
-|   | [Appendix C — Debugging](C-debugging.md) | — |
+| 14 | [Where to go next](14-where-to-go-next.md) |  |
+|   | [Appendix A: Glossary](A-glossary.md) |  |
+|   | [Appendix B: Cheat sheet](B-cheat-sheet.md) | + [printable infographic](figures/cheat-sheet-print.svg) |
+|   | [Appendix C: Debugging](C-debugging.md) |  |
 
 Every chapter from 2 onward ends with exercises. Skim them even if
-you don't work them — they're often the questions a reader actually
+you don't work them, they're often the questions a reader actually
 has at that point.
 
 ## Conventions used in this book
 
-- Code blocks labelled `asm` are ARM Thumb-2 assembly in GNU syntax — the
+- Code blocks labelled `asm` are ARM Thumb-2 assembly in GNU syntax, the
   same syntax rp-asm uses.
 - Code blocks labelled `console` show shell commands. Lines starting with
   `$` are typed; everything else is output.
