@@ -84,8 +84,9 @@ The directories you'll care about most as a beginner:
 - `src/`, the driver implementations, one `.S` file per peripheral.
 - `examples/`, short demo programs. We'll be making more of these.
 - `include/`, the register/bitfield definitions for every peripheral.
-- `link/`, linker scripts. `flash.ld` lays your program out for real
-  hardware; `sram.ld` builds an emulation-only image.
+- `link/`, linker scripts. `flash.ld` lays your program out at the
+  XIP flash window (`0x10000000`); `sram.ld` lays it out at SRAM
+  (`0x20000000`). Both work on hardware.
 - `tools/uf2.py`, the script that packs a raw binary into the UF2
   format the bootrom expects.
 
@@ -128,12 +129,19 @@ UART, the banner, and the LED toggle loop, packaged in 2 KB. Most of
 that is UF2 overhead, the underlying program is only 728 bytes of
 machine code.
 
-This `blinky.uf2` is the **SRAM** variant, useful for emulation and
-testing. For real hardware you need the **flash** variant:
+This `blinky.uf2` is the **SRAM** variant: the bootrom loads it
+into SRAM at `0x20000000` and runs it from there. It's also what the
+emulation test tiers (Unicorn, QEMU, Renode) consume.
+
+For firmware that survives a power cycle, build the **flash**
+variant, which goes into XIP flash at `0x10000000`:
 
 ```console
 $ make build/blinky_flash.uf2
 ```
+
+Both variants boot on real hardware. The packer (`tools/uf2.py`)
+picks the right UF2 family ID automatically from the load address.
 
 ## Running it in emulation (optional)
 
@@ -152,8 +160,9 @@ mismatches.
 ## Running it on hardware
 
 Plug your Pico 2 in while holding the **BOOTSEL** button. It will
-mount as a USB Mass Storage device named `RPI-RP2`. Drag
-`build/blinky_flash.uf2` onto it.
+mount as a USB Mass Storage device named `RPI-RP2`. Drag either
+`build/blinky.uf2` (SRAM, lost on power loss) or
+`build/blinky_flash.uf2` (XIP flash, persistent) onto it.
 
 The Pico 2 will:
 

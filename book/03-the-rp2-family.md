@@ -176,17 +176,19 @@ Why this one?
    *(The value the bootrom loaded from word 0 of the vector table,
    i.e. the symbol `_stack_top` declared in `src/startup.S`.)*
 
-4. **Why flash for hardware?** rp-asm defaults to building
-   SRAM-resident images, but the README warns that they don't run
-   reliably on the Pico 2 boards in our testing, and tells you to use
-   `make build/<name>_flash.uf2` instead. Why have two build paths at
-   all? *(The SRAM path is fast to iterate against the Unicorn / QEMU
-   /Renode test tiers, where it works fine. For real hardware the
-   flash variant is currently the reliable one. The pico-sdk's RP2350
-   `memmap_no_flash.ld` shows the Arm bootrom can launch SRAM
-   binaries when the image starts with a vector table, so this is an
-   rp-asm-specific bring-up issue rather than a documented silicon
-   bug. See `docs/boot.md` for the bring-up story.)*
+4. **Two build paths, one chip.** rp-asm produces two UF2 variants
+   for every example: `build/<name>.uf2` (SRAM-resident at
+   `0x20000000`) and `build/<name>_flash.uf2` (XIP flash at
+   `0x10000000`). What's the difference, and when would you choose
+   each? *(Both run on real hardware. SRAM is volatile, so the
+   program disappears on power loss; useful for fast A/B turnaround
+   while iterating, and it's what the Unicorn / QEMU / Renode test
+   tiers consume. Flash is persistent, so the firmware boots
+   automatically on power-up; that's what you want for shipped
+   firmware. The bootrom uses different UF2 family IDs for the two
+   load paths — `0xE48BFF57` for SRAM, `0xE48BFF59` for flash —
+   which `tools/uf2.py` picks automatically from the load address.
+   See `docs/boot.md`.)*
 
 ## What's next
 
