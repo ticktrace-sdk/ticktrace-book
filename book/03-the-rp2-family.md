@@ -176,11 +176,17 @@ Why this one?
    *(The value the bootrom loaded from word 0 of the vector table,
    i.e. the symbol `_stack_top` declared in `src/startup.S`.)*
 
-4. **Why no SRAM boot?** The README notes that SRAM-resident images
-   don't run on real Pico 2 silicon. Why is that an erratum and not a
-   design choice? *(Bootrom is supposed to be able to launch SRAM
-   images; the A2 silicon has a defect in that path. Workaround: build
-   the flash variant for hardware.)*
+4. **Why flash for hardware?** rp-asm defaults to building
+   SRAM-resident images, but the README warns that they don't run
+   reliably on the Pico 2 boards in our testing, and tells you to use
+   `make build/<name>_flash.uf2` instead. Why have two build paths at
+   all? *(The SRAM path is fast to iterate against the Unicorn / QEMU
+   /Renode test tiers, where it works fine. For real hardware the
+   flash variant is currently the reliable one. The pico-sdk's RP2350
+   `memmap_no_flash.ld` shows the Arm bootrom can launch SRAM
+   binaries when the image starts with a vector table, so this is an
+   rp-asm-specific bring-up issue rather than a documented silicon
+   bug. See `docs/boot.md` for the bring-up story.)*
 
 ## What's next
 
