@@ -40,14 +40,14 @@
     <text x="615" y="46" text-anchor="middle" class="note">unless branch wrote it</text>
   </g>
 
-  <!-- arrows -->
+  <!-- arrows: span the full 30-px gaps between boxes -->
   <g class="arrow">
-    <path d="M170,110 L180,110" />
-    <path d="M330,110 L360,110" />
-    <path d="M510,110 L540,110" />
-    <polygon points="180,110 172,106 172,114" fill="#374151" />
-    <polygon points="360,110 352,106 352,114" fill="#374151" />
-    <polygon points="540,110 532,106 532,114" fill="#374151" />
+    <path d="M170,110 L200,110" />
+    <path d="M350,110 L380,110" />
+    <path d="M530,110 L560,110" />
+    <polygon points="200,110 192,106 192,114" fill="#374151" />
+    <polygon points="380,110 372,106 372,114" fill="#374151" />
+    <polygon points="560,110 552,106 552,114" fill="#374151" />
   </g>
 
   <!-- loop back arrow -->

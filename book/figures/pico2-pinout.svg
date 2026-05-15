@@ -110,8 +110,8 @@
     <text x="550" y="271" class="ext-txt">GP19 — SPI0 TX</text>
   </g>
 
-  <!-- legend -->
-  <g transform="translate(20, 410)">
+  <!-- legend (below the board outline at y=420) -->
+  <g transform="translate(20, 434)">
     <rect x="0"   y="0" width="14" height="14" class="pin-gp"  />
     <text x="20"  y="12" class="note">GPIO</text>
     <rect x="80"  y="0" width="14" height="14" class="pin-gnd" />

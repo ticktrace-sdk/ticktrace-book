@@ -55,7 +55,7 @@
   <!-- arrow -->
   <path d="M230,250 L320,250" class="arrow" />
   <polygon points="320,250 312,246 312,254" fill="#374151" />
-  <text x="275" y="240" text-anchor="middle" class="note">ld + flash.ld + --gc-sections</text>
+  <text x="270" y="240" text-anchor="middle" class="note">ld + flash.ld + --gc-sections</text>
 
   <!-- output .elf -->
   <g transform="translate(360,80)">

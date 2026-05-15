@@ -60,9 +60,9 @@
     <text x="110" y="74" text-anchor="middle" class="note">no save/restore — shared MSP</text>
   </g>
 
-  <!-- arrow from task body back to sched_run idle -->
-  <path d="M450,340 L450,400 L240,400" class="arrow" />
-  <polygon points="240,400 248,396 248,404" fill="#374151" />
+  <!-- arrow from task body back to sched_run idle (ends at sched_run's right edge x=220) -->
+  <path d="M450,340 L450,400 L220,400" class="arrow" />
+  <polygon points="220,400 228,396 228,404" fill="#374151" />
   <text x="345" y="392" text-anchor="middle" class="note">return → unwind exception frame</text>
 
   <!-- sched_run / idle -->
