@@ -137,5 +137,5 @@
     <text x="410" y="433">_halt until patched</text>
   </g>
 
-  <text x="20" y="568" class="note">When IRQ n fires, the CPU loads pc from slot 16 + n. Bit 0 of the loaded value is the Thumb marker — must be 1.</text>
+  <text x="20" y="568" class="note">On IRQ n the CPU jumps to the address in slot 16 + n. Every vector has bit 0 = 1 — the Thumb marker.</text>
 </svg>
