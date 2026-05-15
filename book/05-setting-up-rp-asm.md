@@ -190,6 +190,22 @@ $ minicom -D /dev/ttyUSB0 -b 115200
 
 …or `screen /dev/ttyUSB0 115200`, or `picocom`, or whatever you like.
 
+> **Order matters.** The banner is printed once, in the first
+> ~100 ms after `_reset`. If you flash first and *then* open the
+> terminal, the banner has already gone by — you'll see the LED
+> blinking but no text. Either:
+>
+> - Open the serial terminal first, *then* drag the UF2 onto
+>   `RPI-RP2` (the board reboots into the new image after the drive
+>   ejects, and minicom catches the banner), or
+>
+> - With the terminal already open, tap the on-board RUN/RESET pin
+>   on the Pico 2 — the board reboots and re-prints the banner.
+>
+> Later chapters' examples that talk over USB-CDC have the same
+> race; chapter 10 shows a banner-loop pattern that survives a
+> late-attaching host.
+
 If you don't have a USB-serial adapter, several examples use the Pico's
 built-in USB controller as a USB-CDC serial device, those work on
 nothing but the original USB-C cable. We'll get to those in chapter 10.
