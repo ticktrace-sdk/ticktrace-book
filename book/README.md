@@ -83,6 +83,7 @@ Each chapter is short. Run the examples as you go.
 |   | [Appendix B: Cheat sheet](B-cheat-sheet.md) | + [printable infographic](figures/cheat-sheet-print.svg) |
 |   | [Appendix C: Debugging](C-debugging.md) |  |
 |   | [Appendix D: Memory layouts and execution patterns](D-memory-layouts.md) | execution patterns |
+|   | [Appendix E: Studio](E-studio.md) | GUI/CLI build & flash front-end |
 
 Every chapter from 2 onward ends with exercises. Skim them even if
 you don't work them, they're often the questions a reader actually
