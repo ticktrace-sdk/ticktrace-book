@@ -56,7 +56,7 @@
 
   <text x="174" y="72" text-anchor="middle" class="step">as</text>
   <text x="354" y="72" text-anchor="middle" class="step">ld + flash.ld</text>
-  <text x="544" y="72" text-anchor="middle" class="step">objcopy + uf2.py</text>
+  <text x="544" y="72" text-anchor="middle" class="step">objcopy + rpasm uf2</text>
 
   <!-- Annotation row -->
   <g transform="translate(20,180)">

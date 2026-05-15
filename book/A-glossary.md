@@ -362,8 +362,10 @@ A serial port. The Pico 2 has two PL011 UARTs. See
 
 **UF2.** USB Flashing Format.
 A simple block-based file format Raspberry Pi's bootrom understands.
-rp-asm builds `*.uf2` files via `tools/uf2.py`. See
-[chapter 5](05-setting-up-rp-asm.md).
+rp-asm builds `*.uf2` files via the in-tree `rpasm` CLI
+(`tools/bin/rpasm uf2 pack`) or Studio's GUI. See
+[chapter 5](05-setting-up-rp-asm.md) and
+[Appendix E](E-studio.md).
 
 **Vector table.**
 An array of 32-bit function pointers, one per CPU exception and one

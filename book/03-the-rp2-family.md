@@ -187,7 +187,7 @@ Why this one?
    automatically on power-up; that's what you want for shipped
    firmware. The bootrom uses different UF2 family IDs for the two
    load paths — `0xE48BFF57` for SRAM, `0xE48BFF59` for flash —
-   which `tools/uf2.py` picks automatically from the load address.
+   which `rpasm`'s UF2 packer picks automatically from the load address.
    See `docs/boot.md`.)*
 
 ## What's next

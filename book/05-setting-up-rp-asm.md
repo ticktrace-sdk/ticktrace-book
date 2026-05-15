@@ -87,8 +87,11 @@ The directories you'll care about most as a beginner:
 - `link/`, linker scripts. `flash.ld` lays your program out at the
   XIP flash window (`0x10000000`); `sram.ld` lays it out at SRAM
   (`0x20000000`). Both work on hardware.
-- `tools/uf2.py`, the script that packs a raw binary into the UF2
-  format the bootrom expects.
+- `tools/bin/rpasm`, the in-tree Go CLI built from `tools/cmd/rpasm/`.
+  Its `uf2 pack` subcommand packs a raw binary into the UF2 format the
+  bootrom expects; `mkmanifest` and `mkfirmware` build the bootloader
+  chain. (The older `tools/uf2.py` is still in the tree as a parity
+  reference but the Go tool is the canonical one going forward.)
 
 ## Installing the Python dependencies
 
@@ -140,8 +143,8 @@ variant, which goes into XIP flash at `0x10000000`:
 $ make build/blinky_flash.uf2
 ```
 
-Both variants boot on real hardware. The packer (`tools/uf2.py`)
-picks the right UF2 family ID automatically from the load address.
+Both variants boot on real hardware. The packer picks the right UF2
+family ID automatically from the load address.
 
 ## Running it in emulation (optional)
 
