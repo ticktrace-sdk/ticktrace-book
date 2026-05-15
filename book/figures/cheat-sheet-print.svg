@@ -57,7 +57,7 @@
   <!-- LEFT COLUMN: x=40..390 (w=350)                                -->
   <!-- ============================================================ -->
 
-  <!-- ----- Register file & AAPCS ----- -->
+  <!-- Register file & AAPCS -->
   <g transform="translate(40, 100)">
     <text x="0" y="0" class="h">Register file (AAPCS)</text>
 
@@ -125,7 +125,7 @@
     <text x="0" y="184" class="note">Flags: N Z C V — set by instructions ending in <tspan class="codek">s</tspan> (adds, subs, cmp…)</text>
   </g>
 
-  <!-- ----- Atomic aliases ----- -->
+  <!-- Atomic aliases -->
   <g transform="translate(40, 304)">
     <text x="0" y="0" class="h">Atomic register aliases (RP2350 APB)</text>
     <text x="0"   y="20" class="codek">BASE + 0x0000</text>
@@ -138,7 +138,7 @@
     <text x="150" y="68" class="lab">atomic CLR</text>
   </g>
 
-  <!-- ----- Base addresses ----- -->
+  <!-- Base addresses -->
   <g transform="translate(40, 392)">
     <text x="0" y="0" class="h">Base addresses</text>
 
@@ -170,7 +170,7 @@
     <text x="200" y="212" text-anchor="end" class="codek">0xE0001004</text>
   </g>
 
-  <!-- ----- Function template ----- -->
+  <!-- Function template -->
   <g transform="translate(40, 632)">
     <text x="0" y="0" class="h">Function template (AAPCS-compliant)</text>
     <rect x="-6" y="8" width="356" height="148" rx="4" class="panel-blue" />
@@ -185,7 +185,7 @@
     <text x="0"  y="146" class="note">Leaf (no bl, no callee-saved): drop push/pop, end with bx lr.</text>
   </g>
 
-  <!-- ----- .S file header ----- -->
+  <!-- .S file header -->
   <g transform="translate(40, 800)">
     <text x="0" y="0" class="h">.S file header</text>
     <rect x="-6" y="8" width="356" height="74" rx="4" class="panel-blue" />
@@ -199,7 +199,7 @@
   <!-- RIGHT COLUMN: x=410..760 (w=350)                              -->
   <!-- ============================================================ -->
 
-  <!-- ----- Common instructions ----- -->
+  <!-- Common instructions -->
   <g transform="translate(410, 100)">
     <text x="0" y="0" class="h">Common Thumb-2 instructions</text>
 
@@ -236,7 +236,7 @@
     <text x="0" y="416" class="code">cpsid i / cpsie i / wfi </text><text x="160" y="416" class="note">IRQ off/on / sleep</text>
   </g>
 
-  <!-- ----- GPIO idioms ----- -->
+  <!-- GPIO idioms -->
   <g transform="translate(410, 540)">
     <text x="0" y="0" class="h">GPIO idioms — pin 25 LED</text>
     <rect x="-6" y="8" width="356" height="140" rx="4" class="panel-green" />
@@ -251,7 +251,7 @@
     <text x="0"  y="132" class="code">str   r1, [r0]</text>
   </g>
 
-  <!-- ----- UART send idiom ----- -->
+  <!-- UART send idiom -->
   <g transform="translate(410, 704)">
     <text x="0" y="0" class="h">UART send-byte (spin while FIFO full)</text>
     <rect x="-6" y="8" width="356" height="80" rx="4" class="panel-green" />
@@ -262,7 +262,7 @@
     <text x="0"  y="82" class="code">    str   r1, [r2, #UART_DR_OFFS]   @ r1=byte</text>
   </g>
 
-  <!-- ----- Scheduler / multicore (mini) ----- -->
+  <!-- Scheduler / multicore (mini) -->
   <g transform="translate(410, 814)">
     <text x="0" y="0" class="h">Scheduler &amp; multicore — one-liners</text>
     <rect x="-6" y="8" width="356" height="146" rx="4" class="panel-violet" />
