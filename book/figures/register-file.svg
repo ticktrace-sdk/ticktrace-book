@@ -1,116 +1,105 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 600" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" font-family="ui-monospace, Menlo, Monaco, monospace" font-size="13">
   <style>
-    /* Light theme defaults: text falls back to near-black. */
+    /* Light theme defaults. */
     text { fill: #1f2937; }
-
-.name { font-weight: bold; }
-    .role { font-size: 12px; fill: #374151; }
+    .name        { font-weight: bold; }
+    .role        { font-size: 12px; fill: #1f2937; }
+    .tag         { font-size: 11px; fill: #374151; }
+    .bitlabel    { font-size: 10px; fill: #6b7280; }
+    .title       { font-size: 16px; font-weight: bold; }
     .preserve-yes { fill: #dcfce7; stroke: #16a34a; }
     .preserve-no  { fill: #fee2e2; stroke: #dc2626; }
     .special      { fill: #dbeafe; stroke: #2563eb; }
-    .bitlabel     { font-size: 10px; fill: #6b7280; }
-    .title        { font-size: 16px; font-weight: bold; }
 
     @media (prefers-color-scheme: dark) {
-      text { fill: #e5e7eb; }
-      .role { fill: #d1d5db; }
+      text          { fill: #e5e7eb; }
+      .role         { fill: #f3f4f6; }
+      .tag          { fill: #d1d5db; }
+      .bitlabel     { fill: #9ca3af; }
       .preserve-yes { fill: #14532d; }
-      .preserve-no { fill: #7f1d1d; }
-      .special { fill: #1e3a8a; }
-      .bitlabel { fill: #9ca3af; }
+      .preserve-no  { fill: #7f1d1d; }
+      .special      { fill: #1e3a8a; }
     }
   </style>
 
   <text x="20" y="28" class="title">ARM Cortex-M33 register file</text>
-  <text x="160" y="56" class="bitlabel">bit 31</text>
-  <text x="500" y="56" class="bitlabel" text-anchor="end">bit 0</text>
 
-  <!-- r0-r3: caller-saved (args / return) -->
-  <g transform="translate(0,68)">
-    <rect x="160" y="0"  width="340" height="24" class="preserve-no" />
-    <text x="20"  y="17" class="name">r0</text>
-    <text x="60"  y="17" class="role">arg1 / return value</text>
-    <text x="510" y="17" class="role">caller-saved</text>
+  <!-- Bit labels above the register-cell column -->
+  <text x="130" y="58" class="bitlabel">bit 31</text>
+  <text x="580" y="58" text-anchor="end" class="bitlabel">bit 0</text>
 
-    <rect x="160" y="28" width="340" height="24" class="preserve-no" />
-    <text x="20"  y="45" class="name">r1</text>
-    <text x="60"  y="45" class="role">arg2 / return high</text>
-    <text x="510" y="45" class="role">caller-saved</text>
+  <!-- ============================================================ -->
+  <!-- Group 1: r0–r3, caller-saved                                  -->
+  <!-- ============================================================ -->
+  <g transform="translate(0,70)">
+    <rect x="130" y="0"  width="450" height="24" class="preserve-no" />
+    <text x="115" y="17" text-anchor="end" class="name">r0</text>
+    <text x="142" y="17" class="role">arg1 / return value (low word)</text>
+    <text x="590" y="17" class="tag">caller-saved</text>
 
-    <rect x="160" y="56" width="340" height="24" class="preserve-no" />
-    <text x="20"  y="73" class="name">r2</text>
-    <text x="60"  y="73" class="role">arg3</text>
-    <text x="510" y="73" class="role">caller-saved</text>
+    <rect x="130" y="28" width="450" height="24" class="preserve-no" />
+    <text x="115" y="45" text-anchor="end" class="name">r1</text>
+    <text x="142" y="45" class="role">arg2 / return value (high word)</text>
+    <text x="590" y="45" class="tag">caller-saved</text>
 
-    <rect x="160" y="84" width="340" height="24" class="preserve-no" />
-    <text x="20"  y="101" class="name">r3</text>
-    <text x="60"  y="101" class="role">arg4</text>
-    <text x="510" y="101" class="role">caller-saved</text>
+    <rect x="130" y="56" width="450" height="24" class="preserve-no" />
+    <text x="115" y="73" text-anchor="end" class="name">r2</text>
+    <text x="142" y="73" class="role">arg3</text>
+    <text x="590" y="73" class="tag">caller-saved</text>
+
+    <rect x="130" y="84" width="450" height="24" class="preserve-no" />
+    <text x="115" y="101" text-anchor="end" class="name">r3</text>
+    <text x="142" y="101" class="role">arg4</text>
+    <text x="590" y="101" class="tag">caller-saved</text>
   </g>
 
-  <!-- r4-r11: callee-saved -->
-  <g transform="translate(0,184)">
-    <rect x="160" y="0"   width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="17"  class="name">r4</text>
-    <text x="60"  y="17"  class="role">general purpose</text>
-    <text x="510" y="17"  class="role">callee-saved</text>
-
-    <rect x="160" y="28"  width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="45"  class="name">r5</text>
-    <text x="60"  y="45"  class="role">general purpose</text>
-    <text x="510" y="45"  class="role">callee-saved</text>
-
-    <rect x="160" y="56"  width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="73"  class="name">r6</text>
-
-    <rect x="160" y="84"  width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="101" class="name">r7</text>
-
-    <rect x="160" y="112" width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="129" class="name">r8</text>
-
-    <rect x="160" y="140" width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="157" class="name">r9</text>
-
-    <rect x="160" y="168" width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="185" class="name">r10</text>
-
-    <rect x="160" y="196" width="340" height="24" class="preserve-yes" />
-    <text x="20"  y="213" class="name">r11</text>
-    <text x="60"  y="213" class="role">general purpose</text>
-    <text x="510" y="213" class="role">callee-saved</text>
+  <!-- ============================================================ -->
+  <!-- Group 2: r4–r11, callee-saved (collapsed into one row)        -->
+  <!-- ============================================================ -->
+  <g transform="translate(0,210)">
+    <rect x="130" y="0" width="450" height="24" class="preserve-yes" />
+    <text x="115" y="17" text-anchor="end" class="name">r4–r11</text>
+    <text x="142" y="17" class="role">general-purpose (eight registers)</text>
+    <text x="590" y="17" class="tag">callee-saved</text>
   </g>
 
-  <!-- r12-r15: special -->
-  <g transform="translate(0,420)">
-    <rect x="160" y="0"  width="340" height="24" class="preserve-no" />
-    <text x="20"  y="17" class="name">r12</text>
-    <text x="60"  y="17" class="role">ip — intra-procedure scratch</text>
-    <text x="510" y="17" class="role">caller-saved</text>
+  <!-- ============================================================ -->
+  <!-- Group 3: r12 (scratch), r13–r15 (special)                     -->
+  <!-- ============================================================ -->
+  <g transform="translate(0,266)">
+    <rect x="130" y="0"  width="450" height="24" class="preserve-no" />
+    <text x="115" y="17" text-anchor="end" class="name">r12</text>
+    <text x="142" y="17" class="role">ip — intra-procedure scratch</text>
+    <text x="590" y="17" class="tag">caller-saved</text>
 
-    <rect x="160" y="28" width="340" height="24" class="special" />
-    <text x="20"  y="45" class="name">r13</text>
-    <text x="60"  y="45" class="role">sp — stack pointer</text>
-    <text x="510" y="45" class="role">special</text>
+    <rect x="130" y="28" width="450" height="24" class="special" />
+    <text x="115" y="45" text-anchor="end" class="name">r13</text>
+    <text x="142" y="45" class="role">sp — stack pointer (8-byte aligned)</text>
+    <text x="590" y="45" class="tag">special</text>
 
-    <rect x="160" y="56" width="340" height="24" class="special" />
-    <text x="20"  y="73" class="name">r14</text>
-    <text x="60"  y="73" class="role">lr — link register (return address)</text>
-    <text x="510" y="73" class="role">special</text>
+    <rect x="130" y="56" width="450" height="24" class="special" />
+    <text x="115" y="73" text-anchor="end" class="name">r14</text>
+    <text x="142" y="73" class="role">lr — link register (return address)</text>
+    <text x="590" y="73" class="tag">special</text>
 
-    <rect x="160" y="84" width="340" height="24" class="special" />
-    <text x="20"  y="101" class="name">r15</text>
-    <text x="60"  y="101" class="role">pc — program counter</text>
-    <text x="510" y="101" class="role">special</text>
+    <rect x="130" y="84" width="450" height="24" class="special" />
+    <text x="115" y="101" text-anchor="end" class="name">r15</text>
+    <text x="142" y="101" class="role">pc — program counter</text>
+    <text x="590" y="101" class="tag">special</text>
   </g>
 
-  <!-- legend -->
-  <g transform="translate(20, 560)">
+  <!-- Flags note (APSR) -->
+  <text x="20" y="396" class="tag">Plus flags (N, Z, C, V) in APSR — set by 'adds', 'subs', 'cmp', …</text>
+
+  <!-- ============================================================ -->
+  <!-- Legend                                                        -->
+  <!-- ============================================================ -->
+  <g transform="translate(20, 416)">
     <rect x="0"   y="0" width="14" height="14" class="preserve-no"  />
-    <text x="20"  y="12" class="role">caller-saved (free to clobber)</text>
+    <text x="20"  y="12" class="tag">caller-saved (free to clobber)</text>
     <rect x="220" y="0" width="14" height="14" class="preserve-yes" />
-    <text x="240" y="12" class="role">callee-saved (must preserve)</text>
+    <text x="240" y="12" class="tag">callee-saved (must preserve)</text>
     <rect x="440" y="0" width="14" height="14" class="special"      />
-    <text x="460" y="12" class="role">special (sp / lr / pc)</text>
+    <text x="460" y="12" class="tag">special (sp / lr / pc)</text>
   </g>
 </svg>
