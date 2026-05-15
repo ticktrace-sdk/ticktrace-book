@@ -59,7 +59,7 @@
   <g transform="translate(20,250)">
     <rect x="0" y="0" width="320" height="60" class="data" rx="6" />
     <text x="160" y="26" text-anchor="middle" class="label">CPU registers (r0..r15, flags)</text>
-    <text x="160" y="46" text-anchor="middle" class="note">read and written each cycle, on-chip, ~1 cycle latency</text>
+    <text x="160" y="46" text-anchor="middle" class="note">on-chip, ~1 cycle to read or write</text>
 
     <rect x="350" y="0" width="320" height="60" class="data" rx="6" />
     <text x="510" y="26" text-anchor="middle" class="label">Memory (SRAM, flash, peripherals)</text>
