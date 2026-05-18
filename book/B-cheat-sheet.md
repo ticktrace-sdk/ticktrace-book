@@ -1,6 +1,6 @@
 # Appendix B: Cheat sheet
 
-Everything you need to read or write a rp-asm function, in one place.
+Everything you need to read or write a ticktrace function, in one place.
 
 > **Print-ready version:**
 > [`figures/cheat-sheet-print.svg`](figures/cheat-sheet-print.svg) is a

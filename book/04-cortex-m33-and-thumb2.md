@@ -1,12 +1,12 @@
 # Chapter 4: The Cortex-M33 and Thumb-2
 
-This chapter is a closer look at the processor that runs your rp-asm
+This chapter is a closer look at the processor that runs your ticktrace
 code. Don't try to memorise everything here, treat it as a reference
 to come back to. You'll absorb the details as you write programs.
 
 ## The register file
 
-The Cortex-M33 has 16 general-purpose 32-bit registers. Most rp-asm
+The Cortex-M33 has 16 general-purpose 32-bit registers. Most ticktrace
 documentation refers to them by the names below.
 
 ![Cortex-M33 register file with AAPCS roles](figures/register-file.svg)
@@ -50,7 +50,7 @@ size it needs to be. This is the best of both worlds: dense code where
 a 16-bit form exists, and the full power of 32-bit when it doesn't.
 
 The Cortex-M33 **only** runs Thumb-2. There is no ARM mode at all on
-M-profile cores. This is why every rp-asm function is preceded by:
+M-profile cores. This is why every ticktrace function is preceded by:
 
 ```asm
     .thumb_func
@@ -70,7 +70,7 @@ you, but it explains a few small mysteries down the road.
 ## The instruction set, in broad strokes
 
 You don't need to learn every instruction up front. The everyday
-working set is small. Here's what you'll see constantly in rp-asm:
+working set is small. Here's what you'll see constantly in ticktrace:
 
 ### Move and load constants
 
@@ -123,7 +123,7 @@ a PC-relative load.
 The `[...]` syntax is "the memory address inside these brackets". You
 can also write `[r1, r2]` (register-indexed), `[r1], #4` (post-increment
 r1 after the access), and `[r1, #4]!` (pre-increment, write back).
-You'll see them all in real rp-asm code.
+You'll see them all in real ticktrace code.
 
 ### Compare and branch
 
@@ -202,7 +202,7 @@ So to toggle GP25's output bit you do not need a read-modify-write.
 You just store a 1 in the right place at the right alias and the
 hardware does the bit-flip in two cycles.
 
-rp-asm uses this aggressively. You'll see, for example:
+ticktrace uses this aggressively. You'll see, for example:
 
 ```asm
     ldr     r0, =SIO_BASE + SIO_GPIO_OUT_XOR_OFFS
@@ -267,4 +267,4 @@ toolchain installed so we can turn assembly source into a runnable
 
 ---
 
-[← Chapter 3: The RP2 family](03-the-rp2-family.md) · [Table of contents](README.md) · [Chapter 5: Setting up rp-asm →](05-setting-up-rp-asm.md)
+[← Chapter 3: The RP2 family](03-the-rp2-family.md) · [Table of contents](README.md) · [Chapter 5: Setting up ticktrace →](05-setting-up-rp-asm.md)

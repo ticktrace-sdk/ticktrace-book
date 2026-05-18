@@ -6,7 +6,7 @@ nothing. That's a bad pattern. Microcontrollers should sleep when
 there's no work, and wake up only when something happens.
 
 The mechanism for "wake up when something happens" is **interrupts**.
-This chapter introduces them through the rp-asm timer driver, and
+This chapter introduces them through the ticktrace timer driver, and
 shows you how to write your own interrupt handler.
 
 ## What is an interrupt?
@@ -39,7 +39,7 @@ The first 16 slots are for **CPU exceptions** (reset, NMI, hard fault,
 SysTick, etc.). The slots after that, up to 480 of them on the M33
 are for **external interrupts** from peripherals.
 
-You can see the rp-asm vector table at the top of `src/startup.S`:
+You can see the ticktrace vector table at the top of `src/startup.S`:
 
 ```asm
 _vectors:
@@ -78,7 +78,7 @@ For each external interrupt line, the NVIC maintains:
 - An **active** bit (set while the ISR is running)
 - A **priority** byte (lower number = higher priority)
 
-The rp-asm helpers in `src/nvic.S` give you `nvic_enable`,
+The ticktrace helpers in `src/nvic.S` give you `nvic_enable`,
 `nvic_disable`, `nvic_install_handler`, and `nvic_set_priority`. We
 won't go into the bit-level details, read `docs/nvic.md` when you
 need them, but they boil down to writing the right bit in the right
@@ -105,7 +105,7 @@ To make an alarm fire 500 ms from now:
 When the counter reaches that value, ALARM0 fires interrupt IRQ0, and
 your ISR runs.
 
-rp-asm wraps this in `alarm_set(idx, abs_time)` and a few helpers.
+ticktrace wraps this in `alarm_set(idx, abs_time)` and a few helpers.
 Read `src/timer.S` if curious.
 
 ## A complete interrupt example
@@ -286,7 +286,7 @@ while interrupts are disabled, you can't service the timer, the
 UART, anything.
 
 A subtler tool is `BASEPRI`, which lets you mask only interrupts
-*below* a certain priority. rp-asm's scheduler (`src/sched.S`) uses
+*below* a certain priority. ticktrace's scheduler (`src/sched.S`) uses
 this. We don't dig deeper here, but the docs do.
 
 ## Exercises

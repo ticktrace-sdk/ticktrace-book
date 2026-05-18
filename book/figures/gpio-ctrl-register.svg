@@ -97,5 +97,5 @@
     <text x="22" y="100" class="lab"><tspan font-weight="bold">IRQOVER</tspan>, override the interrupt source signal.</text>
   </g>
 
-  <text x="20" y="290" class="note">rp-asm's gpio_set_function(pin, func) writes FUNCSEL with other fields zero, overrides off, peripheral in control.</text>
+  <text x="20" y="290" class="note">ticktrace's gpio_set_function(pin, func) writes FUNCSEL with other fields zero, overrides off, peripheral in control.</text>
 </svg>

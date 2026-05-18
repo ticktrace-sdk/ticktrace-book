@@ -23,7 +23,7 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">rp-asm build pipeline</text>
+  <text x="20" y="28" class="title">ticktrace build pipeline</text>
   <text x="20" y="48" class="note">No C compiler. Each step is a single tool from the binutils-arm-none-eabi package.</text>
 
   <g transform="translate(20,80)">

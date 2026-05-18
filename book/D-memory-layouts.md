@@ -8,19 +8,19 @@ audio DSP, anything with a strict cycle budget) is usually neither
 of the two defaults.
 
 This appendix lays out the four patterns the chip can run, which ones
-rp-asm currently supports, and shows how to put a hot function into
+ticktrace currently supports, and shows how to put a hot function into
 SRAM while leaving the rest of the program in flash.
 
 ## The four patterns
 
 ![Four execution patterns on the RP2350](figures/execution-patterns.svg)
 
-| Pattern | Code lives in | Code runs from | rp-asm support |
+| Pattern | Code lives in | Code runs from | ticktrace support |
 | --- | --- | --- | --- |
 | **Pure XIP (flash)** | QSPI flash at `0x10000000` | Flash, via the 16 KB XIP cache | Yes: `make build/<name>_flash.uf2` |
 | **SRAM-resident** | SRAM at `0x20000000` | SRAM, ~1 cycle/fetch | Yes: `make build/<name>.uf2` |
 | **Selective `.ramfunc`** | Flash + a `.ramfunc` section that the startup copies to SRAM | Cold code from flash, hot code from SRAM | Yes (used by `qmi_set_clkdiv` today) |
-| **Copy-to-RAM** | Flash only | SRAM after the startup copies everything | Not yet — would need a third linker script |
+| **Copy-to-RAM** | Flash only | SRAM after the startup copies everything | Not yet; would need a third linker script |
 
 The two "all-flash" and "all-SRAM" extremes are the ones we've been
 using. The middle two are about putting cycle-critical code in SRAM
@@ -35,7 +35,7 @@ QSPI flash through the on-chip XIP cache.
 
 The XIP cache is 16 KB. On a cache hit, fetches are essentially
 free. On a cache miss the CPU stalls while the cache controller
-issues a QSPI read — tens of cycles, depending on the QSPI clock
+issues a QSPI read; tens of cycles, depending on the QSPI clock
 divider you configured. For most code, the cache absorbs the
 penalty: hot loops live in cache and run at SRAM-like speeds.
 
@@ -71,7 +71,7 @@ startup, the reset handler copies those functions from flash (LMA)
 to SRAM (VMA), and afterwards calls into them go to SRAM addresses.
 Everything else stays in flash and runs XIP.
 
-rp-asm already supports this. The wiring is:
+ticktrace already supports this. The wiring is:
 
 - `link/flash.ld:45` defines a `.ramfunc` output section whose load
   address is in flash but whose virtual address is in SRAM, plus
@@ -114,7 +114,7 @@ For motor control, the recipe is:
 3. Measure with DWT (Appendix C) to confirm the cycle-count
    variance dropped.
 
-## Pattern 4: copy-to-RAM (not yet in rp-asm)
+## Pattern 4: copy-to-RAM (not yet in ticktrace)
 
 The pico-sdk supports a `PICO_COPY_TO_RAM` build type that puts the
 entire `.text` and `.rodata` in flash (LMA), but with VMA in SRAM
@@ -123,7 +123,7 @@ flash, deterministic execution in SRAM, at the cost of roughly 2×
 RAM footprint (the whole program now lives in both places, though
 the flash copy is read-only after boot).
 
-rp-asm doesn't currently have this. Adding it would mean:
+ticktrace doesn't currently have this. Adding it would mean:
 
 - A third linker script (`link/flash_copy_to_ram.ld`) that places
   `.text*` and `.rodata*` with LMA in flash, VMA in SRAM.
@@ -153,7 +153,7 @@ inner loop fits in the XIP cache. The point is the variance, not
 the absolute count.)
 
 On the flash variant on real hardware, you'll see the XIP path's
-`max` exceed its `min` because of occasional cache misses — the
+`max` exceed its `min` because of occasional cache misses; the
 distribution has a tail. The `.ramfunc` path is dead-flat because
 every iteration runs from SRAM. On the SRAM variant both paths are
 flat (the whole image lives in SRAM).
@@ -187,24 +187,24 @@ Do you need persistent firmware (survives power cycle)?
          Is the cycle-critical code <2 KB total?
          ├─ Yes  →  .ramfunc the critical paths; rest of program in flash
          └─ No   →  consider copy-to-RAM (would need to add support
-                    to rp-asm; see Pattern 4 above)
+                    to ticktrace; see Pattern 4 above)
 ```
 
-For most rp-asm users the answer is one of the first two. Motor
-control, audio, software-emulated PIO state machines — those are
+For most ticktrace users the answer is one of the first two. Motor
+control, audio, software-emulated PIO state machines: those are
 the cases where `.ramfunc` earns its keep.
 
 ## What to read next
 
-- `src/qmi.S` and `link/flash.ld:45` — the one real `.ramfunc`
+- `src/qmi.S` and `link/flash.ld:45`: the one real `.ramfunc`
   user in the codebase today.
-- `src/startup.S:150–160` — the actual copy loop.
-- `examples/ramfunc_demo.S` — the cycle-variance demo described
+- `src/startup.S:150–160`: the actual copy loop.
+- `examples/ramfunc_demo.S`: the cycle-variance demo described
   above.
-- pico-sdk's `src/rp2_common/pico_crt0/rp2350/memmap_copy_to_ram.ld`
-  — the canonical reference for the full copy-to-RAM pattern, if
-  you decide to add it to rp-asm.
-- Appendix C (Debugging) — for the DWT mechanics used in the demo.
+- pico-sdk's `src/rp2_common/pico_crt0/rp2350/memmap_copy_to_ram.ld`:
+  the canonical reference for the full copy-to-RAM pattern, if
+  you decide to add it to ticktrace.
+- Appendix C (Debugging): for the DWT mechanics used in the demo.
 
 <!-- nav-footer -->
 

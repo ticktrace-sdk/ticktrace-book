@@ -7,7 +7,7 @@ patterns become instinctive.
 
 ## File structure
 
-Every `.S` file in rp-asm has this shape:
+Every `.S` file in ticktrace has this shape:
 
 ```asm
     .include "rp2350.inc"           @ optional: pull in register defs
@@ -57,7 +57,7 @@ Three flavours, all interchangeable:
     comments also work  */
 ```
 
-rp-asm prefers `@` for short trailing comments and a banner of
+ticktrace prefers `@` for short trailing comments and a banner of
 `@ ===...` for section headings.
 
 ## Directives: words starting with a dot
@@ -117,7 +117,7 @@ You always pair `.global` with `.thumb_func` for an exported function.
 ```
 
 Direct textual inclusion, like `#include` in C, but without a
-preprocessor. The `.inc` files in rp-asm contain only `.equ`
+preprocessor. The `.inc` files in ticktrace contain only `.equ`
 definitions, no code.
 
 ## Labels
@@ -202,7 +202,7 @@ last operand:
     orr     r0, r1, r2, lsr #4  @ r0 = r1 | (r2 >> 4)
 ```
 
-This is occasionally useful in rp-asm, for example when computing
+This is occasionally useful in ticktrace, for example when computing
 "pin × 8 + offset" to find a per-pin GPIO control register.
 
 ### Memory addressing modes
@@ -218,7 +218,7 @@ This is occasionally useful in rp-asm, for example when computing
     ldr     r0, [r1], #4        @ r0 = mem[r1]; r1 += 4       (post-index)
 ```
 
-Most rp-asm driver code uses the offset form, computing the offset
+Most ticktrace driver code uses the offset form, computing the offset
 from a peripheral base.
 
 ## A walk through real driver code
@@ -254,12 +254,12 @@ following the AAPCS calling convention we'll formalise in chapter 8.
 It clobbers `r0`–`r3` (and the assembler is content to do so, because
 those are caller-saved). It does not touch `r4`–`r11`, so it does not
 need to push anything. It does not call any subroutines, so it does
-not need to save `lr`. Eight cycles, total. This is what rp-asm code
+not need to save `lr`. Eight cycles, total. This is what ticktrace code
 looks like all the way down.
 
 ## Sections and the linker
 
-Each rp-asm `.S` file puts every function and data blob in its own
+Each ticktrace `.S` file puts every function and data blob in its own
 named section like `.text.gpio_set_function` or `.rodata.banner`. Why
 the granularity?
 
@@ -334,7 +334,7 @@ in [appendix B](B-cheat-sheet.md).
 
 The [next chapter](08-functions-and-calling-convention.md) explains
 the *conventions* around how functions push, pop, and call each other
-the rules that make all the rp-asm drivers compose.
+the rules that make all the ticktrace drivers compose.
 
 <!-- nav-footer -->
 

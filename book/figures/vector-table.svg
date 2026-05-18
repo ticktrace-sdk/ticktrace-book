@@ -21,13 +21,13 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">Vector table layout (rp-asm)</text>
+  <text x="20" y="28" class="title">Vector table layout (ticktrace)</text>
   <text x="20" y="48" class="note">An array of 32-bit function pointers at the start of the image. VTOR points at it.</text>
 
   <text x="20" y="76"  class="h">offset</text>
   <text x="100" y="76" class="h">slot</text>
   <text x="180" y="76" class="h">name</text>
-  <text x="430" y="76" class="h">rp-asm handler</text>
+  <text x="430" y="76" class="h">ticktrace handler</text>
 
   <!-- rows -->
   <g transform="translate(20,84)">

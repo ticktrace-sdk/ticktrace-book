@@ -13,7 +13,7 @@ without reading a Makefile. You pick a target, toggle peripherals,
 click Build, click Flash. Under the hood it runs the same
 `arm-none-eabi-as` and `arm-none-eabi-ld` invocations, against the
 same sources in `src/`, with the same linker scripts in `link/`.
-There is no parallel build — no second copy of `uart.S` lives inside
+There is no parallel build; no second copy of `uart.S` lives inside
 Studio. The catalog points at `../src/uart.S` and that is the file
 that gets assembled.
 
@@ -43,7 +43,7 @@ The Makefile is still the right tool when:
 - You're writing CI: `make test-t1`, `make test-tools`, `make test-t2`
   is the canonical entry point.
 - You need to script the build of *something Studio doesn't model
-  yet* — a custom linker script, a one-off footer, a hand-rolled UF2.
+  yet*: a custom linker script, a one-off footer, a hand-rolled UF2.
 - You are debugging the build itself.
 
 The CLI half of Studio (`rpasm`, the binary, not the GUI) lives in
@@ -70,7 +70,7 @@ as "Flash (build first)") activates.
 
 Put the Pico 2 in BOOTSEL (hold the button, plug in the cable),
 click **Flash**, and the on-board LED starts blinking. Same result
-as `make build/blinky.uf2` followed by drag-drop — about 20 fewer
+as `make build/blinky.uf2` followed by drag-drop; about 20 fewer
 keystrokes, and the build log is sitting right there to read.
 
 For a flash-resident build, flip the Layout dropdown to `flash`,
@@ -93,7 +93,7 @@ organised by category. Each checkbox is one module in the catalog
 (most are default-on).
 
 Type or paste a source path: `../src/main.S` for the standard blinky,
-or any of your own `.S` files. Uncheck the modules you don't need —
+or any of your own `.S` files. Uncheck the modules you don't need,
 typically `USB`, `PIO`, `SHA256`, `TRNG`, etc., when the app doesn't
 touch those peripherals. Just below the Source path input, a row of
 "Selected modules" badges shows the live set that the next Build
@@ -114,7 +114,7 @@ sources     = ["../src/myperiph.S"]
 ```
 
 It shows up in the GUI's Features grid on the next launch. There's
-no plugin system, no rebuild of Studio — the catalog is just data.
+no plugin system, no rebuild of Studio; the catalog is just data.
 
 ## Saving a project
 
@@ -159,17 +159,17 @@ Studio sees the field and switches the build engine into chain mode:
    canonical addresses.
 
 The Memory tab now has a third section, "Bootloader chain", that
-breaks the firmware down by stage — SSBL / TSBL-`<flavor>` / Slot A /
-Slot B — with each one's used and capacity in bytes. Slot B reads
+breaks the firmware down by stage (SSBL / TSBL-`<flavor>` / Slot A /
+Slot B) with each one's used and capacity in bytes. Slot B reads
 as 0 B used after a full firmware flash: the chain UF2 only
 populates slot A, and TSBL-ab will see only A as valid and boot it.
 
 Flash the firmware UF2 with Flash as normal. The board boots through
 the whole chain.
 
-If the app needs to talk back to the TSBL — to confirm a successful
-boot for the A/B rollback path, or to request a reboot into DFU mode
-— enable the **Boot API** module in the Features grid. It pulls in
+If the app needs to talk back to the TSBL (to confirm a successful
+boot for the A/B rollback path, or to request a reboot into DFU mode),
+enable the **Boot API** module in the Features grid. It pulls in
 `src/boot_api.S`, which exposes `boot_confirm()`,
 `boot_request_dfu()`, and `boot_request_bootsel()` to your app code.
 
@@ -195,8 +195,8 @@ boot.
 
 If the new app calls `boot_confirm()`, the rollback marker in
 `WATCHDOG_SCRATCH[6]` is cleared and slot B sticks. If it doesn't
-— if it crashes, hangs, or triggers a watchdog reset before
-confirming — the marker survives the warm reset, TSBL-ab sees it on
+(if it crashes, hangs, or triggers a watchdog reset before
+confirming) the marker survives the warm reset, TSBL-ab sees it on
 the way back up, and rolls back to slot A. There's a worked example
 of the watchdog-driven rollback in `examples/blinky_buggy_demo.S`
 and the rollback demo firmware (`make build/firmware_rollback_demo.uf2`).
@@ -279,7 +279,7 @@ Three classes of problem this surfaces:
    rule installation.
 
 For protocol-level problems with rpasmboot itself, the diagnostic
-log lines mirror to the launching terminal — every line the GUI
+log lines mirror to the launching terminal; every line the GUI
 shows in its Output panel also prints on stderr. So
 `go run ./studio/cmd/rpasm-studio 2>&1 | tee studio.log` captures
 everything for paste-into-issue debugging without needing a
@@ -288,13 +288,13 @@ selectable widget.
 ## Where to go from here
 
 This appendix is the narrative tour. For the field-by-field
-reference — every project TOML key, every CLI flag, every internal
-package — see [`docs/studio.md`](../docs/studio.md). The bootloader
+reference (every project TOML key, every CLI flag, every internal
+package) see [`docs/studio.md`](../docs/studio.md). The bootloader
 chain itself (memory map, footer layout, status state machine,
 watchdog ABI) is in [`docs/bootloader.md`](../docs/bootloader.md).
 The peripheral modules referenced by the catalog have their own
 datasheets under `docs/{uart,usb,pio,...}.md`.
 
 Studio is meant to dissolve into the background once you know what
-it's doing. The Makefile, the linker scripts, the SDK sources — none
+it's doing. The Makefile, the linker scripts, the SDK sources: none
 of those go away. Studio is just a cleaner front-end onto them.

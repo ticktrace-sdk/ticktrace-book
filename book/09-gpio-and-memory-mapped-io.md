@@ -114,7 +114,7 @@ To recap:
 | `+0x2000` | Atomic SET, `reg \|= value` for set bits |
 | `+0x3000` | Atomic CLR, `reg &= ~value` for set bits |
 
-You will use these constantly. rp-asm's headers define handy symbols
+You will use these constantly. ticktrace's headers define handy symbols
 for them: look in `include/rp2350.inc` for `ATOMIC_XOR_OFFS`,
 `ATOMIC_SET_OFFS`, `ATOMIC_CLR_OFFS`.
 
@@ -281,7 +281,7 @@ If both LEDs blink, you have a working GPIO driver of your own.
 
 5. **Build a project.** Wire two LEDs (to GP14 and GP15, each through
    330 Ω). Write a Knight Rider-style scanner that bounces between
-   them. Use only the rp-asm GPIO functions plus your own busy-wait.
+   them. Use only the ticktrace GPIO functions plus your own busy-wait.
 
 ## What's next
 

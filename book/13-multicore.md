@@ -9,9 +9,9 @@ second core up and uses both.
 A second core is not free real estate. It is a real processor that
 runs concurrently with the first, and concurrency means
 synchronisation. We'll cover the launch handshake, the three primitives
-rp-asm gives you for inter-core coordination (FIFO mailbox, hardware
+ticktrace gives you for inter-core coordination (FIFO mailbox, hardware
 spinlocks, interpolators), the canonical Larson-pattern from the
-example tree, and the things rp-asm pointedly does *not* offer.
+example tree, and the things ticktrace pointedly does *not* offer.
 
 ## What "two cores" buys you
 
@@ -53,7 +53,7 @@ the user supplies.
 
 ![multicore_launch_core1: the 6-word SIO FIFO handshake](figures/multicore-launch.svg)
 
-You don't write this by hand. rp-asm wraps it as a single call:
+You don't write this by hand. ticktrace wraps it as a single call:
 
 ```asm
     ldr     r0, =core1_entry        @ where core 1 starts
@@ -94,13 +94,13 @@ core1_entry:
 
 `examples/multicore_usb_demo.S:90-105` has the canonical prologue;
 copy it into your own `core1_entry`. After it, core 1 can use the
-FPU, push to its own stack, and call any rp-asm driver.
+FPU, push to its own stack, and call any ticktrace driver.
 
 ## Coordinating: the three primitives
 
 Once both cores are running, they share SRAM and every peripheral
 register. They do **not** share registers, stacks, or vector tables.
-rp-asm gives you three primitives for getting them to cooperate.
+ticktrace gives you three primitives for getting them to cooperate.
 
 ### SIO FIFO mailbox
 
@@ -218,7 +218,7 @@ cores want to read or write the same shared variable, wrap the
 access in a spinlock; if one core wants to notify the other, send
 through the FIFO.
 
-## What multicore in rp-asm does NOT do
+## What multicore in ticktrace does NOT do
 
 A short, honest list:
 
@@ -236,11 +236,11 @@ A short, honest list:
   cleanly from core 0. You can spin it on a flag if you want it
   idle.
 - **No NUMA tricks.** SRAM is uniform-access from both cores. There
-  is no per-core fast SRAM region exposed in rp-asm beyond what the
+  is no per-core fast SRAM region exposed in ticktrace beyond what the
   bootrom defines.
 
 If you need an SMP-style scheduler with task migration, look at
-FreeRTOS SMP or Zephyr's SMP build. rp-asm stops where the hardware
+FreeRTOS SMP or Zephyr's SMP build. ticktrace stops where the hardware
 stops being simple.
 
 ## Exercises
