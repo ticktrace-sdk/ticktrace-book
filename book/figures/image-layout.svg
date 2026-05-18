@@ -50,7 +50,7 @@
 
     <rect x="0" y="238" width="240" height="60" class="rodat" />
     <text x="120" y="260" text-anchor="middle" class="label">.rodata</text>
-    <text x="120" y="278" text-anchor="middle" class="note">"rp-asm M2, clk_sys = 150 MHz\r\n"</text>
+    <text x="120" y="278" text-anchor="middle" class="note">"ticktrace M2, clk_sys = 150 MHz\r\n"</text>
 
     <rect x="0" y="304" width="240" height="60" class="bss" />
     <text x="120" y="326" text-anchor="middle" class="label">.bss / SRAM</text>

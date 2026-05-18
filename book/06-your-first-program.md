@@ -49,7 +49,7 @@ And here's where the bytes end up in flash:
 
     .section .rodata.banner, "a"
 banner:
-    .asciz "rp-asm M2 - clk_sys = 150 MHz\r\n"
+    .asciz "ticktrace M2 - clk_sys = 150 MHz\r\n"
 
     .section .text.main, "ax"
     .thumb_func
@@ -104,7 +104,7 @@ instructions to the **assembler**:
 - `.thumb`, Emit Thumb encodings (which is the only option on M33
   anyway, but explicit is good).
 
-These three lines appear at the top of every `.S` file in rp-asm.
+These three lines appear at the top of every `.S` file in ticktrace.
 
 ## Pass 2: the constants and data
 
@@ -123,7 +123,7 @@ we look at the loop itself.
 ```asm
     .section .rodata.banner, "a"
 banner:
-    .asciz "rp-asm M2 - clk_sys = 150 MHz\r\n"
+    .asciz "ticktrace M2 - clk_sys = 150 MHz\r\n"
 ```
 
 This puts a string in **read-only data** at a label called `banner`.
@@ -134,7 +134,7 @@ Breaking it down:
   takes up space in the final image but isn't executable.
 - `banner:`, A label. The address of the next byte will be remembered
   under this name.
-- `.asciz "rp-asm M2 - clk_sys = 150 MHz\r\n"`, Emit the string,
+- `.asciz "ticktrace M2 - clk_sys = 150 MHz\r\n"`, Emit the string,
   followed by a zero byte. (Without the `z`, `.ascii` would omit the
   terminator.) The `\r\n` is the conventional terminal-friendly
   line-ending: carriage return, then newline.
@@ -159,7 +159,7 @@ main:
   other files (in our case, `startup.S`) can call it.
 - `main:`, The label itself.
 
-The rp-asm reset handler in `src/startup.S` eventually does a
+The ticktrace reset handler in `src/startup.S` eventually does a
 `b main`, which is how this function gets entered.
 
 ## Pass 4: the boot sequence
@@ -334,7 +334,7 @@ half as fast? (It should.)
 Take a moment to appreciate where you are. You can read every line of
 a real piece of firmware. You know what each directive does, what each
 function call accomplishes, why the loop is shaped the way it is, and
-how the program enters the chip. The rp-asm source tree is no longer
+how the program enters the chip. The ticktrace source tree is no longer
 opaque; you can open any `src/*.S` file and the language will mostly
 make sense, even if specific peripheral details are still mysterious.
 
@@ -370,4 +370,4 @@ reference so you can read the *driver* code, not just the user code.
 
 ---
 
-[← Chapter 5: Setting up rp-asm](05-setting-up-rp-asm.md) · [Table of contents](README.md) · [Chapter 7: Assembler syntax and instructions →](07-assembler-syntax.md)
+[← Chapter 5: Setting up ticktrace](05-setting-up-rp-asm.md) · [Table of contents](README.md) · [Chapter 7: Assembler syntax and instructions →](07-assembler-syntax.md)

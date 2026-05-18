@@ -75,7 +75,7 @@
 
     <text x="85" y="222" text-anchor="middle" class="note">Cold code: XIP from flash.</text>
     <text x="85" y="236" text-anchor="middle" class="note">Hot code: SRAM, flat timing.</text>
-    <text x="85" y="254" text-anchor="middle" class="note">rp-asm supports this.</text>
+    <text x="85" y="254" text-anchor="middle" class="note">ticktrace supports this.</text>
   </g>
 
   <!-- Panel 3: Copy-to-RAM -->
@@ -101,7 +101,7 @@
 
     <text x="85" y="222" text-anchor="middle" class="note">Persistent + uniform timing.</text>
     <text x="85" y="236" text-anchor="middle" class="note">~2x RAM footprint.</text>
-    <text x="85" y="254" text-anchor="middle" class="note">Not in rp-asm yet.</text>
+    <text x="85" y="254" text-anchor="middle" class="note">Not in ticktrace yet.</text>
   </g>
 
   <!-- Panel 4: SRAM-resident -->

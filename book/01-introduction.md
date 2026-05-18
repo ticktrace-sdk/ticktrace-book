@@ -2,13 +2,13 @@
 
 This book is a working introduction to ARM Thumb-2 assembly
 programming on the Raspberry Pi RP2350 microcontroller. It uses
-**rp-asm**, a pure-assembly SDK for that chip, as its running
+**ticktrace**, a pure-assembly SDK for that chip, as its running
 codebase.
 
 **Scope:** 14 chapters and two appendices, covering the CPU
 architecture, the toolchain, the calling convention, the GPIO, UART,
 and timer/interrupt subsystems, and the scheduling and multicore
-primitives rp-asm provides.
+primitives ticktrace provides.
 
 **Outcome:** the reader will be able to build, flash, and modify
 cycle-counted bare-metal firmware on a Raspberry Pi Pico 2 without
@@ -19,7 +19,7 @@ invoking a C compiler at any step in the pipeline.
 
 It is a beginner's introduction to **assembly language**, taught through
 a concrete project: writing firmware for the Raspberry Pi Pico 2 using
-the rp-asm SDK. We will spend a chapter or two on theory, what a CPU is,
+the ticktrace SDK. We will spend a chapter or two on theory, what a CPU is,
 what an instruction is, what the RP2350 chip looks like, and then we
 spend the rest of the book writing real code that runs on real hardware.
 
@@ -29,7 +29,7 @@ It is **not** a reference manual. The RP2350 datasheet is 1300 pages and
 freely available; we will quote the bits we need and trust you to look
 up the rest when curious. It is also not a tour of every instruction in
 the ARM Thumb-2 set. We teach what you actually need to read and write
-rp-asm code, and we point you at deeper references when it's time.
+ticktrace code, and we point you at deeper references when it's time.
 
 It is also not a book about computer architecture in the abstract. There
 are wonderful books about pipelines, branch predictors, cache coherency,
@@ -37,7 +37,7 @@ and out-of-order execution, etc. I couldn't teach you these even if I wanted to 
 The Cortex-M33 has none of those things in any interesting form  it is a simple, in-order processor, and that is
 exactly why it is a good teaching target.
 
-## Why I built rp-asm
+## Why I built ticktrace
 
 I write firmware for motor control. In that world, the latency of an
 ISR matters down to the cycle, the jitter on a PWM edge can wreck a
@@ -45,7 +45,7 @@ control loop, and "the compiler probably did the right thing" is not
 an acceptable answer. Deterministic real-time work is hard when you
 don't know what the compiler does.
 
-Before rp-asm I lived in two languages on this chip.
+Before ticktrace I lived in two languages on this chip.
 
 **C, usually with the pico-sdk.** Powerful, and the SDK takes care of
 bring-up, clocks, USB, every block you'd otherwise spend a month on.
@@ -66,7 +66,7 @@ Both languages have their place. Neither was the right tool for the
 work I actually wanted to do, which is *write the exact sequence of
 instructions that hits the wire at the exact cycle I expect*.
 
-rp-asm is what that looks like when you take it seriously. Pure
+ticktrace is what that looks like when you take it seriously. Pure
 Thumb-2 assembly. **No compiler between you and the silicon**. Every
 register, every peripheral, every cycle accounted for in source you
 can read end-to-end. The motto on the front of the README, "every
@@ -95,7 +95,7 @@ blink an LED, you write to a hardware register. If you want to print to
 a terminal, you push bytes into a UART. Every layer is visible. Every
 layer is yours.
 
-rp-asm makes this concrete by giving you, in pure assembly:
+ticktrace makes this concrete by giving you, in pure assembly:
 
 - A startup file that boots the chip
 - Drivers for every peripheral on the RP2350
@@ -118,11 +118,11 @@ else's secret.
 **Software:**
 
 - The GNU ARM embedded toolchain (`binutils-arm-none-eabi`)
-- Python 3 (for the rp-asm test harness)
+- Python 3 (for the ticktrace test harness)
 - A text editor
 
 Chapter 5 walks you through installing all of this. If you don't have a
-Pico 2 yet you can still follow the book, the rp-asm test harness lets
+Pico 2 yet you can still follow the book, the ticktrace test harness lets
 you run programs in emulation  but you'll miss the satisfaction of the
 blinking LED.
 

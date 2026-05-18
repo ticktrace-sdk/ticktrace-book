@@ -1,6 +1,6 @@
 # Chapter 8: Functions and the calling convention
 
-Up to now we've been calling rp-asm driver functions without thinking
+Up to now we've been calling ticktrace driver functions without thinking
 too hard about *how* the calling works. In this chapter we make the
 rules explicit, so that you can write your own functions and have
 them play nicely with the rest of the SDK.
@@ -158,7 +158,7 @@ alignment:
 If a function takes more than 4 word-sized arguments, the extras go
 **on the stack, right-to-left**, with the same 8-byte alignment rule.
 
-In rp-asm, very few functions take more than 4 arguments, so this
+In ticktrace, very few functions take more than 4 arguments, so this
 case rarely comes up. When it does (e.g. `multicore_launch_core1`
 takes 3 args, so it fits), the convention is the same as in C.
 
@@ -167,7 +167,7 @@ takes 3 args, so it fits), the convention is the same as in C.
 - 32 bits or smaller: returned in `r0`.
 - 33–64 bits (e.g. a uint64): returned in `r0` (low) and `r1` (high).
 - Anything bigger: the caller passes a pointer in `r0` and the callee
-  writes through it. (Vanishingly rare in rp-asm.)
+  writes through it. (Vanishingly rare in ticktrace.)
 
 ## Interrupt handlers are different
 
@@ -226,7 +226,7 @@ Read it:
   needed and `lr` is untouched.
 
 You'd place this function in a file `mygpio.S`, assemble it alongside
-the rest of rp-asm, and call it from your app:
+the rest of ticktrace, and call it from your app:
 
 ```asm
     movs    r0, #15
@@ -249,7 +249,7 @@ You'll see the same shape repeated:
 3. Compute / read / write hardware.
 4. Optional `pop {r4..., pc}` (or just `bx lr` for leaf functions).
 
-That's it. There is no other shape. Every function in rp-asm is a
+That's it. There is no other shape. Every function in ticktrace is a
 variation on this template.
 
 ## Common mistakes

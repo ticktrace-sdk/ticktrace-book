@@ -1,6 +1,6 @@
 # Chapter 14: Where to go next
 
-You can now read and write rp-asm. You understand registers,
+You can now read and write ticktrace. You understand registers,
 instructions, the calling convention, memory-mapped I/O, GPIO, UART,
 interrupts, scheduling, and multicore. That's enough vocabulary to
 navigate the entire SDK. The rest is *what specifically* each
@@ -80,7 +80,7 @@ them all. `make build/NAME_flash.uf2` builds the flash variant of one.
 
 ## The test harness
 
-rp-asm has a four-tier test setup:
+ticktrace has a four-tier test setup:
 
 - **T1** (`tests/unicorn/`), Python tests that run each driver
   function inside the Unicorn emulator and verify the exact sequence
@@ -139,7 +139,7 @@ Two appendices that you'll probably keep open while you work:
 - **The pico-sdk** (in C, on GitHub), even though it's C, the
   pico-sdk's peripheral code is a useful cross-reference when the
   datasheet is ambiguous. Sometimes you'll spot an erratum workaround
-  in the pico-sdk and want to mirror it in rp-asm.
+  in the pico-sdk and want to mirror it in ticktrace.
 
 ## A few project ideas
 

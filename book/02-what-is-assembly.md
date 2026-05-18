@@ -122,7 +122,7 @@ Read it line by line.
   microcontroller has nowhere else to go when its program "ends".
 
 The `@` character starts a comment in GNU ARM assembler syntax. You'll
-see them everywhere in rp-asm.
+see them everywhere in ticktrace.
 
 That program, assembled, is six bytes of machine code. Six bytes is a
 complete, runnable program. Welcome to the metal.

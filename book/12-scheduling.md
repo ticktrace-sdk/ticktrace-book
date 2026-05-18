@@ -7,7 +7,7 @@ service a button. Once you have more than one job, you need a story
 for *which job runs when*. That story is **scheduling**.
 
 This chapter covers the two basic flavours of scheduling, names the
-RTOSes you'll meet in the wild, and then explains what rp-asm's
+RTOSes you'll meet in the wild, and then explains what ticktrace's
 scheduler does, and, just as importantly, what it does not.
 
 ## Cooperative scheduling
@@ -82,7 +82,7 @@ encounter in embedded work:
 - **embOS, RTX, ChibiOS, NuttX, Mbed OS, …**, there are dozens.
 - **QV / QXK**, the "Quantum Leaps" kernels by Miro Samek. QV is a
   *cooperative-within-priority-bands* kernel running on the NVIC.
-  rp-asm's scheduler is directly inspired by QV.
+  ticktrace's scheduler is directly inspired by QV.
 
 An RTOS is the right answer when you need things like "spawn 5 worker
 threads at run time," "let this task wait on a mutex for at most 100
@@ -90,12 +90,12 @@ ms," or "queue an arbitrary-sized message between producer and
 consumer with deep buffering." Once you reach that complexity, build
 on an RTOS rather than inventing one.
 
-But, and this is the rp-asm thesis, there is a useful regime
+But, and this is the ticktrace thesis, there is a useful regime
 *below* an RTOS where you can get most of the benefits of preemptive
 priority scheduling without paying the size, complexity, or
 indeterminism of a general kernel.
 
-## rp-asm's scheduler
+## ticktrace's scheduler
 
 `src/sched.S` is roughly 200 lines of assembly. It does *not* try to
 be FreeRTOS. It implements one specific, very efficient discipline:
@@ -107,7 +107,7 @@ The trick is to lean on the hardware the chip already provides. The
 Cortex-M33's NVIC is, in effect, a tiny priority-based dispatcher
 built into the silicon: it knows how to take the highest-priority
 pending IRQ, save registers, branch to a handler, and restore on
-return. rp-asm just reuses it.
+return. ticktrace just reuses it.
 
 The mapping:
 
@@ -157,7 +157,7 @@ running again," you arm a TIMER alarm whose ISR calls
   in `sched.inc` if you need more.
 
 For comparison, a FreeRTOS task on the same chip is at minimum a
-few hundred bytes of stack plus a TCB. The rp-asm model is two
+few hundred bytes of stack plus a TCB. The ticktrace model is two
 orders of magnitude lighter, at the cost of giving up some
 features.
 
@@ -184,7 +184,7 @@ bytes (one slot reserved for the empty/full distinction).
 ### Optional per-task cycle accounting
 
 `src/sched_stats.S` gives you opt-in DWT-based profiling. Replace
-`task_create` with `task_create_traced` and rp-asm wraps your task in
+`task_create` with `task_create_traced` and ticktrace wraps your task in
 a 25-cycle trampoline that reads the DWT cycle counter before and
 after each invocation. Then:
 
@@ -199,7 +199,7 @@ task_stats_reset_all()
 This is how you confirm that "task X took less than 2,500 cycles
 worst-case" before shipping a control loop.
 
-## What rp-asm's scheduler does NOT do
+## What ticktrace's scheduler does NOT do
 
 A direct quote from `docs/sched.md`, edited slightly:
 
@@ -216,14 +216,14 @@ A direct quote from `docs/sched.md`, edited slightly:
   ISR re-post you when the event happens.
 - **No priority inversion mitigation.** Run-to-completion plus SPSC
   removes most of the cases where this would matter.
-- **No memory protection.** The MPU exists on M33, but rp-asm doesn't
+- **No memory protection.** The MPU exists on M33, but ticktrace doesn't
   use it.
 - **No watchdog kicking, power management, or partitioning.** These
   are application concerns.
 
 If your problem needs any of those features in a serious way, what
-you want is FreeRTOS or Zephyr, not rp-asm. That is a deliberate
-trade. rp-asm picks a discipline narrow enough that 200 lines of
+you want is FreeRTOS or Zephyr, not ticktrace. That is a deliberate
+trade. ticktrace picks a discipline narrow enough that 200 lines of
 asm and a 5-cycle `task_post` cover it.
 
 ## When to use it
@@ -241,13 +241,13 @@ Reach for `src/sched.S` when:
 
 Stick with the bare superloop from chapter 6 when there's only one
 job, or two trivial ones. Reach for an RTOS when you need dynamic
-task lifetimes, blocking synchronisation, or features rp-asm
+task lifetimes, blocking synchronisation, or features ticktrace
 deliberately omits.
 
 ## Exercises
 
 1. **Classify these requirements.** For each, say which of (a)
-   superloop, (b) rp-asm scheduler, (c) full RTOS is the cheapest
+   superloop, (b) ticktrace scheduler, (c) full RTOS is the cheapest
    tool that fits:
    - A 1 Hz LED blink.
    - A motor-control loop at 20 kHz with ≤ 5 µs jitter.

@@ -19,7 +19,7 @@
     }
   </style>
 
-  <text x="20" y="28" class="title">rp-asm scheduler, one post, one task fires</text>
+  <text x="20" y="28" class="title">ticktrace scheduler, one post, one task fires</text>
   <text x="20" y="48" class="note">Tasks are NVIC IRQ lines. task_post is one STR to NVIC_ISPR. The CPU's own interrupt logic does the dispatch.</text>
 
   <!-- ISR / event source -->

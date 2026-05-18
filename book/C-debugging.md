@@ -1,14 +1,14 @@
 # Appendix C: Debugging
 
 This appendix is a quick map of the debugging options available to a
-rp-asm program. It is not a tutorial, it's a "which tool when"
+ticktrace program. It is not a tutorial, it's a "which tool when"
 reference. Deeper coverage of GDB/OpenOCD will come in a later
-revision once the on-chip debug surface in rp-asm is more mature.
+revision once the on-chip debug surface in ticktrace is more mature.
 
 ## The three workhorse approaches
 
 Most embedded bugs get caught by **printing things from inside the
-chip and looking at them on a host computer**. rp-asm gives you three
+chip and looking at them on a host computer**. ticktrace gives you three
 ways to do that, in increasing order of capability and integration
 cost.
 
@@ -59,7 +59,7 @@ cable you're already using to power the board.
 
 When it works, it's the nicest debug surface, fast, one cable, no
 extra hardware. The tradeoff is that the USB driver is the most
-complex piece in rp-asm, and if you're debugging *the USB driver*
+complex piece in ticktrace, and if you're debugging *the USB driver*
 you obviously can't rely on it for output. That's why every project
 should keep its UART path working as a fallback.
 
@@ -144,13 +144,13 @@ This is genuinely powerful, and indispensable when print debugging
 runs out of steam (hard faults during early boot, race conditions
 between cores, peripherals that lock up the chip).
 
-For now, rp-asm's coverage of SWD/GDB is intentionally thin. We will
+For now, ticktrace's coverage of SWD/GDB is intentionally thin. We will
 add a fuller setup recipe, probe firmware, OpenOCD configuration,
-GDB scripts for the rp-asm vector table, common-bug walkthrough, in
+GDB scripts for the ticktrace vector table, common-bug walkthrough, in
 a later revision of this book. Until then, see
 [the Raspberry Pi Pico SDK debug guide](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)
 for a complete probe-side setup; everything from the host onwards
-applies to rp-asm unchanged.
+applies to ticktrace unchanged.
 
 ## Choosing the right tool
 
@@ -169,9 +169,9 @@ keep UART working as your last-resort safety net**.
 
 ## Three small habits that pay off
 
-1. **Print a banner at boot.** Every rp-asm program should send
+1. **Print a banner at boot.** Every ticktrace program should send
    something identifiable on its first UART/CDC output,
-   `"rp-asm myapp v0.3"`, so when the chip is misbehaving you know
+   `"ticktrace myapp v0.3"`, so when the chip is misbehaving you know
    *which* firmware is on it.
 
 2. **Cycle-count anything you call "fast".** A claim like "this ISR
@@ -194,7 +194,7 @@ keep UART working as your last-resort safety net**.
 - `examples/sched_usb_demo.S`, `sched_stats` reporting per-task
   cycle counts over CDC.
 
-A printable summary of debug commands and the rest of the rp-asm
+A printable summary of debug commands and the rest of the ticktrace
 working set lives in [Appendix B](B-cheat-sheet.md), and a
 print-ready Letter/A4 version at
 [`figures/cheat-sheet-print.svg`](figures/cheat-sheet-print.svg).

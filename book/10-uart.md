@@ -6,7 +6,7 @@ report errors. The classic way to do that on a microcontroller is a
 **UART**: a serial port that sends bytes one at a time over a single
 wire.
 
-This chapter introduces UART, walks through what the rp-asm UART driver
+This chapter introduces UART, walks through what the ticktrace UART driver
 does for you, and shows how to write your own `puts` function.
 
 ## What is a UART?
@@ -22,7 +22,7 @@ A standard frame is:
 - 8 **data bits** (least-significant first)
 - One **stop bit** (line goes high)
 
-That's 10 bit-times per byte. At 115200 baud, the rate rp-asm
+That's 10 bit-times per byte. At 115200 baud, the rate ticktrace
 defaults to, each byte takes about 87 µs.
 
 ![UART frame for the byte 'A' = 0x41](figures/uart-frame.svg)
@@ -95,7 +95,7 @@ To use UART0 at 115200 baud, the driver does roughly the following:
 
 After this, writes to `UARTDR` are transmitted.
 
-In rp-asm you don't have to do this yourself; you call `uart0_init`
+In ticktrace you don't have to do this yourself; you call `uart0_init`
 (which in turn calls `uart_init(0, 115200, 12000000)`) and the driver
 does the dance. Take a moment to read `src/uart.S`, at this point you
 should be able to follow most of it. The `M_UART_BASE_FROM_IDX` macro
@@ -199,7 +199,7 @@ Walk through:
 - The inner `1:` loop polls the flag register; the `str` writes the
   byte.
 
-The actual rp-asm `uart_puts_blocking` does the same thing, with
+The actual ticktrace `uart_puts_blocking` does the same thing, with
 attention to a few extra details (notably, the v0.1 byte-trace
 compatibility shim mentioned in the driver comments). Read
 `src/uart.S` from line 1 down to the end of `uart0_puts` and you'll
@@ -254,7 +254,7 @@ controller can present itself as a **USB CDC** (Communications Device
 Class) serial device, so the Pico shows up as `/dev/ttyACM0` on Linux
 without any extra hardware.
 
-The rp-asm USB driver (`src/usb.S`) implements this. Many of the
+The ticktrace USB driver (`src/usb.S`) implements this. Many of the
 `*_usb_demo.S` examples use it. Reading the USB driver is a much
 longer journey than reading the UART driver, USB is genuinely
 complicated, so we don't take that detour in this book. But know

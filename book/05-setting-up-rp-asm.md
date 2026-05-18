@@ -1,6 +1,6 @@
-# Chapter 5: Setting up rp-asm
+# Chapter 5: Setting up ticktrace
 
-In this chapter we install the toolchain, clone rp-asm, and build the
+In this chapter we install the toolchain, clone ticktrace, and build the
 default `blinky.uf2`. By the end you'll be one drag-and-drop away from
 a running program.
 
@@ -12,9 +12,9 @@ Three things:
    linker (`arm-none-eabi-ld`), and a few helpers like `objcopy`.
 2. **Python 3** and a couple of Python libraries, used by the test
    harness and the UF2 packer.
-3. The **rp-asm source tree** itself.
+3. The **ticktrace source tree** itself.
 
-You do **not** need GCC or any C compiler. rp-asm is pure assembly;
+You do **not** need GCC or any C compiler. ticktrace is pure assembly;
 the C compiler in `binutils-arm-none-eabi` is not used.
 
 ![Build pipeline: .S → .o → .elf → .uf2](figures/build-pipeline.svg)
@@ -43,7 +43,7 @@ binutils we actually need.)
 ## Windows
 
 Use WSL2 and follow the Linux instructions inside it. Native Windows
-toolchains exist but are not what rp-asm is tested against.
+toolchains exist but are not what ticktrace is tested against.
 
 ## Verifying the toolchain
 
@@ -63,11 +63,11 @@ Python 3.11.x
 If any of those error out, fix that before continuing, nothing later
 will work.
 
-## Cloning rp-asm
+## Cloning ticktrace
 
 ```console
 $ git clone https://github.com/amken3d/rp-asm.git
-$ cd rp-asm
+$ cd ticktrace
 ```
 
 Take a moment to look around:
@@ -95,7 +95,7 @@ The directories you'll care about most as a beginner:
 
 ## Installing the Python dependencies
 
-rp-asm uses a virtualenv to keep its test dependencies out of your
+ticktrace uses a virtualenv to keep its test dependencies out of your
 system Python. The Makefile has a one-shot target for this:
 
 ```console
@@ -148,7 +148,7 @@ family ID automatically from the load address.
 
 ## Running it in emulation (optional)
 
-You don't strictly need a Pico 2 to follow this book. rp-asm's test
+You don't strictly need a Pico 2 to follow this book. ticktrace's test
 harness runs every driver under Unicorn (a CPU emulator) and the
 public examples under QEMU. To smoke-test your install:
 
@@ -171,7 +171,7 @@ The Pico 2 will:
 
 1. Accept the file
 2. Reboot
-3. Print `rp-asm M2 - clk_sys = 150 MHz` over UART0 TX (GP0)
+3. Print `ticktrace M2 - clk_sys = 150 MHz` over UART0 TX (GP0)
 4. Blink its onboard green LED at roughly 2 Hz
 
 To see the UART output, connect a USB-to-serial adapter:
@@ -192,7 +192,7 @@ $ minicom -D /dev/ttyUSB0 -b 115200
 
 > **Order matters.** The banner is printed once, in the first
 > ~100 ms after `_reset`. If you flash first and *then* open the
-> terminal, the banner has already gone by — you'll see the LED
+> terminal, the banner has already gone by, and you'll see the LED
 > blinking but no text. Either:
 >
 > - Open the serial terminal first, *then* drag the UF2 onto
@@ -200,7 +200,7 @@ $ minicom -D /dev/ttyUSB0 -b 115200
 >   ejects, and minicom catches the banner), or
 >
 > - With the terminal already open, tap the on-board RUN/RESET pin
->   on the Pico 2 — the board reboots and re-prints the banner.
+>   on the Pico 2; the board reboots and re-prints the banner.
 >
 > Later chapters' examples that talk over USB-CDC have the same
 > race; chapter 10 shows a banner-loop pattern that survives a
@@ -213,7 +213,7 @@ nothing but the original USB-C cable. We'll get to those in chapter 10.
 ## What just happened?
 
 You built and ran a piece of bare-metal firmware. The chip booted from
-the bootrom, jumped into the rp-asm reset handler, brought up two PLLs
+the bootrom, jumped into the ticktrace reset handler, brought up two PLLs
 and the clock tree, configured a UART, sent some bytes, and started
 toggling a GPIO pin. All in 728 bytes of code.
 

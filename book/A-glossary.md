@@ -6,7 +6,7 @@ pointer to the chapter that introduces it.
 ---
 
 **AAPCS.** ARM Architecture Procedure Call Standard.
-The set of rules every function in rp-asm follows so that functions
+The set of rules every function in ticktrace follows so that functions
 can call each other safely. Arguments go in `r0`–`r3`; return value in
 `r0` (low) and `r1` (high); `r4`–`r11` are callee-saved; the stack
 stays 8-byte aligned at every call boundary. See
@@ -30,7 +30,7 @@ See [chapter 4](04-cortex-m33-and-thumb2.md).
 
 **Assembler.**
 The tool that turns assembly source code (text mnemonics) into machine
-code (binary opcodes). In rp-asm this is `arm-none-eabi-as` from
+code (binary opcodes). In ticktrace this is `arm-none-eabi-as` from
 binutils. See [chapter 5](05-setting-up-rp-asm.md).
 
 **Atomic alias.**
@@ -42,7 +42,7 @@ the aliases live at base + 0x1000 (XOR), + 0x2000 (SET), + 0x3000
 [chapter 9](09-gpio-and-memory-mapped-io.md).
 
 **Baud rate.**
-The signalling rate on a serial line, in bits per second. rp-asm
+The signalling rate on a serial line, in bits per second. ticktrace
 defaults to 115200 baud on UART0, about 8.7 µs per bit, or ~11.5 KB/s
 of one-way throughput. See [chapter 10](10-uart.md).
 
@@ -77,7 +77,7 @@ save it before the call if it cares about the value. On AAPCS:
 `r0`–`r3`, `r12`. See [chapter 8](08-functions-and-calling-convention.md).
 
 **CDC.** Communications Device Class.
-A USB standard for serial-like devices. rp-asm's USB driver implements
+A USB standard for serial-like devices. ticktrace's USB driver implements
 CDC-ACM, which makes a Pico 2 appear as `/dev/ttyACM0` on a Linux
 host. See [chapter 10](10-uart.md) and `docs/usb.md`.
 
@@ -150,7 +150,7 @@ has two DesignWare I²C controllers. See `src/i2c.S` and `docs/i2c.md`.
 
 **IMAGE_DEF.**
 A signature block at a fixed offset in your binary that tells the
-bootrom how to launch the image. rp-asm emits one in `src/startup.S`.
+bootrom how to launch the image. ticktrace emits one in `src/startup.S`.
 See [chapter 3](03-the-rp2-family.md) and `docs/boot.md`.
 
 **Interpolator.**
@@ -183,7 +183,7 @@ pool. See [chapter 4](04-cortex-m33-and-thumb2.md).
 
 **Linker.**
 The tool that combines object files into a final image, resolving
-symbol references and laying out sections. In rp-asm this is
+symbol references and laying out sections. In ticktrace this is
 `arm-none-eabi-ld` with `link/flash.ld` (or `link/sram.ld`).
 See [chapter 5](05-setting-up-rp-asm.md).
 
@@ -200,7 +200,7 @@ See [chapter 4](04-cortex-m33-and-thumb2.md).
 
 **MMIO.** Memory-Mapped I/O.
 The technique of controlling peripherals by reading and writing
-special memory addresses. The basis of every rp-asm driver. See
+special memory addresses. The basis of every ticktrace driver. See
 [chapter 9](09-gpio-and-memory-mapped-io.md).
 
 **NVIC.** Nested Vectored Interrupt Controller.
@@ -237,7 +237,7 @@ The address of the next instruction to execute. Writing to `pc` (via
 
 **Preemptive scheduling.**
 A scheduler where the runtime can interrupt a running task and switch
-to another at any instruction. rp-asm's scheduler uses
+to another at any instruction. ticktrace's scheduler uses
 NVIC-priority-based preemption: a higher-priority task preempts a
 lower-priority one; same-priority tasks run to completion. See
 [chapter 12](12-scheduling.md).
@@ -256,7 +256,7 @@ ARM's standard UART controller IP block. The RP2350's UART0 and UART1
 are PL011 instances. See [chapter 10](10-uart.md) and `docs/uart.md`.
 
 **PLL.** Phase-Locked Loop.
-A clock multiplier. rp-asm uses PLL_SYS to turn the 12 MHz crystal
+A clock multiplier. ticktrace uses PLL_SYS to turn the 12 MHz crystal
 into 150 MHz `clk_sys`, and PLL_USB to produce 48 MHz `clk_usb`. See
 `src/pll.S` and `docs/clocks.md`.
 
@@ -273,7 +273,7 @@ The chip's XIP cache fetches code from QSPI at run-time. See
 A piece of software providing a fully-featured scheduler plus
 synchronisation primitives, timers, message queues, and dynamic task
 creation. FreeRTOS, Zephyr, ThreadX, ChibiOS are common examples.
-rp-asm's scheduler is deliberately *not* an RTOS, it covers a
+ticktrace's scheduler is deliberately *not* an RTOS, it covers a
 narrower regime with much less code. See
 [chapter 12](12-scheduling.md).
 
@@ -284,7 +284,7 @@ Raspberry Pi's first chip (2021): dual Cortex-M0+, 264 KB SRAM,
 
 **RP2350.**
 Raspberry Pi's second chip (2024): dual Cortex-M33, 520 KB SRAM,
-48 GPIOs. Target of rp-asm. See [chapter 3](03-the-rp2-family.md).
+48 GPIOs. Target of ticktrace. See [chapter 3](03-the-rp2-family.md).
 
 **.rodata.**
 The section for read-only data, string literals, constant lookup
@@ -334,14 +334,14 @@ each job in turn. Works when jobs are short and bounded. See
 [chapter 6](06-your-first-program.md) and
 [chapter 12](12-scheduling.md).
 
-**Task (rp-asm).**
+**Task (ticktrace).**
 A function installed as an NVIC IRQ handler via `task_create`. Posted
 with `task_post`; runs at the handler's NVIC priority; returns when
 done. All tasks share the main stack. See
 [chapter 12](12-scheduling.md).
 
 **.text.**
-The section for executable code. rp-asm puts each function in its
+The section for executable code. ticktrace puts each function in its
 own subsection (`.text.foo`) so the linker can drop unused ones.
 See [chapter 7](07-assembler-syntax.md).
 
@@ -362,7 +362,7 @@ A serial port. The Pico 2 has two PL011 UARTs. See
 
 **UF2.** USB Flashing Format.
 A simple block-based file format Raspberry Pi's bootrom understands.
-rp-asm builds `*.uf2` files via the in-tree `rpasm` CLI
+ticktrace builds `*.uf2` files via the in-tree `rpasm` CLI
 (`tools/bin/rpasm uf2 pack`) or Studio's GUI. See
 [chapter 5](05-setting-up-rp-asm.md) and
 [Appendix E](E-studio.md).
@@ -375,7 +375,7 @@ register tells the CPU where it is. See
 
 **VTOR.** Vector Table Offset Register.
 A CPU control register at `0xE000ED08` that points at the active
-vector table. rp-asm's `_reset` writes it.
+vector table. ticktrace's `_reset` writes it.
 
 **wfi.** Wait For Interrupt.
 A Thumb-2 instruction that halts the CPU until an enabled interrupt

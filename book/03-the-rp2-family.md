@@ -1,12 +1,12 @@
 # Chapter 3: The RP2 family
 
-The "RP2" in rp-asm refers to the family of microcontrollers designed
+The "RP2" in ticktrace refers to the family of microcontrollers designed
 by Raspberry Pi Ltd themselves, first the RP2040 (launched in 2021)
 and then the RP2350 (launched in 2024). They are the silicon at the
 heart of the Raspberry Pi Pico and Pico 2 boards.
 
 This chapter is a tour of what these chips are, how they differ, and
-why rp-asm targets the RP2350 specifically.
+why ticktrace targets the RP2350 specifically.
 
 ![RP2350 chip-level block diagram](figures/chip-block.svg)
 
@@ -56,7 +56,7 @@ many opcodes.
 
 ## The RP2350 (Raspberry Pi Pico 2)
 
-The RP2350, released in 2024, is the chip rp-asm targets. It is a
+The RP2350, released in 2024, is the chip ticktrace targets. It is a
 substantial upgrade from the RP2040:
 
 | Feature | RP2040 | RP2350 |
@@ -85,7 +85,7 @@ a much more capable processor than the M0+:
   protection.
 
 You can also boot the RP2350 into a *RISC-V* mode where two Hazard3
-cores replace the ARM ones, sharing the same peripherals. rp-asm
+cores replace the ARM ones, sharing the same peripherals. ticktrace
 ignores this entirely and runs the chip as a pair of Cortex-M33s. (If
 you ever want to learn RISC-V assembly, this chip is also a friendly
 place to do it, but that's a different book.)
@@ -103,7 +103,7 @@ the RP2350. It adds:
   USB Mass Storage Class mode so you can drag-and-drop firmware
 
 There is also a Pico 2 W variant with onboard Wi-Fi/Bluetooth via an
-extra chip; rp-asm doesn't currently use the wireless, but everything
+extra chip; ticktrace doesn't currently use the wireless, but everything
 else on the W is identical to the non-W board.
 
 ![Pico 2 board layout with selected pins](figures/pico2-pinout.svg)
@@ -140,7 +140,7 @@ flowchart TD
 4. Your reset handler sets up the C-runtime-style state (stack pointer,
    .bss, vector table), brings up the clock tree, and calls `main`.
 
-rp-asm provides all of step 4 for you, see `src/startup.S` and
+ticktrace provides all of step 4 for you, see `src/startup.S` and
 `src/main.S`. From your perspective, "boot" just means "`main` gets
 called". We will read the bootrom-to-`main` handoff in [chapter 6](06-your-first-program.md).
 
@@ -176,7 +176,7 @@ Why this one?
    *(The value the bootrom loaded from word 0 of the vector table,
    i.e. the symbol `_stack_top` declared in `src/startup.S`.)*
 
-4. **Two build paths, one chip.** rp-asm produces two UF2 variants
+4. **Two build paths, one chip.** ticktrace produces two UF2 variants
    for every example: `build/<name>.uf2` (SRAM-resident at
    `0x20000000`) and `build/<name>_flash.uf2` (XIP flash at
    `0x10000000`). What's the difference, and when would you choose
@@ -186,7 +186,7 @@ Why this one?
    tiers consume. Flash is persistent, so the firmware boots
    automatically on power-up; that's what you want for shipped
    firmware. The bootrom uses different UF2 family IDs for the two
-   load paths — `0xE48BFF57` for SRAM, `0xE48BFF59` for flash —
+   load paths (`0xE48BFF57` for SRAM, `0xE48BFF59` for flash),
    which `rpasm`'s UF2 packer picks automatically from the load address.
    See `docs/boot.md`.)*
 
