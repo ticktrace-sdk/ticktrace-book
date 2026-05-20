@@ -329,6 +329,45 @@ $ cp build/blinky_flash.uf2 /media/$USER/RPI-RP2/
 Then watch the LED. Try doubling `DELAY_COUNT_150MHZ`, does it blink
 half as fast? (It should.)
 
+## What is in that 1.2 KB?
+
+After your first build the binary is roughly 1,200 bytes. For a
+35-line source file that feels large. Here is where each byte goes:
+
+| What | ~Bytes | Notes |
+|---|---|---|
+| `main()` | 64 | The 35-line source you just read |
+| Banner string | 36 | `.asciz "ticktrace M2…\r\n"` + NUL + alignment pad |
+| Literal pool | 8 | Constants materialized for `ldr r0, =banner` and `=DELAY_COUNT_150MHZ` |
+| Vector table | 64 | Initial SP, `_reset` PC, plus reserved exception-handler slots |
+| `_reset` handler | ~100 | FPU enable, RCP seed, VTOR setup, `.bss` zero loop, `b main` |
+| Driver library | ~930 | `xosc_init`, 2× PLL, `clocks_init`, `tick_init`, `watchdog_disable`, `gpio_led_init`, `uart0_init`, `baud_fixup`, `gpio_led_toggle`, `uart0_puts` |
+| **Total** | **~1,202** | |
+
+The headline: **your logic is 64 bytes**. The other ~1.1 KB is the
+minimum infrastructure any bare-metal Cortex-M33 needs before `main`
+can run — a vector table, a reset handler that prepares the CPU, and
+the clock and peripheral drivers you call. On a chip with no OS,
+none of that can be left out.
+
+The cost amortises quickly. A second driver function costs 40–80
+bytes; a second *call* to an existing driver in `main` costs four
+bytes (one `bl` instruction). By the time you have five peripherals
+running, `main` is still tiny and the driver overhead is already paid.
+
+You can inspect the live numbers yourself:
+
+```console
+$ arm-none-eabi-size build/blinky_flash.elf
+   text    data     bss     dec     hex filename
+   1202       0      16    1218     4C2 blinky_flash.elf
+$ arm-none-eabi-nm --print-size --size-sort build/blinky_flash.elf
+```
+
+`nm --size-sort` lists every symbol in ascending size order. `main`
+appears near the top; the larger driver routines sit at the bottom.
+Try it: you will see the table above reflected in the output.
+
 ## What you now understand
 
 Take a moment to appreciate where you are. You can read every line of
