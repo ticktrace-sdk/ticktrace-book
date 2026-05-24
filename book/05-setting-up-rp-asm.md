@@ -74,9 +74,9 @@ Take a moment to look around:
 
 ```console
 $ ls
-Makefile  README.md  benchmarks/  book/      c_apps/
-c_bridge/ docs/      examples/    include/   link/
-rust_apps/ rust_bridge/ src/      tests/     tools/
+Makefile  README.md  book/      c_apps/    c_bridge/
+docs/     examples/  include/   link/      rust_apps/
+rust_bridge/  src/   tests/     tools/
 ```
 
 The directories you'll care about most as a beginner:
